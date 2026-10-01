@@ -29,28 +29,13 @@ jobs:
           # Provenance attestations via OIDC. Requires a public repo + npm Trusted Publishing.
           NPM_CONFIG_PROVENANCE: 'true'
 
-      # The Action is consumed via git ref (gigadrive/lupe/apps/action@vN), so its built ncc
-      # bundle must live on the consumed tag — but we keep it OUT of main (apps/action/dist is
-      # gitignored). When Changesets bumps @gigadrive/lupe-action, this tags the freshly built
-      # bundle: an immutable vX.Y.Z plus a moving vN major alias. Guarded so it only runs once
-      # per version (release.yml fires on every push to main).
+      # newcoworker fork: the Action bundle is committed (git add -f) and tagged by hand
+      # as vX.Y.Z-nc.N. This step does not create upstream vX.Y.Z / vN tags.
       - name: Tag built Action bundle on version bump
-        # Runs even if `changeset publish` (npm) failed — tagging the Action is a
-        # standalone git operation and must not depend on npm auth being set up.
+        # newcoworker/lupe publishes Action tags by hand as vX.Y.Z-nc.N (moving
+        # alias vX.Y.Z-nc). Upstream's release step would otherwise tag the
+        # package version (v0.2.1 / v0) from this fork; skip that.
         if: ${{ !cancelled() }}
         run: |
-          set -euo pipefail
-          V="$(node -p "require('./apps/action/package.json').version")"
-          if [ "$V" = "0.0.0" ]; then
-            echo "placeholder version 0.0.0 — nothing to release."; exit 0
-          fi
-          MAJOR="v${V%%.*}"
-          if git ls-remote --tags --exit-code origin "refs/tags/v${V}" >/dev/null 2>&1; then
-            echo "v${V} already published — skipping."; exit 0
-          fi
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f apps/action/dist            # force past .gitignore
-          git commit -m "build(action): release v${V}"
-          git tag "v${V}" && git tag -f "${MAJOR}"
-          git push origin "v${V}" && git push -f origin "${MAJOR}"  # tags only — main never gets this commit
+          echo "newcoworker fork: skipping automatic upstream Action tags (vX.Y.Z / vN)."
+          echo "Pin newcoworker/lupe/apps/action@vX.Y.Z-nc.N instead."
