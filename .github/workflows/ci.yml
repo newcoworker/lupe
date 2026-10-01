@@ -35,6 +35,9 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - uses: ./.github/actions/setup-node-pnpm
       - name: Build · typecheck · test · check exports
-        run: pnpm turbo run build typecheck test check:exports
+        # The docs site is not part of the Action this fork publishes. Its typecheck
+        # (`fumadocs-mdx` + `tsc`) can see a half-written `.source/server.ts` while
+        # `next build` regenerates that directory (TS2306), which then crashes turbo.
+        run: pnpm turbo run build typecheck test check:exports --filter='!@repo/docs'
       - name: Effect language-service check
         run: pnpm effect:check

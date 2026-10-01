@@ -13,7 +13,9 @@ catalog:
 
   # --- Vercel AI SDK 6 + provider packages (pin together) ---
   ai: 6.0.208
-  '@ai-sdk/anthropic': 3.0.85
+  # 3.0.125+ knows claude-sonnet-5-5 and falls back from forced jsonTool to outputFormat.
+  # Stay on the 3.0.x line that peers with ai 6.x (do not jump to @ai-sdk/anthropic 4 / ai 7).
+  '@ai-sdk/anthropic': 3.0.127
   '@ai-sdk/openai': 3.0.73
   '@ai-sdk/google': 3.0.83
   '@ai-sdk/amazon-bedrock': 4.0.119

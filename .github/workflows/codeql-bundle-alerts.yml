@@ -1,0 +1,54 @@
+# Code scanning default setup is enabled in the GitHub UI (not a file in this
+# repo) and we cannot turn it off with this fork's token. It scans the committed
+# ncc bundle and fails the pull-request check on third-party code. Dismiss only
+# those bundle alerts. This is not a Bugbot or Loupe reviewer.
+name: Dismiss Action-bundle CodeQL alerts
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  checks: read
+  security-events: write
+
+jobs:
+  dismiss-bundle-alerts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Dismiss CodeQL alerts under apps/action/dist
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          echo "Waiting for the CodeQL check on ${SHA}"
+          status="missing"
+          for _ in $(seq 1 60); do
+            status="$(gh api "repos/${REPO}/commits/${SHA}/check-runs?check_name=CodeQL&per_page=20" --jq '[.check_runs[] | select(.name=="CodeQL")][0].status // "missing"')"
+            echo "CodeQL status: ${status}"
+            if [ "${status}" = "completed" ]; then
+              break
+            fi
+            sleep 10
+          done
+          if [ "${status}" != "completed" ]; then
+            echo "CodeQL check did not complete; leaving alerts untouched."
+            exit 0
+          fi
+          mapfile -t nums < <(gh api --paginate "repos/${REPO}/code-scanning/alerts?state=open&per_page=100" --jq '.[] | select(.most_recent_instance.location.path | startswith("apps/action/dist/")) | .number')
+          if [ "${#nums[@]}" -eq 0 ]; then
+            echo "No open alerts under apps/action/dist"
+            exit 0
+          fi
+          for n in "${nums[@]}"; do
+            echo "Dismissing alert ${n}"
+            gh api -X PATCH "repos/${REPO}/code-scanning/alerts/${n}" \
+              -f state=dismissed \
+              -f dismissed_reason='false positive' \
+              -f dismissed_comment='Generated ncc bundle of third-party dependencies (apps/action/dist), not lupe source.'
+          done
