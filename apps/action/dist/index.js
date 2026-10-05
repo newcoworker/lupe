@@ -56,7 +56,7 @@ const http = __importStar(__nccwpck_require__(8611));
 const https = __importStar(__nccwpck_require__(5692));
 const pm = __importStar(__nccwpck_require__(6984));
 const tunnel = __importStar(__nccwpck_require__(421));
-const undici_1 = __nccwpck_require__(4032);
+const undici_1 = __nccwpck_require__(1770);
 var HttpCodes;
 (function (HttpCodes) {
     HttpCodes[HttpCodes["OK"] = 200] = "OK";
@@ -2160,7 +2160,7 @@ var DiagLogLevel;
 
 /***/ }),
 
-/***/ 2314:
+/***/ 9933:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 var __webpack_unused_export__;
@@ -10308,7 +10308,7 @@ function getContext() {
 
 /***/ }),
 
-/***/ 3160:
+/***/ 779:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
@@ -10423,7 +10423,7 @@ __export(src_exports, {
   getVercelToken: () => import_token_util.getVercelToken
 });
 module.exports = __toCommonJS(src_exports);
-var import_get_vercel_oidc_token = __nccwpck_require__(3160);
+var import_get_vercel_oidc_token = __nccwpck_require__(779);
 var import_get_context = __nccwpck_require__(4883);
 var import_auth_errors = __nccwpck_require__(3471);
 var import_token_util = __nccwpck_require__(8657);
@@ -14152,33 +14152,33 @@ exports.debug = debug; // for test
 
 /***/ }),
 
-/***/ 4032:
+/***/ 1770:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const Client = __nccwpck_require__(5541)
-const Dispatcher = __nccwpck_require__(4003)
-const Pool = __nccwpck_require__(9204)
-const BalancedPool = __nccwpck_require__(3765)
-const Agent = __nccwpck_require__(2077)
-const ProxyAgent = __nccwpck_require__(9824)
-const EnvHttpProxyAgent = __nccwpck_require__(5457)
-const RetryAgent = __nccwpck_require__(3586)
-const errors = __nccwpck_require__(8067)
-const util = __nccwpck_require__(6112)
+const Client = __nccwpck_require__(531)
+const Dispatcher = __nccwpck_require__(9765)
+const Pool = __nccwpck_require__(7754)
+const BalancedPool = __nccwpck_require__(2499)
+const Agent = __nccwpck_require__(8015)
+const ProxyAgent = __nccwpck_require__(6474)
+const EnvHttpProxyAgent = __nccwpck_require__(7847)
+const RetryAgent = __nccwpck_require__(9276)
+const errors = __nccwpck_require__(2237)
+const util = __nccwpck_require__(9454)
 const { InvalidArgumentError } = errors
-const api = __nccwpck_require__(6023)
-const buildConnector = __nccwpck_require__(9392)
-const MockClient = __nccwpck_require__(9765)
-const MockAgent = __nccwpck_require__(1341)
-const MockPool = __nccwpck_require__(4180)
-const mockErrors = __nccwpck_require__(557)
-const RetryHandler = __nccwpck_require__(2264)
-const { getGlobalDispatcher, setGlobalDispatcher } = __nccwpck_require__(5749)
-const DecoratorHandler = __nccwpck_require__(4107)
-const RedirectHandler = __nccwpck_require__(4178)
-const createRedirectInterceptor = __nccwpck_require__(6580)
+const api = __nccwpck_require__(9797)
+const buildConnector = __nccwpck_require__(4014)
+const MockClient = __nccwpck_require__(6947)
+const MockAgent = __nccwpck_require__(655)
+const MockPool = __nccwpck_require__(6106)
+const mockErrors = __nccwpck_require__(9084)
+const RetryHandler = __nccwpck_require__(538)
+const { getGlobalDispatcher, setGlobalDispatcher } = __nccwpck_require__(992)
+const DecoratorHandler = __nccwpck_require__(4593)
+const RedirectHandler = __nccwpck_require__(8540)
+const createRedirectInterceptor = __nccwpck_require__(9686)
 
 Object.assign(Dispatcher.prototype, api)
 
@@ -14196,10 +14196,10 @@ module.exports.DecoratorHandler = DecoratorHandler
 module.exports.RedirectHandler = RedirectHandler
 module.exports.createRedirectInterceptor = createRedirectInterceptor
 module.exports.interceptors = {
-  redirect: __nccwpck_require__(9434),
-  retry: __nccwpck_require__(2554),
-  dump: __nccwpck_require__(2044),
-  dns: __nccwpck_require__(779)
+  redirect: __nccwpck_require__(7888),
+  retry: __nccwpck_require__(2880),
+  dump: __nccwpck_require__(5974),
+  dns: __nccwpck_require__(1825)
 }
 
 module.exports.buildConnector = buildConnector
@@ -14261,7 +14261,7 @@ function makeDispatcher (fn) {
 module.exports.setGlobalDispatcher = setGlobalDispatcher
 module.exports.getGlobalDispatcher = getGlobalDispatcher
 
-const fetchImpl = (__nccwpck_require__(8286).fetch)
+const fetchImpl = (__nccwpck_require__(6464).fetch)
 module.exports.fetch = async function fetch (init, options = undefined) {
   try {
     return await fetchImpl(init, options)
@@ -14273,39 +14273,39 @@ module.exports.fetch = async function fetch (init, options = undefined) {
     throw err
   }
 }
-module.exports.Headers = __nccwpck_require__(4900).Headers
-module.exports.Response = __nccwpck_require__(5803).Response
-module.exports.Request = __nccwpck_require__(2847).Request
-module.exports.FormData = __nccwpck_require__(3654).FormData
+module.exports.Headers = __nccwpck_require__(7346).Headers
+module.exports.Response = __nccwpck_require__(2585).Response
+module.exports.Request = __nccwpck_require__(7757).Request
+module.exports.FormData = __nccwpck_require__(3508).FormData
 module.exports.File = globalThis.File ?? (__nccwpck_require__(4573).File)
-module.exports.FileReader = __nccwpck_require__(1075).FileReader
+module.exports.FileReader = __nccwpck_require__(4005).FileReader
 
-const { setGlobalOrigin, getGlobalOrigin } = __nccwpck_require__(5683)
+const { setGlobalOrigin, getGlobalOrigin } = __nccwpck_require__(9001)
 
 module.exports.setGlobalOrigin = setGlobalOrigin
 module.exports.getGlobalOrigin = getGlobalOrigin
 
-const { CacheStorage } = __nccwpck_require__(3597)
-const { kConstruct } = __nccwpck_require__(4685)
+const { CacheStorage } = __nccwpck_require__(9927)
+const { kConstruct } = __nccwpck_require__(5283)
 
 // Cache & CacheStorage are tightly coupled with fetch. Even if it may run
 // in an older version of Node, it doesn't have any use without fetch.
 module.exports.caches = new CacheStorage(kConstruct)
 
-const { deleteCookie, getCookies, getSetCookies, setCookie } = __nccwpck_require__(37)
+const { deleteCookie, getCookies, getSetCookies, setCookie } = __nccwpck_require__(899)
 
 module.exports.deleteCookie = deleteCookie
 module.exports.getCookies = getCookies
 module.exports.getSetCookies = getSetCookies
 module.exports.setCookie = setCookie
 
-const { parseMIMEType, serializeAMimeType } = __nccwpck_require__(1436)
+const { parseMIMEType, serializeAMimeType } = __nccwpck_require__(5946)
 
 module.exports.parseMIMEType = parseMIMEType
 module.exports.serializeAMimeType = serializeAMimeType
 
-const { CloseEvent, ErrorEvent, MessageEvent } = __nccwpck_require__(7204)
-module.exports.WebSocket = __nccwpck_require__(9870).WebSocket
+const { CloseEvent, ErrorEvent, MessageEvent } = __nccwpck_require__(4317)
+module.exports.WebSocket = __nccwpck_require__(908).WebSocket
 module.exports.CloseEvent = CloseEvent
 module.exports.ErrorEvent = ErrorEvent
 module.exports.MessageEvent = MessageEvent
@@ -14321,18 +14321,18 @@ module.exports.MockPool = MockPool
 module.exports.MockAgent = MockAgent
 module.exports.mockErrors = mockErrors
 
-const { EventSource } = __nccwpck_require__(2870)
+const { EventSource } = __nccwpck_require__(4540)
 
 module.exports.EventSource = EventSource
 
 
 /***/ }),
 
-/***/ 8830:
+/***/ 6340:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { addAbortListener } = __nccwpck_require__(6112)
-const { RequestAbortedError } = __nccwpck_require__(8067)
+const { addAbortListener } = __nccwpck_require__(9454)
+const { RequestAbortedError } = __nccwpck_require__(2237)
 
 const kListener = Symbol('kListener')
 const kSignal = Symbol('kSignal')
@@ -14392,16 +14392,16 @@ module.exports = {
 
 /***/ }),
 
-/***/ 2580:
+/***/ 3466:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 const assert = __nccwpck_require__(4589)
 const { AsyncResource } = __nccwpck_require__(6698)
-const { InvalidArgumentError, SocketError } = __nccwpck_require__(8067)
-const util = __nccwpck_require__(6112)
-const { addSignal, removeSignal } = __nccwpck_require__(8830)
+const { InvalidArgumentError, SocketError } = __nccwpck_require__(2237)
+const util = __nccwpck_require__(9454)
+const { addSignal, removeSignal } = __nccwpck_require__(6340)
 
 class ConnectHandler extends AsyncResource {
   constructor (opts, callback) {
@@ -14507,7 +14507,7 @@ module.exports = connect
 
 /***/ }),
 
-/***/ 3566:
+/***/ 6080:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
@@ -14521,10 +14521,10 @@ const {
   InvalidArgumentError,
   InvalidReturnValueError,
   RequestAbortedError
-} = __nccwpck_require__(8067)
-const util = __nccwpck_require__(6112)
+} = __nccwpck_require__(2237)
+const util = __nccwpck_require__(9454)
 const { AsyncResource } = __nccwpck_require__(6698)
-const { addSignal, removeSignal } = __nccwpck_require__(8830)
+const { addSignal, removeSignal } = __nccwpck_require__(6340)
 const assert = __nccwpck_require__(4589)
 
 const kResume = Symbol('resume')
@@ -14765,16 +14765,16 @@ module.exports = pipeline
 
 /***/ }),
 
-/***/ 2011:
+/***/ 7925:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 const assert = __nccwpck_require__(4589)
-const { Readable } = __nccwpck_require__(8439)
-const { InvalidArgumentError, RequestAbortedError } = __nccwpck_require__(8067)
-const util = __nccwpck_require__(6112)
-const { getResolveErrorBodyCallback } = __nccwpck_require__(727)
+const { Readable } = __nccwpck_require__(3501)
+const { InvalidArgumentError, RequestAbortedError } = __nccwpck_require__(2237)
+const util = __nccwpck_require__(9454)
+const { getResolveErrorBodyCallback } = __nccwpck_require__(901)
 const { AsyncResource } = __nccwpck_require__(6698)
 
 class RequestHandler extends AsyncResource {
@@ -14986,18 +14986,18 @@ module.exports.RequestHandler = RequestHandler
 
 /***/ }),
 
-/***/ 8248:
+/***/ 2102:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 const assert = __nccwpck_require__(4589)
 const { finished, PassThrough } = __nccwpck_require__(7075)
-const { InvalidArgumentError, InvalidReturnValueError } = __nccwpck_require__(8067)
-const util = __nccwpck_require__(6112)
-const { getResolveErrorBodyCallback } = __nccwpck_require__(727)
+const { InvalidArgumentError, InvalidReturnValueError } = __nccwpck_require__(2237)
+const util = __nccwpck_require__(9454)
+const { getResolveErrorBodyCallback } = __nccwpck_require__(901)
 const { AsyncResource } = __nccwpck_require__(6698)
-const { addSignal, removeSignal } = __nccwpck_require__(8830)
+const { addSignal, removeSignal } = __nccwpck_require__(6340)
 
 class StreamHandler extends AsyncResource {
   constructor (opts, factory, callback) {
@@ -15213,15 +15213,15 @@ module.exports = stream
 
 /***/ }),
 
-/***/ 3658:
+/***/ 6548:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { InvalidArgumentError, SocketError } = __nccwpck_require__(8067)
+const { InvalidArgumentError, SocketError } = __nccwpck_require__(2237)
 const { AsyncResource } = __nccwpck_require__(6698)
-const util = __nccwpck_require__(6112)
-const { addSignal, removeSignal } = __nccwpck_require__(8830)
+const util = __nccwpck_require__(9454)
+const { addSignal, removeSignal } = __nccwpck_require__(6340)
 const assert = __nccwpck_require__(4589)
 
 class UpgradeHandler extends AsyncResource {
@@ -15328,21 +15328,21 @@ module.exports = upgrade
 
 /***/ }),
 
-/***/ 6023:
+/***/ 9797:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-module.exports.request = __nccwpck_require__(2011)
-module.exports.stream = __nccwpck_require__(8248)
-module.exports.pipeline = __nccwpck_require__(3566)
-module.exports.upgrade = __nccwpck_require__(3658)
-module.exports.connect = __nccwpck_require__(2580)
+module.exports.request = __nccwpck_require__(7925)
+module.exports.stream = __nccwpck_require__(2102)
+module.exports.pipeline = __nccwpck_require__(6080)
+module.exports.upgrade = __nccwpck_require__(6548)
+module.exports.connect = __nccwpck_require__(3466)
 
 
 /***/ }),
 
-/***/ 8439:
+/***/ 3501:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 // Ported from https://github.com/nodejs/undici/pull/907
@@ -15351,9 +15351,9 @@ module.exports.connect = __nccwpck_require__(2580)
 
 const assert = __nccwpck_require__(4589)
 const { Readable } = __nccwpck_require__(7075)
-const { RequestAbortedError, NotSupportedError, InvalidArgumentError, AbortError } = __nccwpck_require__(8067)
-const util = __nccwpck_require__(6112)
-const { ReadableStreamFrom } = __nccwpck_require__(6112)
+const { RequestAbortedError, NotSupportedError, InvalidArgumentError, AbortError } = __nccwpck_require__(2237)
+const util = __nccwpck_require__(9454)
+const { ReadableStreamFrom } = __nccwpck_require__(9454)
 
 const kConsume = Symbol('kConsume')
 const kReading = Symbol('kReading')
@@ -15734,15 +15734,15 @@ module.exports = { Readable: BodyReadable, chunksDecode }
 
 /***/ }),
 
-/***/ 727:
+/***/ 901:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const assert = __nccwpck_require__(4589)
 const {
   ResponseStatusCodeError
-} = __nccwpck_require__(8067)
+} = __nccwpck_require__(2237)
 
-const { chunksDecode } = __nccwpck_require__(8439)
+const { chunksDecode } = __nccwpck_require__(3501)
 const CHUNK_LIMIT = 128 * 1024
 
 async function getResolveErrorBodyCallback ({ callback, body, contentType, statusCode, statusMessage, headers }) {
@@ -15834,16 +15834,16 @@ module.exports = {
 
 /***/ }),
 
-/***/ 9392:
+/***/ 4014:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 const net = __nccwpck_require__(7030)
 const assert = __nccwpck_require__(4589)
-const util = __nccwpck_require__(6112)
-const { InvalidArgumentError, ConnectTimeoutError } = __nccwpck_require__(8067)
-const timers = __nccwpck_require__(3899)
+const util = __nccwpck_require__(9454)
+const { InvalidArgumentError, ConnectTimeoutError } = __nccwpck_require__(2237)
+const timers = __nccwpck_require__(821)
 
 function noop () {}
 
@@ -16081,7 +16081,7 @@ module.exports = buildConnector
 
 /***/ }),
 
-/***/ 847:
+/***/ 3121:
 /***/ ((module) => {
 
 
@@ -16206,7 +16206,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 734:
+/***/ 2848:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
@@ -16415,7 +16415,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 8067:
+/***/ 2237:
 /***/ ((module) => {
 
 
@@ -16847,7 +16847,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 63:
+/***/ 6689:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
@@ -16855,7 +16855,7 @@ module.exports = {
 const {
   InvalidArgumentError,
   NotSupportedError
-} = __nccwpck_require__(8067)
+} = __nccwpck_require__(2237)
 const assert = __nccwpck_require__(4589)
 const {
   isValidHTTPToken,
@@ -16870,9 +16870,9 @@ const {
   validateHandler,
   getServerName,
   normalizedMethodRecords
-} = __nccwpck_require__(6112)
-const { channels } = __nccwpck_require__(734)
-const { headerNameLowerCasedRecord } = __nccwpck_require__(847)
+} = __nccwpck_require__(9454)
+const { channels } = __nccwpck_require__(2848)
+const { headerNameLowerCasedRecord } = __nccwpck_require__(3121)
 
 // Verifies that a given path is valid does not contain control chars \x00 to \x20
 const invalidPathRegex = /[^\u0021-\u00ff]/
@@ -17115,11 +17115,77 @@ class Request {
     }
   }
 
-  onUpgrade (statusCode, headers, socket) {
+  /**
+   * @param {number|null} statusCode
+   * @param {Buffer[]|null} headers
+   * @param {import('node:stream').Duplex} socket
+   * @param {string} [statusText]
+   */
+  onUpgrade (statusCode, headers, socket, statusText = '') {
+    this.onFinally()
+
     assert(!this.aborted)
     assert(!this.completed)
 
-    return this[kHandler].onUpgrade(statusCode, headers, socket)
+    if (statusCode !== null) {
+      this.#publishUpgradeHeaders(statusCode, headers, statusText)
+    }
+
+    const result = this[kHandler].onUpgrade(statusCode, headers, socket)
+
+    if (!this.aborted) {
+      this.completed = true
+      if (statusCode !== null) {
+        this.#publishUpgradeTrailers()
+      }
+    }
+
+    return result
+  }
+
+  /**
+   * @param {number} statusCode
+   * @param {import('node:http2').IncomingHttpHeaders} headers
+   * @param {(headers: import('node:http2').IncomingHttpHeaders) => Buffer[]} parseHeaders
+   * @param {string} [statusText]
+   */
+  onUpgradeResponse (statusCode, headers, parseHeaders, statusText = '') {
+    assert(!this.aborted)
+    assert(this.completed)
+
+    if (channels.headers.hasSubscribers) {
+      this.#publishUpgradeHeaders(statusCode, parseHeaders(headers), statusText)
+    }
+    this.#publishUpgradeTrailers()
+  }
+
+  /**
+   * @param {Error} error
+   */
+  onUpgradeError (error) {
+    assert(!this.aborted)
+    assert(this.completed)
+
+    if (channels.error.hasSubscribers) {
+      channels.error.publish({ request: this, error })
+    }
+  }
+
+  /**
+   * @param {number} statusCode
+   * @param {Buffer[]} headers
+   * @param {string} statusText
+   */
+  #publishUpgradeHeaders (statusCode, headers, statusText) {
+    if (channels.headers.hasSubscribers) {
+      channels.headers.publish({ request: this, response: { statusCode, headers, statusText } })
+    }
+  }
+
+  #publishUpgradeTrailers () {
+    if (channels.trailers.hasSubscribers) {
+      channels.trailers.publish({ request: this, trailers: [] })
+    }
   }
 
   onComplete (trailers) {
@@ -17202,7 +17268,13 @@ function processHeader (request, key, val) {
       } else if (typeof val[i] === 'object') {
         throw new InvalidArgumentError(`invalid ${key} header`)
       } else {
-        arr.push(`${val[i]}`)
+        // Coerce primitives (and reject unsafe coercions such as functions
+        // with a crafted toString/Symbol.toPrimitive).
+        const str = `${val[i]}`
+        if (!isValidHeaderValue(str)) {
+          throw new InvalidArgumentError(`invalid ${key} header`)
+        }
+        arr.push(str)
       }
     }
     val = arr
@@ -17213,7 +17285,12 @@ function processHeader (request, key, val) {
   } else if (val === null) {
     val = ''
   } else {
+    // Coerce primitives (and reject unsafe coercions such as functions
+    // with a crafted toString/Symbol.toPrimitive).
     val = `${val}`
+    if (!isValidHeaderValue(val)) {
+      throw new InvalidArgumentError(`invalid ${key} header`)
+    }
   }
 
   if (headerName === 'host') {
@@ -17259,7 +17336,7 @@ module.exports = Request
 
 /***/ }),
 
-/***/ 5659:
+/***/ 973:
 /***/ ((module) => {
 
 module.exports = {
@@ -17333,7 +17410,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 3944:
+/***/ 6434:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
@@ -17341,7 +17418,7 @@ module.exports = {
 const {
   wellknownHeaderNames,
   headerNameLowerCasedRecord
-} = __nccwpck_require__(847)
+} = __nccwpck_require__(3121)
 
 class TstNode {
   /** @type {any} */
@@ -17492,13 +17569,13 @@ module.exports = {
 
 /***/ }),
 
-/***/ 6112:
+/***/ 9454:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 const assert = __nccwpck_require__(4589)
-const { kDestroyed, kBodyUsed, kListeners, kBody } = __nccwpck_require__(5659)
+const { kDestroyed, kBodyUsed, kListeners, kBody } = __nccwpck_require__(973)
 const { IncomingMessage } = __nccwpck_require__(7067)
 const stream = __nccwpck_require__(7075)
 const net = __nccwpck_require__(7030)
@@ -17506,9 +17583,9 @@ const { Blob } = __nccwpck_require__(4573)
 const nodeUtil = __nccwpck_require__(7975)
 const { stringify } = __nccwpck_require__(1792)
 const { EventEmitter: EE } = __nccwpck_require__(8474)
-const { InvalidArgumentError } = __nccwpck_require__(8067)
-const { headerNameLowerCasedRecord } = __nccwpck_require__(847)
-const { tree } = __nccwpck_require__(3944)
+const { InvalidArgumentError } = __nccwpck_require__(2237)
+const { headerNameLowerCasedRecord } = __nccwpck_require__(3121)
+const { tree } = __nccwpck_require__(6434)
 
 const [nodeMajor, nodeMinor] = process.versions.node.split('.').map(v => Number(v))
 
@@ -18218,18 +18295,18 @@ module.exports = {
 
 /***/ }),
 
-/***/ 2077:
+/***/ 8015:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { InvalidArgumentError } = __nccwpck_require__(8067)
-const { kClients, kRunning, kClose, kDestroy, kDispatch, kInterceptors } = __nccwpck_require__(5659)
-const DispatcherBase = __nccwpck_require__(9393)
-const Pool = __nccwpck_require__(9204)
-const Client = __nccwpck_require__(5541)
-const util = __nccwpck_require__(6112)
-const createRedirectInterceptor = __nccwpck_require__(6580)
+const { InvalidArgumentError } = __nccwpck_require__(2237)
+const { kClients, kRunning, kClose, kDestroy, kDispatch, kInterceptors } = __nccwpck_require__(973)
+const DispatcherBase = __nccwpck_require__(3415)
+const Pool = __nccwpck_require__(7754)
+const Client = __nccwpck_require__(531)
+const util = __nccwpck_require__(9454)
+const createRedirectInterceptor = __nccwpck_require__(9686)
 
 const kOnConnect = Symbol('onConnect')
 const kOnDisconnect = Symbol('onDisconnect')
@@ -18354,7 +18431,7 @@ module.exports = Agent
 
 /***/ }),
 
-/***/ 3765:
+/***/ 2499:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
@@ -18362,7 +18439,7 @@ module.exports = Agent
 const {
   BalancedPoolMissingUpstreamError,
   InvalidArgumentError
-} = __nccwpck_require__(8067)
+} = __nccwpck_require__(2237)
 const {
   PoolBase,
   kClients,
@@ -18370,10 +18447,10 @@ const {
   kAddClient,
   kRemoveClient,
   kGetDispatcher
-} = __nccwpck_require__(3296)
-const Pool = __nccwpck_require__(9204)
-const { kUrl, kInterceptors } = __nccwpck_require__(5659)
-const { parseOrigin } = __nccwpck_require__(6112)
+} = __nccwpck_require__(8050)
+const Pool = __nccwpck_require__(7754)
+const { kUrl, kInterceptors } = __nccwpck_require__(973)
+const { parseOrigin } = __nccwpck_require__(9454)
 const kFactory = Symbol('factory')
 
 const kOptions = Symbol('options')
@@ -18570,7 +18647,7 @@ module.exports = BalancedPool
 
 /***/ }),
 
-/***/ 6445:
+/***/ 6703:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
@@ -18578,13 +18655,14 @@ module.exports = BalancedPool
 /* global WebAssembly */
 
 const assert = __nccwpck_require__(4589)
-const util = __nccwpck_require__(6112)
-const { channels } = __nccwpck_require__(734)
-const timers = __nccwpck_require__(3899)
+const util = __nccwpck_require__(9454)
+const { channels } = __nccwpck_require__(2848)
+const timers = __nccwpck_require__(821)
 const {
   RequestContentLengthMismatchError,
   ResponseContentLengthMismatchError,
   RequestAbortedError,
+  InvalidArgumentError,
   HeadersTimeoutError,
   HeadersOverflowError,
   SocketError,
@@ -18592,7 +18670,7 @@ const {
   BodyTimeoutError,
   HTTPParserError,
   ResponseExceededMaxSizeError
-} = __nccwpck_require__(8067)
+} = __nccwpck_require__(2237)
 const {
   kUrl,
   kReset,
@@ -18625,9 +18703,9 @@ const {
   kOnError,
   kResume,
   kHTTPContext
-} = __nccwpck_require__(5659)
+} = __nccwpck_require__(973)
 
-const constants = __nccwpck_require__(1336)
+const constants = __nccwpck_require__(3710)
 const EMPTY_BUF = Buffer.alloc(0)
 const FastBuffer = Buffer[Symbol.species]
 const addListener = util.addListener
@@ -18639,11 +18717,11 @@ const kSocketUsed = Symbol('kSocketUsed')
 let extractBody
 
 async function lazyllhttp () {
-  const llhttpWasmData = process.env.JEST_WORKER_ID ? __nccwpck_require__(4126) : undefined
+  const llhttpWasmData = process.env.JEST_WORKER_ID ? __nccwpck_require__(5124) : undefined
 
   let mod
   try {
-    mod = await WebAssembly.compile(__nccwpck_require__(3546))
+    mod = await WebAssembly.compile(__nccwpck_require__(8204))
   } catch (e) {
     /* istanbul ignore next */
 
@@ -18651,7 +18729,7 @@ async function lazyllhttp () {
     // being enabled, but the occurring of this other error
     // * https://github.com/emscripten-core/emscripten/issues/11495
     // got me to remove that check to avoid breaking Node 12.
-    mod = await WebAssembly.compile(llhttpWasmData || __nccwpck_require__(4126))
+    mod = await WebAssembly.compile(llhttpWasmData || __nccwpck_require__(5124))
   }
 
   return await WebAssembly.instantiate(mod, {
@@ -19006,7 +19084,7 @@ class Parser {
   }
 
   onUpgrade (head) {
-    const { upgrade, client, socket, headers, statusCode } = this
+    const { upgrade, client, socket, headers, statusCode, statusText } = this
 
     assert(upgrade)
     assert(client[kSocket] === socket)
@@ -19041,9 +19119,10 @@ class Parser {
     client.emit('disconnect', client[kUrl], [client], new InformationalError('upgrade'))
 
     try {
-      request.onUpgrade(statusCode, headers, socket)
-    } catch (err) {
-      util.destroy(socket, err)
+      request.onUpgrade(statusCode, headers, socket, statusText)
+    } catch (error) {
+      util.errorRequest(client, request, error)
+      util.destroy(socket, error)
     }
 
     client[kResume]()
@@ -19450,7 +19529,7 @@ async function connectH1 (client, socket) {
 
 function clearIdleSocketValidation (socket) {
   if (socket[kIdleSocketValidationTimeout]) {
-    clearTimeout(socket[kIdleSocketValidationTimeout])
+    clearImmediate(socket[kIdleSocketValidationTimeout])
     socket[kIdleSocketValidationTimeout] = null
   }
 
@@ -19459,15 +19538,23 @@ function clearIdleSocketValidation (socket) {
 
 function scheduleIdleSocketValidation (client, socket) {
   socket[kIdleSocketValidation] = 1
-  socket[kIdleSocketValidationTimeout] = setTimeout(() => {
+  // Yield to the check phase (after poll) so unsolicited bytes / FIN / RST
+  // already pending on this idle keep-alive socket are processed before the
+  // next request is written (GHSA-35p6-xmwp-9g52).
+  //
+  // setTimeout(0) pays Node's ~1ms timer floor on every sequential reuse
+  // (#5493). setImmediate avoids that, but an *unref'd* Immediate lets poll
+  // block for ~500ms when the event loop is otherwise idle (#5600 / #5606).
+  // A ref'd Immediate both keeps the pending request alive and makes poll
+  // return immediately — the hybrid those issues asked for.
+  socket[kIdleSocketValidationTimeout] = setImmediate(() => {
     socket[kIdleSocketValidationTimeout] = null
     socket[kIdleSocketValidation] = 2
 
     if (client[kSocket] === socket && !socket.destroyed) {
       client[kResume]()
     }
-  }, 0)
-  socket[kIdleSocketValidationTimeout].unref?.()
+  })
 }
 
 /**
@@ -19559,7 +19646,7 @@ function writeH1 (client, request) {
 
   if (util.isFormDataLike(body)) {
     if (!extractBody) {
-      extractBody = (__nccwpck_require__(2988).extractBody)
+      extractBody = (__nccwpck_require__(7206).extractBody)
     }
 
     const [bodyStream, contentType] = extractBody(body)
@@ -19568,8 +19655,16 @@ function writeH1 (client, request) {
     }
     body = bodyStream.stream
     contentLength = bodyStream.length
-  } else if (util.isBlobLike(body) && request.contentType == null && body.type) {
-    headers.push('content-type', body.type)
+  } else if (util.isBlobLike(body) && request.contentType == null) {
+    const contentType = body.type
+    if (contentType) {
+      const contentTypeValue = `${contentType}`
+      if (!util.isValidHeaderValue(contentTypeValue)) {
+        util.errorRequest(client, request, new InvalidArgumentError('invalid content-type header'))
+        return false
+      }
+      headers.push('content-type', contentTypeValue)
+    }
   }
 
   if (body && typeof body.read === 'function') {
@@ -19608,12 +19703,22 @@ function writeH1 (client, request) {
   const socket = client[kSocket]
   clearIdleSocketValidation(socket)
 
-  const abort = (err) => {
-    if (request.aborted || request.completed) {
+  /**
+   * @param {Error} [error]
+   */
+  const abort = (error) => {
+    if (request.aborted) {
       return
     }
 
-    util.errorRequest(client, request, err || new RequestAbortedError())
+    if (request.completed) {
+      if (request.upgrade || request.method === 'CONNECT') {
+        util.destroy(socket, new InformationalError('aborted'))
+      }
+      return
+    }
+
+    util.errorRequest(client, request, error || new RequestAbortedError())
 
     util.destroy(body)
     util.destroy(socket, new InformationalError('aborted'))
@@ -20064,20 +20169,21 @@ module.exports = connectH1
 
 /***/ }),
 
-/***/ 1860:
+/***/ 8322:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 const assert = __nccwpck_require__(4589)
+const { errorMonitor } = __nccwpck_require__(8474)
 const { pipeline } = __nccwpck_require__(7075)
-const util = __nccwpck_require__(6112)
+const util = __nccwpck_require__(9454)
 const {
   RequestContentLengthMismatchError,
   RequestAbortedError,
   SocketError,
   InformationalError
-} = __nccwpck_require__(8067)
+} = __nccwpck_require__(2237)
 const {
   kUrl,
   kReset,
@@ -20096,7 +20202,7 @@ const {
   kResume,
   kSize,
   kHTTPContext
-} = __nccwpck_require__(5659)
+} = __nccwpck_require__(973)
 
 const kOpenStreams = Symbol('open streams')
 
@@ -20144,6 +20250,15 @@ function parseH2Headers (headers) {
   }
 
   return result
+}
+
+/**
+ * @param {import('node:http2').IncomingHttpHeaders} headers
+ * @returns {Buffer[]}
+ */
+function parseH2ResponseHeaders (headers) {
+  const { [HTTP2_HEADER_STATUS]: _statusCode, ...realHeaders } = headers
+  return parseH2Headers(realHeaders)
 }
 
 async function connectH2 (client, socket) {
@@ -20366,22 +20481,32 @@ function writeH2 (client, request) {
   headers[HTTP2_HEADER_AUTHORITY] = host || `${hostname}${port ? `:${port}` : ''}`
   headers[HTTP2_HEADER_METHOD] = method
 
-  const abort = (err) => {
-    if (request.aborted || request.completed) {
+  /**
+   * @param {Error} [error]
+   */
+  const abort = (error) => {
+    if (request.aborted) {
       return
     }
 
-    err = err || new RequestAbortedError()
+    if (request.completed) {
+      if (method === 'CONNECT' && stream != null) {
+        util.destroy(stream, error || new RequestAbortedError())
+      }
+      return
+    }
 
-    util.errorRequest(client, request, err)
+    error = error || new RequestAbortedError()
+
+    util.errorRequest(client, request, error)
 
     if (stream != null) {
-      util.destroy(stream, err)
+      util.destroy(stream, error)
     }
 
     // We do not destroy the socket as we can continue using the session
     // the stream get's destroyed and the session remains to create new streams
-    util.destroy(body, err)
+    util.destroy(body, error)
     client[kQueue][client[kRunningIdx]++] = null
     client[kResume]()
   }
@@ -20400,25 +20525,57 @@ function writeH2 (client, request) {
 
   if (method === 'CONNECT') {
     session.ref()
-    // We are already connected, streams are pending, first request
-    // will create a new stream. We trigger a request to create the stream and wait until
-    // `ready` event is triggered
     // We disabled endStream to allow the user to write to the stream
     stream = session.request(headers, { endStream: false, signal })
+    let upgradeResponseFinished = false
 
-    if (stream.id && !stream.pending) {
-      request.onUpgrade(null, null, stream)
-      ++session[kOpenStreams]
-      client[kQueue][client[kRunningIdx]++] = null
-    } else {
-      stream.once('ready', () => {
-        request.onUpgrade(null, null, stream)
-        ++session[kOpenStreams]
-        client[kQueue][client[kRunningIdx]++] = null
-      })
+    /**
+     * @param {import('node:http2').IncomingHttpHeaders} headers
+     */
+    const onResponse = (headers) => {
+      upgradeResponseFinished = true
+      stream.off(errorMonitor, onUpgradeError)
+      request.onUpgradeResponse(Number(headers[HTTP2_HEADER_STATUS]), headers, parseH2ResponseHeaders)
     }
 
+    /**
+     * @param {Error} error
+     */
+    const onUpgradeError = (error) => {
+      upgradeResponseFinished = true
+      stream.off('response', onResponse)
+      request.onUpgradeError(error)
+    }
+
+    const onReady = () => {
+      try {
+        request.onUpgrade(null, null, stream)
+      } catch (error) {
+        stream.off('response', onResponse)
+        abort(error)
+        return
+      }
+
+      if (request.aborted) {
+        return
+      }
+
+      stream.off('error', abort)
+      stream.once(errorMonitor, onUpgradeError)
+      client[kQueue][client[kRunningIdx]++] = null
+    }
+
+    stream.once('response', onResponse)
+    stream.once('error', abort)
+    ++session[kOpenStreams]
+    onReady()
+
     stream.once('close', () => {
+      if (!upgradeResponseFinished && request.completed) {
+        stream.off('response', onResponse)
+        stream.off(errorMonitor, onUpgradeError)
+        request.onUpgradeError(new InformationalError(`HTTP/2: "stream error" received - code ${stream.rstCode}`))
+      }
       session[kOpenStreams] -= 1
       if (session[kOpenStreams] === 0) session.unref()
     })
@@ -20455,7 +20612,7 @@ function writeH2 (client, request) {
   let contentLength = util.bodyLength(body)
 
   if (util.isFormDataLike(body)) {
-    extractBody ??= (__nccwpck_require__(2988).extractBody)
+    extractBody ??= (__nccwpck_require__(7206).extractBody)
 
     const [bodyStream, contentType] = extractBody(body)
     headers['content-type'] = contentType
@@ -20815,7 +20972,7 @@ module.exports = connectH2
 
 /***/ }),
 
-/***/ 5541:
+/***/ 531:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 // @ts-check
@@ -20825,16 +20982,16 @@ module.exports = connectH2
 const assert = __nccwpck_require__(4589)
 const net = __nccwpck_require__(7030)
 const http = __nccwpck_require__(7067)
-const util = __nccwpck_require__(6112)
-const { channels } = __nccwpck_require__(734)
-const Request = __nccwpck_require__(63)
-const DispatcherBase = __nccwpck_require__(9393)
+const util = __nccwpck_require__(9454)
+const { channels } = __nccwpck_require__(2848)
+const Request = __nccwpck_require__(6689)
+const DispatcherBase = __nccwpck_require__(3415)
 const {
   InvalidArgumentError,
   InformationalError,
   ClientDestroyedError
-} = __nccwpck_require__(8067)
-const buildConnector = __nccwpck_require__(9392)
+} = __nccwpck_require__(2237)
+const buildConnector = __nccwpck_require__(4014)
 const {
   kUrl,
   kServerName,
@@ -20876,9 +21033,9 @@ const {
   kHTTPContext,
   kMaxConcurrentStreams,
   kResume
-} = __nccwpck_require__(5659)
-const connectH1 = __nccwpck_require__(6445)
-const connectH2 = __nccwpck_require__(1860)
+} = __nccwpck_require__(973)
+const connectH1 = __nccwpck_require__(6703)
+const connectH2 = __nccwpck_require__(8322)
 let deprecatedInterceptorWarned = false
 
 const kClosedResolve = Symbol('kClosedResolve')
@@ -21185,7 +21342,7 @@ class Client extends DispatcherBase {
   }
 }
 
-const createRedirectInterceptor = __nccwpck_require__(6580)
+const createRedirectInterceptor = __nccwpck_require__(9686)
 
 function onError (client, err) {
   if (
@@ -21445,18 +21602,18 @@ module.exports = Client
 
 /***/ }),
 
-/***/ 9393:
+/***/ 3415:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const Dispatcher = __nccwpck_require__(4003)
+const Dispatcher = __nccwpck_require__(9765)
 const {
   ClientDestroyedError,
   ClientClosedError,
   InvalidArgumentError
-} = __nccwpck_require__(8067)
-const { kDestroy, kClose, kClosed, kDestroyed, kDispatch, kInterceptors } = __nccwpck_require__(5659)
+} = __nccwpck_require__(2237)
+const { kDestroy, kClose, kClosed, kDestroyed, kDispatch, kInterceptors } = __nccwpck_require__(973)
 
 const kOnDestroyed = Symbol('onDestroyed')
 const kOnClosed = Symbol('onClosed')
@@ -21651,7 +21808,7 @@ module.exports = DispatcherBase
 
 /***/ }),
 
-/***/ 4003:
+/***/ 9765:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
@@ -21723,15 +21880,15 @@ module.exports = Dispatcher
 
 /***/ }),
 
-/***/ 5457:
+/***/ 7847:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const DispatcherBase = __nccwpck_require__(9393)
-const { kClose, kDestroy, kClosed, kDestroyed, kDispatch, kNoProxyAgent, kHttpProxyAgent, kHttpsProxyAgent } = __nccwpck_require__(5659)
-const ProxyAgent = __nccwpck_require__(9824)
-const Agent = __nccwpck_require__(2077)
+const DispatcherBase = __nccwpck_require__(3415)
+const { kClose, kDestroy, kClosed, kDestroyed, kDispatch, kNoProxyAgent, kHttpProxyAgent, kHttpsProxyAgent } = __nccwpck_require__(973)
+const ProxyAgent = __nccwpck_require__(6474)
+const Agent = __nccwpck_require__(8015)
 
 const DEFAULT_PORTS = {
   'http:': 80,
@@ -21890,7 +22047,7 @@ module.exports = EnvHttpProxyAgent
 
 /***/ }),
 
-/***/ 5636:
+/***/ 2314:
 /***/ ((module) => {
 
 /* eslint-disable */
@@ -22014,15 +22171,15 @@ module.exports = class FixedQueue {
 
 /***/ }),
 
-/***/ 3296:
+/***/ 8050:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const DispatcherBase = __nccwpck_require__(9393)
-const FixedQueue = __nccwpck_require__(5636)
-const { kConnected, kSize, kRunning, kPending, kQueued, kBusy, kFree, kUrl, kClose, kDestroy, kDispatch } = __nccwpck_require__(5659)
-const PoolStats = __nccwpck_require__(8846)
+const DispatcherBase = __nccwpck_require__(3415)
+const FixedQueue = __nccwpck_require__(2314)
+const { kConnected, kSize, kRunning, kPending, kQueued, kBusy, kFree, kUrl, kClose, kDestroy, kDispatch } = __nccwpck_require__(973)
+const PoolStats = __nccwpck_require__(2660)
 
 const kClients = Symbol('clients')
 const kNeedDrain = Symbol('needDrain')
@@ -22215,10 +22372,10 @@ module.exports = {
 
 /***/ }),
 
-/***/ 8846:
+/***/ 2660:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { kFree, kConnected, kPending, kQueued, kRunning, kSize } = __nccwpck_require__(5659)
+const { kFree, kConnected, kPending, kQueued, kRunning, kSize } = __nccwpck_require__(973)
 const kPool = Symbol('pool')
 
 class PoolStats {
@@ -22256,7 +22413,7 @@ module.exports = PoolStats
 
 /***/ }),
 
-/***/ 9204:
+/***/ 7754:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
@@ -22267,14 +22424,14 @@ const {
   kNeedDrain,
   kAddClient,
   kGetDispatcher
-} = __nccwpck_require__(3296)
-const Client = __nccwpck_require__(5541)
+} = __nccwpck_require__(8050)
+const Client = __nccwpck_require__(531)
 const {
   InvalidArgumentError
-} = __nccwpck_require__(8067)
-const util = __nccwpck_require__(6112)
-const { kUrl, kInterceptors } = __nccwpck_require__(5659)
-const buildConnector = __nccwpck_require__(9392)
+} = __nccwpck_require__(2237)
+const util = __nccwpck_require__(9454)
+const { kUrl, kInterceptors } = __nccwpck_require__(973)
+const buildConnector = __nccwpck_require__(4014)
 
 const kOptions = Symbol('options')
 const kConnections = Symbol('connections')
@@ -22370,19 +22527,19 @@ module.exports = Pool
 
 /***/ }),
 
-/***/ 9824:
+/***/ 6474:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { kProxy, kClose, kDestroy, kDispatch, kInterceptors } = __nccwpck_require__(5659)
+const { kProxy, kClose, kDestroy, kDispatch, kInterceptors } = __nccwpck_require__(973)
 const { URL } = __nccwpck_require__(3136)
-const Agent = __nccwpck_require__(2077)
-const Pool = __nccwpck_require__(9204)
-const DispatcherBase = __nccwpck_require__(9393)
-const { InvalidArgumentError, RequestAbortedError, SecureProxyConnectionError } = __nccwpck_require__(8067)
-const buildConnector = __nccwpck_require__(9392)
-const Client = __nccwpck_require__(5541)
+const Agent = __nccwpck_require__(8015)
+const Pool = __nccwpck_require__(7754)
+const DispatcherBase = __nccwpck_require__(3415)
+const { InvalidArgumentError, RequestAbortedError, SecureProxyConnectionError } = __nccwpck_require__(2237)
+const buildConnector = __nccwpck_require__(4014)
+const Client = __nccwpck_require__(531)
 
 const kAgent = Symbol('proxy agent')
 const kClient = Symbol('proxy client')
@@ -22651,13 +22808,13 @@ module.exports = ProxyAgent
 
 /***/ }),
 
-/***/ 3586:
+/***/ 9276:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const Dispatcher = __nccwpck_require__(4003)
-const RetryHandler = __nccwpck_require__(2264)
+const Dispatcher = __nccwpck_require__(9765)
+const RetryHandler = __nccwpck_require__(538)
 
 class RetryAgent extends Dispatcher {
   #agent = null
@@ -22693,7 +22850,7 @@ module.exports = RetryAgent
 
 /***/ }),
 
-/***/ 5749:
+/***/ 992:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
@@ -22701,8 +22858,8 @@ module.exports = RetryAgent
 // We include a version number for the Dispatcher API. In case of breaking changes,
 // this version number must be increased to avoid conflicts.
 const globalDispatcher = Symbol.for('undici.globalDispatcher.1')
-const { InvalidArgumentError } = __nccwpck_require__(8067)
-const Agent = __nccwpck_require__(2077)
+const { InvalidArgumentError } = __nccwpck_require__(2237)
+const Agent = __nccwpck_require__(8015)
 
 if (getGlobalDispatcher() === undefined) {
   setGlobalDispatcher(new Agent())
@@ -22732,7 +22889,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 4107:
+/***/ 4593:
 /***/ ((module) => {
 
 
@@ -22783,15 +22940,15 @@ module.exports = class DecoratorHandler {
 
 /***/ }),
 
-/***/ 4178:
+/***/ 8540:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const util = __nccwpck_require__(6112)
-const { kBodyUsed } = __nccwpck_require__(5659)
+const util = __nccwpck_require__(9454)
+const { kBodyUsed } = __nccwpck_require__(973)
 const assert = __nccwpck_require__(4589)
-const { InvalidArgumentError } = __nccwpck_require__(8067)
+const { InvalidArgumentError } = __nccwpck_require__(2237)
 const EE = __nccwpck_require__(8474)
 
 const redirectableStatusCodes = [300, 301, 302, 303, 307, 308]
@@ -23022,24 +23179,46 @@ module.exports = RedirectHandler
 
 /***/ }),
 
-/***/ 2264:
+/***/ 538:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 const assert = __nccwpck_require__(4589)
 
-const { kRetryHandlerDefaultRetry } = __nccwpck_require__(5659)
-const { RequestRetryError } = __nccwpck_require__(8067)
+const { kRetryHandlerDefaultRetry } = __nccwpck_require__(973)
+const { RequestRetryError } = __nccwpck_require__(2237)
 const {
   isDisturbed,
   parseHeaders,
   parseRangeHeader,
   wrapRequestBody
-} = __nccwpck_require__(6112)
+} = __nccwpck_require__(9454)
 
 function calculateRetryAfterHeader (retryAfter) {
   const current = Date.now()
   return new Date(retryAfter).getTime() - current
+}
+
+function validatePartialResponseContentLength (headers, range, statusCode, retryCount) {
+  const contentLength = headers['content-length']
+  if (contentLength == null) {
+    return null
+  }
+
+  if (!Number.isFinite(range.start) || !Number.isFinite(range.end)) {
+    return null
+  }
+
+  const length = Number(contentLength)
+  const expectedLength = range.end - range.start + 1
+  if (!Number.isFinite(length) || length !== expectedLength) {
+    return new RequestRetryError('Content-Length mismatch', statusCode, {
+      headers,
+      data: { count: retryCount }
+    })
+  }
+
+  return null
 }
 
 class RetryHandler {
@@ -23095,6 +23274,7 @@ class RetryHandler {
     this.end = null
     this.etag = null
     this.resume = null
+    this.headersSent = false
 
     // Handle possible onConnect duplication
     this.handler.onConnect(reason => {
@@ -23105,6 +23285,20 @@ class RetryHandler {
         this.reason = reason
       }
     })
+  }
+
+  checkpointResponseEnd (headers, resume) {
+    if (this.end == null && this.opts.method !== 'HEAD') {
+      const contentLength = headers['content-length']
+      this.end = contentLength != null ? Number(contentLength) - 1 : null
+
+      assert(
+        this.end == null || Number.isFinite(this.end),
+        'invalid content-length'
+      )
+    }
+
+    this.resume = this.end != null ? resume : null
   }
 
   onRequestSent () {
@@ -23195,7 +23389,12 @@ class RetryHandler {
     this.retryCount += 1
 
     if (statusCode >= 300) {
-      if (this.retryOpts.statusCodes.includes(statusCode) === false) {
+      // Only expose a response if no earlier attempt has reached the caller.
+      // Otherwise abort this attempt so the error settles the existing body
+      // instead of replacing it with a new response.
+      if (!this.headersSent && this.retryOpts.statusCodes.includes(statusCode) === false) {
+        this.headersSent = true
+        this.checkpointResponseEnd(headers, resume)
         return this.handler.onHeaders(
           statusCode,
           rawHeaders,
@@ -23256,10 +23455,23 @@ class RetryHandler {
         return false
       }
 
+      const contentLengthError = validatePartialResponseContentLength(headers, contentRange, statusCode, this.retryCount)
+      if (contentLengthError != null) {
+        this.abort(contentLengthError)
+        return false
+      }
+
       const { start, size, end = size - 1 } = contentRange
 
-      assert(this.start === start, 'content-range mismatch')
-      assert(this.end == null || this.end === end, 'content-range mismatch')
+      if (this.start !== start || (this.end != null && this.end !== end)) {
+        this.abort(
+          new RequestRetryError('Content-Range mismatch', statusCode, {
+            headers,
+            data: { count: this.retryCount }
+          })
+        )
+        return false
+      }
 
       this.resume = resume
       return true
@@ -23271,12 +23483,19 @@ class RetryHandler {
         const range = parseRangeHeader(headers['content-range'])
 
         if (range == null) {
+          this.headersSent = true
           return this.handler.onHeaders(
             statusCode,
             rawHeaders,
             resume,
             statusMessage
           )
+        }
+
+        const contentLengthError = validatePartialResponseContentLength(headers, range, statusCode, this.retryCount)
+        if (contentLengthError != null) {
+          this.abort(contentLengthError)
+          return false
         }
 
         const { start, size, end = size - 1 } = range
@@ -23303,6 +23522,7 @@ class RetryHandler {
       )
 
       this.resume = resume
+      this.headersSent = true
       this.etag = headers.etag != null ? headers.etag : null
 
       // Weak etags are not useful for comparison nor cache
@@ -23342,7 +23562,7 @@ class RetryHandler {
   }
 
   onError (err) {
-    if (this.aborted || isDisturbed(this.opts.body)) {
+    if (this.aborted || isDisturbed(this.opts.body) || (this.headersSent && this.resume == null)) {
       return this.handler.onError(err)
     }
 
@@ -23403,14 +23623,14 @@ module.exports = RetryHandler
 
 /***/ }),
 
-/***/ 779:
+/***/ 1825:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 const { isIP } = __nccwpck_require__(7030)
 const { lookup } = __nccwpck_require__(610)
-const DecoratorHandler = __nccwpck_require__(4107)
-const { InvalidArgumentError, InformationalError } = __nccwpck_require__(8067)
+const DecoratorHandler = __nccwpck_require__(4593)
+const { InvalidArgumentError, InformationalError } = __nccwpck_require__(2237)
 const maxInt = Math.pow(2, 31) - 1
 
 class DNSInstance {
@@ -23785,14 +24005,14 @@ module.exports = interceptorOpts => {
 
 /***/ }),
 
-/***/ 2044:
+/***/ 5974:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const util = __nccwpck_require__(6112)
-const { InvalidArgumentError, RequestAbortedError } = __nccwpck_require__(8067)
-const DecoratorHandler = __nccwpck_require__(4107)
+const util = __nccwpck_require__(9454)
+const { InvalidArgumentError, RequestAbortedError } = __nccwpck_require__(2237)
+const DecoratorHandler = __nccwpck_require__(4593)
 
 class DumpHandler extends DecoratorHandler {
   #maxSize = 1024 * 1024
@@ -23915,12 +24135,12 @@ module.exports = createDumpInterceptor
 
 /***/ }),
 
-/***/ 6580:
+/***/ 9686:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const RedirectHandler = __nccwpck_require__(4178)
+const RedirectHandler = __nccwpck_require__(8540)
 
 function createRedirectInterceptor ({ maxRedirections: defaultMaxRedirections }) {
   return (dispatch) => {
@@ -23943,11 +24163,11 @@ module.exports = createRedirectInterceptor
 
 /***/ }),
 
-/***/ 9434:
+/***/ 7888:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
-const RedirectHandler = __nccwpck_require__(4178)
+const RedirectHandler = __nccwpck_require__(8540)
 
 module.exports = opts => {
   const globalMaxRedirections = opts?.maxRedirections
@@ -23974,11 +24194,11 @@ module.exports = opts => {
 
 /***/ }),
 
-/***/ 2554:
+/***/ 2880:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
-const RetryHandler = __nccwpck_require__(2264)
+const RetryHandler = __nccwpck_require__(538)
 
 module.exports = globalOpts => {
   return dispatch => {
@@ -24000,13 +24220,13 @@ module.exports = globalOpts => {
 
 /***/ }),
 
-/***/ 1336:
+/***/ 3710:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SPECIAL_HEADERS = exports.HEADER_STATE = exports.MINOR = exports.MAJOR = exports.CONNECTION_TOKEN_CHARS = exports.HEADER_CHARS = exports.TOKEN = exports.STRICT_TOKEN = exports.HEX = exports.URL_CHAR = exports.STRICT_URL_CHAR = exports.USERINFO_CHARS = exports.MARK = exports.ALPHANUM = exports.NUM = exports.HEX_MAP = exports.NUM_MAP = exports.ALPHA = exports.FINISH = exports.H_METHOD_MAP = exports.METHOD_MAP = exports.METHODS_RTSP = exports.METHODS_ICE = exports.METHODS_HTTP = exports.METHODS = exports.LENIENT_FLAGS = exports.FLAGS = exports.TYPE = exports.ERROR = void 0;
-const utils_1 = __nccwpck_require__(9068);
+const utils_1 = __nccwpck_require__(3206);
 // C headers
 var ERROR;
 (function (ERROR) {
@@ -24284,7 +24504,7 @@ exports.SPECIAL_HEADERS = {
 
 /***/ }),
 
-/***/ 4126:
+/***/ 5124:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
@@ -24296,7 +24516,7 @@ module.exports = Buffer.from('AGFzbQEAAAABJwdgAX8Bf2ADf39/AX9gAX8AYAJ/fwBgBH9/f3
 
 /***/ }),
 
-/***/ 3546:
+/***/ 8204:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
@@ -24308,7 +24528,7 @@ module.exports = Buffer.from('AGFzbQEAAAABJwdgAX8Bf2ADf39/AX9gAX8AYAJ/fwBgBH9/f3
 
 /***/ }),
 
-/***/ 9068:
+/***/ 3206:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -24329,13 +24549,13 @@ exports.enumToMap = enumToMap;
 
 /***/ }),
 
-/***/ 1341:
+/***/ 655:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { kClients } = __nccwpck_require__(5659)
-const Agent = __nccwpck_require__(2077)
+const { kClients } = __nccwpck_require__(973)
+const Agent = __nccwpck_require__(8015)
 const {
   kAgent,
   kMockAgentSet,
@@ -24346,14 +24566,14 @@ const {
   kGetNetConnect,
   kOptions,
   kFactory
-} = __nccwpck_require__(1581)
-const MockClient = __nccwpck_require__(9765)
-const MockPool = __nccwpck_require__(4180)
-const { matchValue, buildMockOptions } = __nccwpck_require__(1781)
-const { InvalidArgumentError, UndiciError } = __nccwpck_require__(8067)
-const Dispatcher = __nccwpck_require__(4003)
-const Pluralizer = __nccwpck_require__(9657)
-const PendingInterceptorsFormatter = __nccwpck_require__(5486)
+} = __nccwpck_require__(8359)
+const MockClient = __nccwpck_require__(6947)
+const MockPool = __nccwpck_require__(6106)
+const { matchValue, buildMockOptions } = __nccwpck_require__(1515)
+const { InvalidArgumentError, UndiciError } = __nccwpck_require__(2237)
+const Dispatcher = __nccwpck_require__(9765)
+const Pluralizer = __nccwpck_require__(4579)
+const PendingInterceptorsFormatter = __nccwpck_require__(9160)
 
 class MockAgent extends Dispatcher {
   constructor (opts) {
@@ -24496,14 +24716,14 @@ module.exports = MockAgent
 
 /***/ }),
 
-/***/ 9765:
+/***/ 6947:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 const { promisify } = __nccwpck_require__(7975)
-const Client = __nccwpck_require__(5541)
-const { buildMockDispatch } = __nccwpck_require__(1781)
+const Client = __nccwpck_require__(531)
+const { buildMockDispatch } = __nccwpck_require__(1515)
 const {
   kDispatches,
   kMockAgent,
@@ -24512,10 +24732,10 @@ const {
   kOrigin,
   kOriginalDispatch,
   kConnected
-} = __nccwpck_require__(1581)
-const { MockInterceptor } = __nccwpck_require__(3367)
-const Symbols = __nccwpck_require__(5659)
-const { InvalidArgumentError } = __nccwpck_require__(8067)
+} = __nccwpck_require__(8359)
+const { MockInterceptor } = __nccwpck_require__(8469)
+const Symbols = __nccwpck_require__(973)
+const { InvalidArgumentError } = __nccwpck_require__(2237)
 
 /**
  * MockClient provides an API that extends the Client to influence the mockDispatches.
@@ -24562,12 +24782,12 @@ module.exports = MockClient
 
 /***/ }),
 
-/***/ 557:
+/***/ 9084:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { UndiciError } = __nccwpck_require__(8067)
+const { UndiciError } = __nccwpck_require__(2237)
 
 const kMockNotMatchedError = Symbol.for('undici.error.UND_MOCK_ERR_MOCK_NOT_MATCHED')
 
@@ -24597,12 +24817,12 @@ module.exports = {
 
 /***/ }),
 
-/***/ 3367:
+/***/ 8469:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { getResponseData, buildKey, addMockDispatch } = __nccwpck_require__(1781)
+const { getResponseData, buildKey, addMockDispatch } = __nccwpck_require__(1515)
 const {
   kDispatches,
   kDispatchKey,
@@ -24610,9 +24830,9 @@ const {
   kDefaultTrailers,
   kContentLength,
   kMockDispatch
-} = __nccwpck_require__(1581)
-const { InvalidArgumentError } = __nccwpck_require__(8067)
-const { buildURL } = __nccwpck_require__(6112)
+} = __nccwpck_require__(8359)
+const { InvalidArgumentError } = __nccwpck_require__(2237)
+const { buildURL } = __nccwpck_require__(9454)
 
 /**
  * Defines the scope API for an interceptor reply
@@ -24811,14 +25031,14 @@ module.exports.MockScope = MockScope
 
 /***/ }),
 
-/***/ 4180:
+/***/ 6106:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 const { promisify } = __nccwpck_require__(7975)
-const Pool = __nccwpck_require__(9204)
-const { buildMockDispatch } = __nccwpck_require__(1781)
+const Pool = __nccwpck_require__(7754)
+const { buildMockDispatch } = __nccwpck_require__(1515)
 const {
   kDispatches,
   kMockAgent,
@@ -24827,10 +25047,10 @@ const {
   kOrigin,
   kOriginalDispatch,
   kConnected
-} = __nccwpck_require__(1581)
-const { MockInterceptor } = __nccwpck_require__(3367)
-const Symbols = __nccwpck_require__(5659)
-const { InvalidArgumentError } = __nccwpck_require__(8067)
+} = __nccwpck_require__(8359)
+const { MockInterceptor } = __nccwpck_require__(8469)
+const Symbols = __nccwpck_require__(973)
+const { InvalidArgumentError } = __nccwpck_require__(2237)
 
 /**
  * MockPool provides an API that extends the Pool to influence the mockDispatches.
@@ -24877,7 +25097,7 @@ module.exports = MockPool
 
 /***/ }),
 
-/***/ 1581:
+/***/ 8359:
 /***/ ((module) => {
 
 
@@ -24907,20 +25127,20 @@ module.exports = {
 
 /***/ }),
 
-/***/ 1781:
+/***/ 1515:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { MockNotMatchedError } = __nccwpck_require__(557)
+const { MockNotMatchedError } = __nccwpck_require__(9084)
 const {
   kDispatches,
   kMockAgent,
   kOriginalDispatch,
   kOrigin,
   kGetNetConnect
-} = __nccwpck_require__(1581)
-const { buildURL } = __nccwpck_require__(6112)
+} = __nccwpck_require__(8359)
+const { buildURL } = __nccwpck_require__(9454)
 const { STATUS_CODES } = __nccwpck_require__(7067)
 const {
   types: {
@@ -25281,7 +25501,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 5486:
+/***/ 9160:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
@@ -25331,7 +25551,7 @@ module.exports = class PendingInterceptorsFormatter {
 
 /***/ }),
 
-/***/ 9657:
+/***/ 4579:
 /***/ ((module) => {
 
 
@@ -25367,7 +25587,7 @@ module.exports = class Pluralizer {
 
 /***/ }),
 
-/***/ 3899:
+/***/ 821:
 /***/ ((module) => {
 
 
@@ -25797,20 +26017,20 @@ module.exports = {
 
 /***/ }),
 
-/***/ 7538:
+/***/ 3816:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { kConstruct } = __nccwpck_require__(4685)
-const { urlEquals, getFieldValues } = __nccwpck_require__(8353)
-const { kEnumerableProperty, isDisturbed } = __nccwpck_require__(6112)
-const { webidl } = __nccwpck_require__(3509)
-const { Response, cloneResponse, fromInnerResponse } = __nccwpck_require__(5803)
-const { Request, fromInnerRequest } = __nccwpck_require__(2847)
-const { kState } = __nccwpck_require__(7115)
-const { fetching } = __nccwpck_require__(8286)
-const { urlIsHttpHttpsScheme, createDeferredPromise, readAllBytes } = __nccwpck_require__(512)
+const { kConstruct } = __nccwpck_require__(5283)
+const { urlEquals, getFieldValues } = __nccwpck_require__(7800)
+const { kEnumerableProperty, isDisturbed } = __nccwpck_require__(9454)
+const { webidl } = __nccwpck_require__(5796)
+const { Response, cloneResponse, fromInnerResponse } = __nccwpck_require__(2585)
+const { Request, fromInnerRequest } = __nccwpck_require__(7757)
+const { kState } = __nccwpck_require__(657)
+const { fetching } = __nccwpck_require__(6464)
+const { urlIsHttpHttpsScheme, createDeferredPromise, readAllBytes } = __nccwpck_require__(9994)
 const assert = __nccwpck_require__(4589)
 
 /**
@@ -26663,15 +26883,15 @@ module.exports = {
 
 /***/ }),
 
-/***/ 3597:
+/***/ 9927:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { kConstruct } = __nccwpck_require__(4685)
-const { Cache } = __nccwpck_require__(7538)
-const { webidl } = __nccwpck_require__(3509)
-const { kEnumerableProperty } = __nccwpck_require__(6112)
+const { kConstruct } = __nccwpck_require__(5283)
+const { Cache } = __nccwpck_require__(3816)
+const { webidl } = __nccwpck_require__(5796)
+const { kEnumerableProperty } = __nccwpck_require__(9454)
 
 class CacheStorage {
   /**
@@ -26822,26 +27042,26 @@ module.exports = {
 
 /***/ }),
 
-/***/ 4685:
+/***/ 5283:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 module.exports = {
-  kConstruct: (__nccwpck_require__(5659).kConstruct)
+  kConstruct: (__nccwpck_require__(973).kConstruct)
 }
 
 
 /***/ }),
 
-/***/ 8353:
+/***/ 7800:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 const assert = __nccwpck_require__(4589)
-const { URLSerializer } = __nccwpck_require__(1436)
-const { isValidHeaderName } = __nccwpck_require__(512)
+const { URLSerializer } = __nccwpck_require__(5946)
+const { isValidHeaderName } = __nccwpck_require__(9994)
 
 /**
  * @see https://url.spec.whatwg.org/#concept-url-equals
@@ -26886,7 +27106,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 9948:
+/***/ 8870:
 /***/ ((module) => {
 
 
@@ -26905,15 +27125,15 @@ module.exports = {
 
 /***/ }),
 
-/***/ 37:
+/***/ 899:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { parseSetCookie } = __nccwpck_require__(8762)
-const { stringify } = __nccwpck_require__(6837)
-const { webidl } = __nccwpck_require__(3509)
-const { Headers } = __nccwpck_require__(4900)
+const { parseSetCookie } = __nccwpck_require__(7612)
+const { stringify } = __nccwpck_require__(2747)
+const { webidl } = __nccwpck_require__(5796)
+const { Headers } = __nccwpck_require__(7346)
 
 /**
  * @typedef {Object} Cookie
@@ -27096,14 +27316,14 @@ module.exports = {
 
 /***/ }),
 
-/***/ 8762:
+/***/ 7612:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { maxNameValuePairSize, maxAttributeValueSize } = __nccwpck_require__(9948)
-const { isCTLExcludingHtab } = __nccwpck_require__(6837)
-const { collectASequenceOfCodePointsFast } = __nccwpck_require__(1436)
+const { maxNameValuePairSize, maxAttributeValueSize } = __nccwpck_require__(8870)
+const { isCTLExcludingHtab } = __nccwpck_require__(2747)
+const { collectASequenceOfCodePointsFast } = __nccwpck_require__(5946)
 const assert = __nccwpck_require__(4589)
 
 /**
@@ -27413,7 +27633,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 6837:
+/***/ 2747:
 /***/ ((module) => {
 
 
@@ -27523,7 +27743,7 @@ function validateCookiePath (path) {
 
     if (
       code < 0x20 || // exclude CTLs (0-31)
-      code === 0x7F || // DEL
+      code > 0x7E || // exclude DEL and non-ascii
       code === 0x3B // ;
     ) {
       throw new Error('Invalid cookie path')
@@ -27532,16 +27752,80 @@ function validateCookiePath (path) {
 }
 
 /**
- * I have no idea why these values aren't allowed to be honest,
- * but Deno tests these. - Khafra
+ * <let-dig> ::= <letter> | <digit>
+ *
+ * <letter> ::= any one of the 52 alphabetic characters A through Z in
+ * upper case and a through z in lower case
+ *
+ * <digit> ::= any one of the ten digits 0 through 9r
+ *
+ * @see https://www.rfc-editor.org/rfc/rfc1034#section-3.5
+ * @param {number} code
+ */
+function isLetterOrDigit (code) {
+  return (
+    (code >= 0x30 && code <= 0x39) || // 0-9
+    (code >= 0x41 && code <= 0x5A) || // A-Z
+    (code >= 0x61 && code <= 0x7A) // a-z
+  )
+}
+
+/**
+ * Validates a cookie domain against the "preferred name syntax".
+ *
+ * <domain>      ::= <subdomain> | " "
+ * <subdomain>   ::= <label> | <subdomain> "." <label>
+ * <label>       ::= <let-dig> [ [ <ldh-str> ] <let-dig> ]
+ * <ldh-str>     ::= <let-dig-hyp> | <let-dig-hyp> <ldh-str>
+ * <let-dig-hyp> ::= <let-dig> | "-"
+ *
+ * @see https://www.rfc-editor.org/rfc/rfc1034#section-3.5
+ * @see https://www.rfc-editor.org/rfc/rfc1123#section-2.1
+ * @see https://www.rfc-editor.org/rfc/rfc1035#section-2.3.4
  * @param {string} domain
  */
 function validateCookieDomain (domain) {
-  if (
-    domain.startsWith('-') ||
-    domain.endsWith('.') ||
-    domain.endsWith('-')
-  ) {
+  // <domain> ::= <subdomain> | " "
+  if (domain === ' ') {
+    return
+  }
+
+  if (domain.length > 255) {
+    throw new Error('Invalid cookie domain')
+  }
+
+  let labelLength = 0
+
+  for (let i = 0; i < domain.length; ++i) {
+    const code = domain.charCodeAt(i)
+
+    if (code === 0x2E) {
+      if (labelLength === 0) {
+        throw new Error('Invalid cookie domain')
+      }
+
+      if (domain.charCodeAt(i - 1) === 0x2D) { // "-"
+        throw new Error('Invalid cookie domain')
+      }
+
+      labelLength = 0
+      continue
+    }
+
+    if (labelLength === 0 && !isLetterOrDigit(code)) {
+      throw new Error('Invalid cookie domain')
+    }
+
+    if (!isLetterOrDigit(code) && code !== 0x2D) { // "-"
+      throw new Error('Invalid cookie domain')
+    }
+
+    if (++labelLength > 63) {
+      throw new Error('Invalid cookie domain')
+    }
+  }
+
+  if (labelLength === 0 || domain.charCodeAt(domain.length - 1) === 0x2D) { // "-"
     throw new Error('Invalid cookie domain')
   }
 }
@@ -27684,7 +27968,13 @@ function stringify (cookie) {
 
     const [key, ...value] = part.split('=')
 
-    out.push(`${key.trim()}=${value.join('=')}`)
+    const trimmedKey = key.trim()
+    const joinedValue = value.join('=')
+
+    validateCookieName(trimmedKey)
+    validateCookieValue(joinedValue)
+
+    out.push(`${trimmedKey}=${joinedValue}`)
   }
 
   return out.join('; ')
@@ -27702,12 +27992,12 @@ module.exports = {
 
 /***/ }),
 
-/***/ 9503:
+/***/ 1161:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 const { Transform } = __nccwpck_require__(7075)
-const { isASCIINumber, isValidLastEventId } = __nccwpck_require__(3627)
+const { isASCIINumber, isValidLastEventId } = __nccwpck_require__(9077)
 
 /**
  * @type {number[]} BOM
@@ -27729,6 +28019,49 @@ const COLON = 0x3A
  * @type {32} SPACE
  */
 const SPACE = 0x20
+
+const DATA = Buffer.from('data')
+const EVENT = Buffer.from('event')
+const ID = Buffer.from('id')
+const RETRY = Buffer.from('retry')
+
+function isASCIINumberBytes (buffer, start) {
+  if (start >= buffer.length) {
+    return false
+  }
+
+  for (let i = start; i < buffer.length; i++) {
+    if (buffer[i] < 0x30 || buffer[i] > 0x39) {
+      return false
+    }
+  }
+
+  return true
+}
+
+function isValidLastEventIdBytes (buffer, start) {
+  for (let i = start; i < buffer.length; i++) {
+    if (buffer[i] === 0x00) {
+      return false
+    }
+  }
+
+  return true
+}
+
+function isFieldName (line, length, field) {
+  if (length !== field.length) {
+    return false
+  }
+
+  for (let i = 0; i < length; i++) {
+    if (line[i] !== field[i]) {
+      return false
+    }
+  }
+
+  return true
+}
 
 /**
  * @typedef {object} EventSourceStreamEvent
@@ -27770,11 +28103,14 @@ class EventSourceStream extends Transform {
   eventEndCheck = false
 
   /**
-   * @type {Buffer}
+   * @type {Buffer[]}
    */
-  buffer = null
+  chunks = []
 
+  chunkIndex = 0
   pos = 0
+  lineChunkIndex = 0
+  linePos = 0
 
   event = {
     data: undefined,
@@ -27813,92 +28149,20 @@ class EventSourceStream extends Transform {
       return
     }
 
-    // Cache the chunk in the buffer, as the data might not be complete while
-    // processing it
-    // TODO: Investigate if there is a more performant way to handle
-    // incoming chunks
-    // see: https://github.com/nodejs/undici/issues/2630
-    if (this.buffer) {
-      this.buffer = Buffer.concat([this.buffer, chunk])
-    } else {
-      this.buffer = chunk
-    }
+    this.chunks.push(chunk)
 
     // Strip leading byte-order-mark if we opened the stream and started
     // the processing of the incoming data
     if (this.checkBOM) {
-      switch (this.buffer.length) {
-        case 1:
-          // Check if the first byte is the same as the first byte of the BOM
-          if (this.buffer[0] === BOM[0]) {
-            // If it is, we need to wait for more data
-            callback()
-            return
-          }
-          // Set the checkBOM flag to false as we don't need to check for the
-          // BOM anymore
-          this.checkBOM = false
-
-          // The buffer only contains one byte so we need to wait for more data
-          callback()
-          return
-        case 2:
-          // Check if the first two bytes are the same as the first two bytes
-          // of the BOM
-          if (
-            this.buffer[0] === BOM[0] &&
-            this.buffer[1] === BOM[1]
-          ) {
-            // If it is, we need to wait for more data, because the third byte
-            // is needed to determine if it is the BOM or not
-            callback()
-            return
-          }
-
-          // Set the checkBOM flag to false as we don't need to check for the
-          // BOM anymore
-          this.checkBOM = false
-          break
-        case 3:
-          // Check if the first three bytes are the same as the first three
-          // bytes of the BOM
-          if (
-            this.buffer[0] === BOM[0] &&
-            this.buffer[1] === BOM[1] &&
-            this.buffer[2] === BOM[2]
-          ) {
-            // If it is, we can drop the buffered data, as it is only the BOM
-            this.buffer = Buffer.alloc(0)
-            // Set the checkBOM flag to false as we don't need to check for the
-            // BOM anymore
-            this.checkBOM = false
-
-            // Await more data
-            callback()
-            return
-          }
-          // If it is not the BOM, we can start processing the data
-          this.checkBOM = false
-          break
-        default:
-          // The buffer is longer than 3 bytes, so we can drop the BOM if it is
-          // present
-          if (
-            this.buffer[0] === BOM[0] &&
-            this.buffer[1] === BOM[1] &&
-            this.buffer[2] === BOM[2]
-          ) {
-            // Remove the BOM from the buffer
-            this.buffer = this.buffer.subarray(3)
-          }
-
-          // Set the checkBOM flag to false as we don't need to check for the
-          this.checkBOM = false
-          break
+      if (this.handleBOM()) {
+        callback()
+        return
       }
     }
 
-    while (this.pos < this.buffer.length) {
+    while (this.hasCurrentByte()) {
+      const byte = this.currentByte()
+
       // If the previous line ended with an end-of-line, we need to check
       // if the next character is also an end-of-line.
       if (this.eventEndCheck) {
@@ -27911,10 +28175,9 @@ class EventSourceStream extends Transform {
         if (this.crlfCheck) {
           // If the current character is a line feed, we can remove it
           // from the buffer and reset the crlfCheck flag
-          if (this.buffer[this.pos] === LF) {
-            this.buffer = this.buffer.subarray(this.pos + 1)
-            this.pos = 0
+          if (byte === LF) {
             this.crlfCheck = false
+            this.consumeCurrentByte()
 
             // It is possible that the line feed is not the end of the
             // event. We need to check if the next character is an
@@ -27930,19 +28193,17 @@ class EventSourceStream extends Transform {
           this.crlfCheck = false
         }
 
-        if (this.buffer[this.pos] === LF || this.buffer[this.pos] === CR) {
+        if (byte === LF || byte === CR) {
           // If the current character is a carriage return, we need to
           // set the crlfCheck flag to true, as we need to check if the
           // next character is a line feed so we can remove it from the
           // buffer
-          if (this.buffer[this.pos] === CR) {
+          if (byte === CR) {
             this.crlfCheck = true
           }
 
-          this.buffer = this.buffer.subarray(this.pos + 1)
-          this.pos = 0
-          if (
-            this.event.data !== undefined || this.event.event || this.event.id || this.event.retry) {
+          this.consumeCurrentByte()
+          if (this.hasPendingEvent()) {
             this.processEvent(this.event)
           }
           this.clearEvent()
@@ -27956,22 +28217,18 @@ class EventSourceStream extends Transform {
 
       // If the current character is an end-of-line, we can process the
       // line
-      if (this.buffer[this.pos] === LF || this.buffer[this.pos] === CR) {
+      if (byte === LF || byte === CR) {
         // If the current character is a carriage return, we need to
         // set the crlfCheck flag to true, as we need to check if the
         // next character is a line feed
-        if (this.buffer[this.pos] === CR) {
+        if (byte === CR) {
           this.crlfCheck = true
         }
 
         // In any case, we can process the line as we reached an
         // end-of-line character
-        this.parseLine(this.buffer.subarray(0, this.pos), this.event)
-
-        // Remove the processed line from the buffer
-        this.buffer = this.buffer.subarray(this.pos + 1)
-        // Reset the position as we removed the processed line from the buffer
-        this.pos = 0
+        this.parseLine(this.readLine(), this.event)
+        this.consumeCurrentByte()
         // A line was processed and this could be the end of the event. We need
         // to check if the next line is empty to determine if the event is
         // finished.
@@ -27979,7 +28236,7 @@ class EventSourceStream extends Transform {
         continue
       }
 
-      this.pos++
+      this.advanceCursor()
     }
 
     callback()
@@ -28004,64 +28261,53 @@ class EventSourceStream extends Transform {
       return
     }
 
-    let field = ''
-    let value = ''
+    let fieldLength = line.length
+    let valueStart = line.length
 
     // If the line contains a U+003A COLON character (:)
     if (colonPosition !== -1) {
-      // Collect the characters on the line before the first U+003A COLON
-      // character (:), and let field be that string.
-      // TODO: Investigate if there is a more performant way to extract the
-      // field
-      // see: https://github.com/nodejs/undici/issues/2630
-      field = line.subarray(0, colonPosition).toString('utf8')
+      fieldLength = colonPosition
 
       // Collect the characters on the line after the first U+003A COLON
       // character (:), and let value be that string.
       // If value starts with a U+0020 SPACE character, remove it from value.
-      let valueStart = colonPosition + 1
+      valueStart = colonPosition + 1
       if (line[valueStart] === SPACE) {
         ++valueStart
       }
-      // TODO: Investigate if there is a more performant way to extract the
-      // value
-      // see: https://github.com/nodejs/undici/issues/2630
-      value = line.subarray(valueStart).toString('utf8')
-
-      // Otherwise, the string is not empty but does not contain a U+003A COLON
-      // character (:)
-    } else {
-      // Process the field using the steps described below, using the whole
-      // line as the field name, and the empty string as the field value.
-      field = line.toString('utf8')
-      value = ''
     }
 
-    // Modify the event with the field name and value. The value is also
-    // decoded as UTF-8
-    switch (field) {
-      case 'data':
-        if (event[field] === undefined) {
-          event[field] = value
-        } else {
-          event[field] += `\n${value}`
-        }
-        break
-      case 'retry':
-        if (isASCIINumber(value)) {
-          event[field] = value
-        }
-        break
-      case 'id':
-        if (isValidLastEventId(value)) {
-          event[field] = value
-        }
-        break
-      case 'event':
-        if (value.length > 0) {
-          event[field] = value
-        }
-        break
+    if (isFieldName(line, fieldLength, DATA)) {
+      const value = line.toString('utf8', valueStart)
+
+      if (event.data === undefined) {
+        event.data = value
+      } else {
+        event.data += `\n${value}`
+      }
+      return
+    }
+
+    if (isFieldName(line, fieldLength, RETRY)) {
+      if (isASCIINumberBytes(line, valueStart)) {
+        event.retry = line.toString('utf8', valueStart)
+      }
+      return
+    }
+
+    if (isFieldName(line, fieldLength, ID)) {
+      if (isValidLastEventIdBytes(line, valueStart)) {
+        event.id = line.toString('utf8', valueStart)
+      }
+      return
+    }
+
+    if (isFieldName(line, fieldLength, EVENT)) {
+      const value = line.toString('utf8', valueStart)
+
+      if (value.length > 0) {
+        event.event = value
+      }
     }
   }
 
@@ -28091,12 +28337,151 @@ class EventSourceStream extends Transform {
   }
 
   clearEvent () {
-    this.event = {
-      data: undefined,
-      event: undefined,
-      id: undefined,
-      retry: undefined
+    this.event.data = undefined
+    this.event.event = undefined
+    this.event.id = undefined
+    this.event.retry = undefined
+  }
+
+  hasPendingEvent () {
+    return this.event.data !== undefined ||
+      this.event.event !== undefined ||
+      this.event.id !== undefined ||
+      this.event.retry !== undefined
+  }
+
+  hasCurrentByte () {
+    return this.chunkIndex < this.chunks.length &&
+      this.pos < this.chunks[this.chunkIndex].length
+  }
+
+  currentByte () {
+    return this.chunks[this.chunkIndex][this.pos]
+  }
+
+  consumeCurrentByte () {
+    this.advanceCursor()
+    this.syncLineStartToCursor()
+  }
+
+  advanceCursor () {
+    this.pos++
+
+    while (this.chunkIndex < this.chunks.length && this.pos >= this.chunks[this.chunkIndex].length) {
+      this.chunkIndex++
+      this.pos = 0
     }
+  }
+
+  syncLineStartToCursor () {
+    this.lineChunkIndex = this.chunkIndex
+    this.linePos = this.pos
+    this.dropConsumedChunks()
+  }
+
+  dropConsumedChunks () {
+    while (this.lineChunkIndex > 0) {
+      this.chunks.shift()
+      this.lineChunkIndex--
+      this.chunkIndex--
+    }
+
+    if (this.chunkIndex === this.chunks.length) {
+      this.chunks.length = 0
+      this.chunkIndex = 0
+      this.pos = 0
+      this.lineChunkIndex = 0
+      this.linePos = 0
+    }
+  }
+
+  readLine () {
+    if (this.lineChunkIndex === this.chunkIndex) {
+      return this.chunks[this.chunkIndex].subarray(this.linePos, this.pos)
+    }
+
+    const chunks = []
+    let length = 0
+
+    for (let i = this.lineChunkIndex; i <= this.chunkIndex; i++) {
+      const chunk = this.chunks[i]
+      const start = i === this.lineChunkIndex ? this.linePos : 0
+      const end = i === this.chunkIndex ? this.pos : chunk.length
+      const slice = chunk.subarray(start, end)
+      length += slice.length
+      chunks.push(slice)
+    }
+
+    return Buffer.concat(chunks, length)
+  }
+
+  peekBufferedByte (offset) {
+    let chunkIndex = this.lineChunkIndex
+    let pos = this.linePos
+
+    while (chunkIndex < this.chunks.length) {
+      const chunk = this.chunks[chunkIndex]
+      const remaining = chunk.length - pos
+
+      if (offset < remaining) {
+        return chunk[pos + offset]
+      }
+
+      offset -= remaining
+      chunkIndex++
+      pos = 0
+    }
+  }
+
+  discardLeadingBytes (count) {
+    while (count > 0 && this.lineChunkIndex < this.chunks.length) {
+      const chunk = this.chunks[this.lineChunkIndex]
+      const remaining = chunk.length - this.linePos
+
+      if (count < remaining) {
+        this.linePos += count
+        count = 0
+      } else {
+        count -= remaining
+        this.lineChunkIndex++
+        this.linePos = 0
+      }
+    }
+
+    this.chunkIndex = this.lineChunkIndex
+    this.pos = this.linePos
+    this.dropConsumedChunks()
+  }
+
+  handleBOM () {
+    const first = this.peekBufferedByte(0)
+    const second = this.peekBufferedByte(1)
+    const third = this.peekBufferedByte(2)
+
+    if (second === undefined) {
+      if (first === BOM[0]) {
+        return true
+      }
+
+      this.checkBOM = false
+      return true
+    }
+
+    if (third === undefined) {
+      if (first === BOM[0] && second === BOM[1]) {
+        return true
+      }
+
+      this.checkBOM = false
+      return false
+    }
+
+    if (first === BOM[0] && second === BOM[1] && third === BOM[2]) {
+      this.discardLeadingBytes(3)
+    }
+
+    this.checkBOM = false
+    return !this.hasCurrentByte()
   }
 }
 
@@ -28107,22 +28492,22 @@ module.exports = {
 
 /***/ }),
 
-/***/ 2870:
+/***/ 4540:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 const { pipeline } = __nccwpck_require__(7075)
-const { fetching } = __nccwpck_require__(8286)
-const { makeRequest } = __nccwpck_require__(2847)
-const { webidl } = __nccwpck_require__(3509)
-const { EventSourceStream } = __nccwpck_require__(9503)
-const { parseMIMEType } = __nccwpck_require__(1436)
-const { createFastMessageEvent } = __nccwpck_require__(7204)
-const { isNetworkError } = __nccwpck_require__(5803)
-const { delay } = __nccwpck_require__(3627)
-const { kEnumerableProperty } = __nccwpck_require__(6112)
-const { environmentSettingsObject } = __nccwpck_require__(512)
+const { fetching } = __nccwpck_require__(6464)
+const { makeRequest } = __nccwpck_require__(7757)
+const { webidl } = __nccwpck_require__(5796)
+const { EventSourceStream } = __nccwpck_require__(1161)
+const { parseMIMEType } = __nccwpck_require__(5946)
+const { createFastMessageEvent } = __nccwpck_require__(4317)
+const { isNetworkError } = __nccwpck_require__(2585)
+const { delay } = __nccwpck_require__(9077)
+const { kEnumerableProperty } = __nccwpck_require__(9454)
+const { environmentSettingsObject } = __nccwpck_require__(9994)
 
 let experimentalWarned = false
 
@@ -28594,7 +28979,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 3627:
+/***/ 9077:
 /***/ ((module) => {
 
 
@@ -28638,12 +29023,12 @@ module.exports = {
 
 /***/ }),
 
-/***/ 2988:
+/***/ 7206:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const util = __nccwpck_require__(6112)
+const util = __nccwpck_require__(9454)
 const {
   ReadableStreamFrom,
   isBlobLike,
@@ -28653,16 +29038,16 @@ const {
   fullyReadBody,
   extractMimeType,
   utf8DecodeBytes
-} = __nccwpck_require__(512)
-const { FormData } = __nccwpck_require__(3654)
-const { kState } = __nccwpck_require__(7115)
-const { webidl } = __nccwpck_require__(3509)
+} = __nccwpck_require__(9994)
+const { FormData } = __nccwpck_require__(3508)
+const { kState } = __nccwpck_require__(657)
+const { webidl } = __nccwpck_require__(5796)
 const { Blob } = __nccwpck_require__(4573)
 const assert = __nccwpck_require__(4589)
 const { isErrored, isDisturbed } = __nccwpck_require__(7075)
 const { isArrayBuffer } = __nccwpck_require__(3429)
-const { serializeAMimeType } = __nccwpck_require__(1436)
-const { multipartFormDataParser } = __nccwpck_require__(6308)
+const { serializeAMimeType } = __nccwpck_require__(5946)
+const { multipartFormDataParser } = __nccwpck_require__(3162)
 let random
 
 try {
@@ -29174,7 +29559,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 1199:
+/***/ 4581:
 /***/ ((module) => {
 
 
@@ -29305,7 +29690,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 1436:
+/***/ 5946:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
@@ -30056,12 +30441,12 @@ module.exports = {
 
 /***/ }),
 
-/***/ 7453:
+/***/ 7003:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { kConnected, kSize } = __nccwpck_require__(5659)
+const { kConnected, kSize } = __nccwpck_require__(973)
 
 class CompatWeakRef {
   constructor (value) {
@@ -30109,14 +30494,14 @@ module.exports = function () {
 
 /***/ }),
 
-/***/ 3258:
+/***/ 5184:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 const { Blob, File } = __nccwpck_require__(4573)
-const { kState } = __nccwpck_require__(7115)
-const { webidl } = __nccwpck_require__(3509)
+const { kState } = __nccwpck_require__(657)
+const { webidl } = __nccwpck_require__(5796)
 
 // TODO(@KhafraDev): remove
 class FileLike {
@@ -30242,16 +30627,16 @@ module.exports = { FileLike, isFileLike }
 
 /***/ }),
 
-/***/ 6308:
+/***/ 3162:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { isUSVString, bufferToLowerCasedHeaderName } = __nccwpck_require__(6112)
-const { utf8DecodeBytes } = __nccwpck_require__(512)
-const { HTTP_TOKEN_CODEPOINTS, isomorphicDecode } = __nccwpck_require__(1436)
-const { isFileLike } = __nccwpck_require__(3258)
-const { makeEntry } = __nccwpck_require__(3654)
+const { isUSVString, bufferToLowerCasedHeaderName } = __nccwpck_require__(9454)
+const { utf8DecodeBytes } = __nccwpck_require__(9994)
+const { HTTP_TOKEN_CODEPOINTS, isomorphicDecode } = __nccwpck_require__(5946)
+const { isFileLike } = __nccwpck_require__(5184)
+const { makeEntry } = __nccwpck_require__(3508)
 const assert = __nccwpck_require__(4589)
 const { File: NodeFile } = __nccwpck_require__(4573)
 
@@ -30723,16 +31108,16 @@ module.exports = {
 
 /***/ }),
 
-/***/ 3654:
+/***/ 3508:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { isBlobLike, iteratorMixin } = __nccwpck_require__(512)
-const { kState } = __nccwpck_require__(7115)
-const { kEnumerableProperty } = __nccwpck_require__(6112)
-const { FileLike, isFileLike } = __nccwpck_require__(3258)
-const { webidl } = __nccwpck_require__(3509)
+const { isBlobLike, iteratorMixin } = __nccwpck_require__(9994)
+const { kState } = __nccwpck_require__(657)
+const { kEnumerableProperty } = __nccwpck_require__(9454)
+const { FileLike, isFileLike } = __nccwpck_require__(5184)
+const { webidl } = __nccwpck_require__(5796)
 const { File: NativeFile } = __nccwpck_require__(4573)
 const nodeUtil = __nccwpck_require__(7975)
 
@@ -30982,7 +31367,7 @@ module.exports = { FormData, makeEntry }
 
 /***/ }),
 
-/***/ 5683:
+/***/ 9001:
 /***/ ((module) => {
 
 
@@ -31029,21 +31414,21 @@ module.exports = {
 
 /***/ }),
 
-/***/ 4900:
+/***/ 7346:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 // https://github.com/Ethan-Arrowood/undici-fetch
 
 
 
-const { kConstruct } = __nccwpck_require__(5659)
-const { kEnumerableProperty } = __nccwpck_require__(6112)
+const { kConstruct } = __nccwpck_require__(973)
+const { kEnumerableProperty } = __nccwpck_require__(9454)
 const {
   iteratorMixin,
   isValidHeaderName,
   isValidHeaderValue
-} = __nccwpck_require__(512)
-const { webidl } = __nccwpck_require__(3509)
+} = __nccwpck_require__(9994)
+const { webidl } = __nccwpck_require__(5796)
 const assert = __nccwpck_require__(4589)
 const util = __nccwpck_require__(7975)
 
@@ -31723,7 +32108,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 8286:
+/***/ 6464:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 // https://github.com/Ethan-Arrowood/undici-fetch
@@ -31736,9 +32121,9 @@ const {
   filterResponse,
   makeResponse,
   fromInnerResponse
-} = __nccwpck_require__(5803)
-const { HeadersList } = __nccwpck_require__(4900)
-const { Request, cloneRequest } = __nccwpck_require__(2847)
+} = __nccwpck_require__(2585)
+const { HeadersList } = __nccwpck_require__(7346)
+const { Request, cloneRequest } = __nccwpck_require__(7757)
 const zlib = __nccwpck_require__(8522)
 const {
   bytesMatch,
@@ -31774,23 +32159,23 @@ const {
   buildContentRange,
   createInflate,
   extractMimeType
-} = __nccwpck_require__(512)
-const { kState, kDispatcher } = __nccwpck_require__(7115)
+} = __nccwpck_require__(9994)
+const { kState, kDispatcher } = __nccwpck_require__(657)
 const assert = __nccwpck_require__(4589)
-const { safelyExtractBody, extractBody } = __nccwpck_require__(2988)
+const { safelyExtractBody, extractBody } = __nccwpck_require__(7206)
 const {
   redirectStatusSet,
   nullBodyStatus,
   safeMethodsSet,
   requestBodyHeader,
   subresourceSet
-} = __nccwpck_require__(1199)
+} = __nccwpck_require__(4581)
 const EE = __nccwpck_require__(8474)
 const { Readable, pipeline, finished } = __nccwpck_require__(7075)
-const { addAbortListener, isErrored, isReadable, bufferToLowerCasedHeaderName } = __nccwpck_require__(6112)
-const { dataURLProcessor, serializeAMimeType, minimizeSupportedMimeType } = __nccwpck_require__(1436)
-const { getGlobalDispatcher } = __nccwpck_require__(5749)
-const { webidl } = __nccwpck_require__(3509)
+const { addAbortListener, isErrored, isReadable, bufferToLowerCasedHeaderName } = __nccwpck_require__(9454)
+const { dataURLProcessor, serializeAMimeType, minimizeSupportedMimeType } = __nccwpck_require__(5946)
+const { getGlobalDispatcher } = __nccwpck_require__(992)
+const { webidl } = __nccwpck_require__(5796)
 const { STATUS_CODES } = __nccwpck_require__(7067)
 const GET_OR_HEAD = ['GET', 'HEAD']
 
@@ -34002,23 +34387,23 @@ module.exports = {
 
 /***/ }),
 
-/***/ 2847:
+/***/ 7757:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /* globals AbortController */
 
 
 
-const { extractBody, mixinBody, cloneBody, bodyUnusable } = __nccwpck_require__(2988)
-const { Headers, fill: fillHeaders, HeadersList, setHeadersGuard, getHeadersGuard, setHeadersList, getHeadersList } = __nccwpck_require__(4900)
-const { FinalizationRegistry } = __nccwpck_require__(7453)()
-const util = __nccwpck_require__(6112)
+const { extractBody, mixinBody, cloneBody, bodyUnusable } = __nccwpck_require__(7206)
+const { Headers, fill: fillHeaders, HeadersList, setHeadersGuard, getHeadersGuard, setHeadersList, getHeadersList } = __nccwpck_require__(7346)
+const { FinalizationRegistry } = __nccwpck_require__(7003)()
+const util = __nccwpck_require__(9454)
 const nodeUtil = __nccwpck_require__(7975)
 const {
   isValidHTTPToken,
   sameOrigin,
   environmentSettingsObject
-} = __nccwpck_require__(512)
+} = __nccwpck_require__(9994)
 const {
   forbiddenMethodsSet,
   corsSafeListedMethodsSet,
@@ -34028,12 +34413,12 @@ const {
   requestCredentials,
   requestCache,
   requestDuplex
-} = __nccwpck_require__(1199)
+} = __nccwpck_require__(4581)
 const { kEnumerableProperty, normalizedMethodRecordsBase, normalizedMethodRecords } = util
-const { kHeaders, kSignal, kState, kDispatcher } = __nccwpck_require__(7115)
-const { webidl } = __nccwpck_require__(3509)
-const { URLSerializer } = __nccwpck_require__(1436)
-const { kConstruct } = __nccwpck_require__(5659)
+const { kHeaders, kSignal, kState, kDispatcher } = __nccwpck_require__(657)
+const { webidl } = __nccwpck_require__(5796)
+const { URLSerializer } = __nccwpck_require__(5946)
+const { kConstruct } = __nccwpck_require__(973)
 const assert = __nccwpck_require__(4589)
 const { getMaxListeners, setMaxListeners, getEventListeners, defaultMaxListeners } = __nccwpck_require__(8474)
 
@@ -35046,14 +35431,14 @@ module.exports = { Request, makeRequest, fromInnerRequest, cloneRequest }
 
 /***/ }),
 
-/***/ 5803:
+/***/ 2585:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { Headers, HeadersList, fill, getHeadersGuard, setHeadersGuard, setHeadersList } = __nccwpck_require__(4900)
-const { extractBody, cloneBody, mixinBody, hasFinalizationRegistry, streamRegistry, bodyUnusable } = __nccwpck_require__(2988)
-const util = __nccwpck_require__(6112)
+const { Headers, HeadersList, fill, getHeadersGuard, setHeadersGuard, setHeadersList } = __nccwpck_require__(7346)
+const { extractBody, cloneBody, mixinBody, hasFinalizationRegistry, streamRegistry, bodyUnusable } = __nccwpck_require__(7206)
+const util = __nccwpck_require__(9454)
 const nodeUtil = __nccwpck_require__(7975)
 const { kEnumerableProperty } = util
 const {
@@ -35065,16 +35450,16 @@ const {
   isErrorLike,
   isomorphicEncode,
   environmentSettingsObject: relevantRealm
-} = __nccwpck_require__(512)
+} = __nccwpck_require__(9994)
 const {
   redirectStatusSet,
   nullBodyStatus
-} = __nccwpck_require__(1199)
-const { kState, kHeaders } = __nccwpck_require__(7115)
-const { webidl } = __nccwpck_require__(3509)
-const { FormData } = __nccwpck_require__(3654)
-const { URLSerializer } = __nccwpck_require__(1436)
-const { kConstruct } = __nccwpck_require__(5659)
+} = __nccwpck_require__(4581)
+const { kState, kHeaders } = __nccwpck_require__(657)
+const { webidl } = __nccwpck_require__(5796)
+const { FormData } = __nccwpck_require__(3508)
+const { URLSerializer } = __nccwpck_require__(5946)
+const { kConstruct } = __nccwpck_require__(973)
 const assert = __nccwpck_require__(4589)
 const { types } = __nccwpck_require__(7975)
 
@@ -35663,7 +36048,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 7115:
+/***/ 657:
 /***/ ((module) => {
 
 
@@ -35679,21 +36064,21 @@ module.exports = {
 
 /***/ }),
 
-/***/ 512:
+/***/ 9994:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 const { Transform } = __nccwpck_require__(7075)
 const zlib = __nccwpck_require__(8522)
-const { redirectStatusSet, referrerPolicySet: referrerPolicyTokens, badPortsSet } = __nccwpck_require__(1199)
-const { getGlobalOrigin } = __nccwpck_require__(5683)
-const { collectASequenceOfCodePoints, collectAnHTTPQuotedString, removeChars, parseMIMEType } = __nccwpck_require__(1436)
+const { redirectStatusSet, referrerPolicySet: referrerPolicyTokens, badPortsSet } = __nccwpck_require__(4581)
+const { getGlobalOrigin } = __nccwpck_require__(9001)
+const { collectASequenceOfCodePoints, collectAnHTTPQuotedString, removeChars, parseMIMEType } = __nccwpck_require__(5946)
 const { performance } = __nccwpck_require__(643)
-const { isBlobLike, ReadableStreamFrom, isValidHTTPToken, normalizedMethodRecordsBase } = __nccwpck_require__(6112)
+const { isBlobLike, ReadableStreamFrom, isValidHTTPToken, normalizedMethodRecordsBase } = __nccwpck_require__(9454)
 const assert = __nccwpck_require__(4589)
 const { isUint8Array } = __nccwpck_require__(3429)
-const { webidl } = __nccwpck_require__(3509)
+const { webidl } = __nccwpck_require__(5796)
 
 let supportedHashes = []
 
@@ -37318,14 +37703,14 @@ module.exports = {
 
 /***/ }),
 
-/***/ 3509:
+/***/ 5796:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 const { types, inspect } = __nccwpck_require__(7975)
 const { markAsUncloneable } = __nccwpck_require__(5919)
-const { toUSVString } = __nccwpck_require__(6112)
+const { toUSVString } = __nccwpck_require__(9454)
 
 /** @type {import('../../../types/webidl').Webidl} */
 const webidl = {}
@@ -38020,7 +38405,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 8223:
+/***/ 4353:
 /***/ ((module) => {
 
 
@@ -38317,7 +38702,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 1075:
+/***/ 4005:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
@@ -38326,16 +38711,16 @@ const {
   staticPropertyDescriptors,
   readOperation,
   fireAProgressEvent
-} = __nccwpck_require__(8538)
+} = __nccwpck_require__(8592)
 const {
   kState,
   kError,
   kResult,
   kEvents,
   kAborted
-} = __nccwpck_require__(9409)
-const { webidl } = __nccwpck_require__(3509)
-const { kEnumerableProperty } = __nccwpck_require__(6112)
+} = __nccwpck_require__(4235)
+const { webidl } = __nccwpck_require__(5796)
+const { kEnumerableProperty } = __nccwpck_require__(9454)
 
 class FileReader extends EventTarget {
   constructor () {
@@ -38668,12 +39053,12 @@ module.exports = {
 
 /***/ }),
 
-/***/ 1741:
+/***/ 4727:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { webidl } = __nccwpck_require__(3509)
+const { webidl } = __nccwpck_require__(5796)
 
 const kState = Symbol('ProgressEvent state')
 
@@ -38753,7 +39138,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 9409:
+/***/ 4235:
 /***/ ((module) => {
 
 
@@ -38770,7 +39155,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 8538:
+/***/ 8592:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
@@ -38781,10 +39166,10 @@ const {
   kResult,
   kAborted,
   kLastProgressEventFired
-} = __nccwpck_require__(9409)
-const { ProgressEvent } = __nccwpck_require__(1741)
-const { getEncoding } = __nccwpck_require__(8223)
-const { serializeAMimeType, parseMIMEType } = __nccwpck_require__(1436)
+} = __nccwpck_require__(4235)
+const { ProgressEvent } = __nccwpck_require__(4727)
+const { getEncoding } = __nccwpck_require__(4353)
+const { serializeAMimeType, parseMIMEType } = __nccwpck_require__(5946)
 const { types } = __nccwpck_require__(7975)
 const { StringDecoder } = __nccwpck_require__(3193)
 const { btoa } = __nccwpck_require__(4573)
@@ -39168,27 +39553,27 @@ module.exports = {
 
 /***/ }),
 
-/***/ 4369:
+/***/ 8855:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { uid, states, sentCloseFrameState, emptyBuffer, opcodes } = __nccwpck_require__(1696)
+const { uid, states, sentCloseFrameState, emptyBuffer, opcodes } = __nccwpck_require__(1502)
 const {
   kReadyState,
   kSentClose,
   kByteParser,
   kReceivedClose,
   kResponse
-} = __nccwpck_require__(8544)
-const { fireEvent, failWebsocketConnection, isClosing, isClosed, isEstablished, parseExtensions } = __nccwpck_require__(4977)
-const { channels } = __nccwpck_require__(734)
-const { CloseEvent } = __nccwpck_require__(7204)
-const { makeRequest } = __nccwpck_require__(2847)
-const { fetching } = __nccwpck_require__(8286)
-const { Headers, getHeadersList } = __nccwpck_require__(4900)
-const { getDecodeSplit } = __nccwpck_require__(512)
-const { WebsocketFrameSend } = __nccwpck_require__(1504)
+} = __nccwpck_require__(4910)
+const { fireEvent, failWebsocketConnection, isClosing, isClosed, isEstablished, parseExtensions } = __nccwpck_require__(5795)
+const { channels } = __nccwpck_require__(2848)
+const { CloseEvent } = __nccwpck_require__(4317)
+const { makeRequest } = __nccwpck_require__(7757)
+const { fetching } = __nccwpck_require__(6464)
+const { Headers, getHeadersList } = __nccwpck_require__(7346)
+const { getDecodeSplit } = __nccwpck_require__(9994)
+const { WebsocketFrameSend } = __nccwpck_require__(1094)
 
 /** @type {import('crypto')} */
 let crypto
@@ -39365,7 +39750,7 @@ function establishWebSocketConnection (url, protocols, client, ws, onEstablish, 
         // is specified, the server needs to include the same field and one of
         // the selected subprotocol values in its response for the connection to
         // be established.
-        if (!requestProtocols.includes(secProtocol)) {
+        if (requestProtocols === null || !requestProtocols.includes(secProtocol)) {
           failWebsocketConnection(ws, 'Protocol was not set in the opening handshake.')
           return
         }
@@ -39546,7 +39931,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 1696:
+/***/ 1502:
 /***/ ((module) => {
 
 
@@ -39619,14 +40004,14 @@ module.exports = {
 
 /***/ }),
 
-/***/ 7204:
+/***/ 4317:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { webidl } = __nccwpck_require__(3509)
-const { kEnumerableProperty } = __nccwpck_require__(6112)
-const { kConstruct } = __nccwpck_require__(5659)
+const { webidl } = __nccwpck_require__(5796)
+const { kEnumerableProperty } = __nccwpck_require__(9454)
+const { kConstruct } = __nccwpck_require__(973)
 const { MessagePort } = __nccwpck_require__(5919)
 
 /**
@@ -39955,12 +40340,12 @@ module.exports = {
 
 /***/ }),
 
-/***/ 1504:
+/***/ 1094:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { maxUnsigned16Bit } = __nccwpck_require__(1696)
+const { maxUnsigned16Bit } = __nccwpck_require__(1502)
 
 const BUFFER_SIZE = 16386
 
@@ -40058,14 +40443,14 @@ module.exports = {
 
 /***/ }),
 
-/***/ 3549:
+/***/ 1731:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 const { createInflateRaw, Z_DEFAULT_WINDOWBITS } = __nccwpck_require__(8522)
-const { isValidClientWindowBits } = __nccwpck_require__(4977)
-const { MessageSizeExceededError } = __nccwpck_require__(8067)
+const { isValidClientWindowBits } = __nccwpck_require__(5795)
+const { MessageSizeExceededError } = __nccwpck_require__(2237)
 
 const tail = Buffer.from([0x00, 0x00, 0xff, 0xff])
 const kBuffer = Symbol('kBuffer')
@@ -40126,7 +40511,12 @@ class PerMessageDeflate {
 
         if (this.#maxPayloadSize > 0 && this.#inflate[kLength] > this.#maxPayloadSize) {
           callback(new MessageSizeExceededError())
+          // The inflater may still hold buffered input that can emit a late
+          // zlib error. Remove the data listener, then deterministically stop
+          // the stream so a subsequent 'error' cannot fire without a listener
+          // (which would terminate the process as an unhandled error event).
           this.#inflate.removeAllListeners()
+          this.#inflate.destroy()
           this.#inflate = null
           return
         }
@@ -40165,16 +40555,16 @@ module.exports = { PerMessageDeflate }
 
 /***/ }),
 
-/***/ 8276:
+/***/ 4662:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 const { Writable } = __nccwpck_require__(7075)
 const assert = __nccwpck_require__(4589)
-const { parserStates, opcodes, states, emptyBuffer, sentCloseFrameState } = __nccwpck_require__(1696)
-const { kReadyState, kSentClose, kResponse, kReceivedClose } = __nccwpck_require__(8544)
-const { channels } = __nccwpck_require__(734)
+const { parserStates, opcodes, states, emptyBuffer, sentCloseFrameState } = __nccwpck_require__(1502)
+const { kReadyState, kSentClose, kResponse, kReceivedClose } = __nccwpck_require__(4910)
+const { channels } = __nccwpck_require__(2848)
 const {
   isValidStatusCode,
   isValidOpcode,
@@ -40184,11 +40574,11 @@ const {
   isControlFrame,
   isTextBinaryFrame,
   isContinuationFrame
-} = __nccwpck_require__(4977)
-const { WebsocketFrameSend } = __nccwpck_require__(1504)
-const { closeWebSocketConnection } = __nccwpck_require__(4369)
-const { PerMessageDeflate } = __nccwpck_require__(3549)
-const { MessageSizeExceededError } = __nccwpck_require__(8067)
+} = __nccwpck_require__(5795)
+const { WebsocketFrameSend } = __nccwpck_require__(1094)
+const { closeWebSocketConnection } = __nccwpck_require__(8855)
+const { PerMessageDeflate } = __nccwpck_require__(1731)
+const { MessageSizeExceededError } = __nccwpck_require__(2237)
 
 function failWebsocketConnectionWithCode (ws, code, reason) {
   closeWebSocketConnection(ws, code, reason, Buffer.byteLength(reason))
@@ -40685,14 +41075,14 @@ module.exports = {
 
 /***/ }),
 
-/***/ 124:
+/***/ 6490:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { WebsocketFrameSend } = __nccwpck_require__(1504)
-const { opcodes, sendHints } = __nccwpck_require__(1696)
-const FixedQueue = __nccwpck_require__(5636)
+const { WebsocketFrameSend } = __nccwpck_require__(1094)
+const { opcodes, sendHints } = __nccwpck_require__(1502)
+const FixedQueue = __nccwpck_require__(2314)
 
 /** @type {typeof Uint8Array} */
 const FastBuffer = Buffer[Symbol.species]
@@ -40796,7 +41186,7 @@ module.exports = { SendQueue }
 
 /***/ }),
 
-/***/ 8544:
+/***/ 4910:
 /***/ ((module) => {
 
 
@@ -40815,16 +41205,16 @@ module.exports = {
 
 /***/ }),
 
-/***/ 4977:
+/***/ 5795:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { kReadyState, kController, kResponse, kBinaryType, kWebSocketURL } = __nccwpck_require__(8544)
-const { states, opcodes } = __nccwpck_require__(1696)
-const { ErrorEvent, createFastMessageEvent } = __nccwpck_require__(7204)
+const { kReadyState, kController, kResponse, kBinaryType, kWebSocketURL } = __nccwpck_require__(4910)
+const { states, opcodes } = __nccwpck_require__(1502)
+const { ErrorEvent, createFastMessageEvent } = __nccwpck_require__(4317)
 const { isUtf8 } = __nccwpck_require__(4573)
-const { collectASequenceOfCodePointsFast, removeHTTPWhitespace } = __nccwpck_require__(1436)
+const { collectASequenceOfCodePointsFast, removeHTTPWhitespace } = __nccwpck_require__(5946)
 
 /* globals Blob */
 
@@ -41144,15 +41534,15 @@ module.exports = {
 
 /***/ }),
 
-/***/ 9870:
+/***/ 908:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
-const { webidl } = __nccwpck_require__(3509)
-const { URLSerializer } = __nccwpck_require__(1436)
-const { environmentSettingsObject } = __nccwpck_require__(512)
-const { staticPropertyDescriptors, states, sentCloseFrameState, sendHints } = __nccwpck_require__(1696)
+const { webidl } = __nccwpck_require__(5796)
+const { URLSerializer } = __nccwpck_require__(5946)
+const { environmentSettingsObject } = __nccwpck_require__(9994)
+const { staticPropertyDescriptors, states, sentCloseFrameState, sendHints } = __nccwpck_require__(1502)
 const {
   kWebSocketURL,
   kReadyState,
@@ -41161,21 +41551,21 @@ const {
   kResponse,
   kSentClose,
   kByteParser
-} = __nccwpck_require__(8544)
+} = __nccwpck_require__(4910)
 const {
   isConnecting,
   isEstablished,
   isClosing,
   isValidSubprotocol,
   fireEvent
-} = __nccwpck_require__(4977)
-const { establishWebSocketConnection, closeWebSocketConnection } = __nccwpck_require__(4369)
-const { ByteParser } = __nccwpck_require__(8276)
-const { kEnumerableProperty, isBlobLike } = __nccwpck_require__(6112)
-const { getGlobalDispatcher } = __nccwpck_require__(5749)
+} = __nccwpck_require__(5795)
+const { establishWebSocketConnection, closeWebSocketConnection } = __nccwpck_require__(8855)
+const { ByteParser } = __nccwpck_require__(4662)
+const { kEnumerableProperty, isBlobLike } = __nccwpck_require__(9454)
+const { getGlobalDispatcher } = __nccwpck_require__(992)
 const { types } = __nccwpck_require__(7975)
-const { ErrorEvent, CloseEvent } = __nccwpck_require__(7204)
-const { SendQueue } = __nccwpck_require__(124)
+const { ErrorEvent, CloseEvent } = __nccwpck_require__(4317)
+const { SendQueue } = __nccwpck_require__(6490)
 
 // https://websockets.spec.whatwg.org/#interface-definition
 class WebSocket extends EventTarget {
@@ -49561,7 +49951,7 @@ exports.foldFlowLines = foldFlowLines;
 
 var anchors = __nccwpck_require__(7407);
 var identity = __nccwpck_require__(3662);
-var stringifyComment = __nccwpck_require__(4910);
+var stringifyComment = __nccwpck_require__(8881);
 var stringifyString = __nccwpck_require__(5098);
 
 function createStringifyContext(doc, options) {
@@ -49700,7 +50090,7 @@ exports.stringify = stringify;
 
 var identity = __nccwpck_require__(3662);
 var stringify = __nccwpck_require__(7727);
-var stringifyComment = __nccwpck_require__(4910);
+var stringifyComment = __nccwpck_require__(8881);
 
 function stringifyCollection(collection, ctx, options) {
     const flow = ctx.inFlow ?? collection.flow;
@@ -49855,7 +50245,7 @@ exports.stringifyCollection = stringifyCollection;
 
 /***/ }),
 
-/***/ 4910:
+/***/ 8881:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -49893,7 +50283,7 @@ exports.stringifyComment = stringifyComment;
 
 var identity = __nccwpck_require__(3662);
 var stringify = __nccwpck_require__(7727);
-var stringifyComment = __nccwpck_require__(4910);
+var stringifyComment = __nccwpck_require__(8881);
 
 function stringifyDocument(doc, options) {
     const lines = [];
@@ -50022,7 +50412,7 @@ exports.stringifyNumber = stringifyNumber;
 var identity = __nccwpck_require__(3662);
 var Scalar = __nccwpck_require__(8732);
 var stringify = __nccwpck_require__(7727);
-var stringifyComment = __nccwpck_require__(4910);
+var stringifyComment = __nccwpck_require__(8881);
 
 function stringifyPair({ key, value }, ctx, onComment, onChompKeep) {
     const { allNullValues, doc, indent, indentStep, options: { commentString, indentSeq, simpleKeys } } = ctx;
@@ -51219,8 +51609,8 @@ class DecodedURL extends URL {
 //# sourceMappingURL=proxy.js.map
 // EXTERNAL MODULE: ../../node_modules/.pnpm/tunnel@0.0.6/node_modules/tunnel/index.js
 var node_modules_tunnel = __nccwpck_require__(421);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/undici@6.27.0/node_modules/undici/index.js
-var undici = __nccwpck_require__(4032);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/undici@6.29.0/node_modules/undici/index.js
+var undici = __nccwpck_require__(1770);
 ;// CONCATENATED MODULE: ../../node_modules/.pnpm/@actions+http-client@4.0.1/node_modules/@actions/http-client/lib/index.js
 /* eslint-disable @typescript-eslint/no-explicit-any */
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -116050,7 +116440,7 @@ const Data_TaggedError = tag => {
   return O.BaseEffectError;
 };
 //# sourceMappingURL=Data.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+provider@3.0.10/node_modules/@ai-sdk/provider/dist/index.mjs
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+provider@3.0.18/node_modules/@ai-sdk/provider/dist/index.mjs
 // src/errors/ai-sdk-error.ts
 var marker = "vercel.ai.error";
 var dist_symbol = Symbol.for(marker);
@@ -116255,7 +116645,7 @@ var name8 = "AI_LoadSettingError";
 var marker9 = `vercel.ai.error.${name8}`;
 var symbol9 = Symbol.for(marker9);
 var _a9, _b9;
-var dist_LoadSettingError = class extends (_b9 = AISDKError, _a9 = symbol9, _b9) {
+var LoadSettingError = class extends (_b9 = AISDKError, _a9 = symbol9, _b9) {
   // used in isInstance
   constructor({ message }) {
     super({ name: name8, message });
@@ -120849,13 +121239,13 @@ class EventSourceParserStream extends TransformStream {
 
 //# sourceMappingURL=stream.js.map
 
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+provider-utils@4.0.30_zod@4.4.3/node_modules/@ai-sdk/provider-utils/dist/index.mjs
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+provider-utils@4.0.57_zod@4.4.3/node_modules/@ai-sdk/provider-utils/dist/index.mjs
 // src/combine-headers.ts
 function dist_combineHeaders(...headers) {
   return headers.reduce(
     (combinedHeaders, currentHeaders) => ({
       ...combinedHeaders,
-      ...currentHeaders != null ? currentHeaders : {}
+      ...currentHeaders
     }),
     {}
   );
@@ -120933,7 +121323,7 @@ function dist_createToolNameMapping({
 // src/delay.ts
 async function dist_delay(delayInMs, options) {
   if (delayInMs == null) {
-    return Promise.resolve();
+    return;
   }
   const signal = options == null ? void 0 : options.abortSignal;
   return new Promise((resolve2, reject) => {
@@ -121020,11 +121410,12 @@ function dist_convertBase64ToUint8Array(base64String) {
   return Uint8Array.from(latin1string, (byte) => byte.codePointAt(0));
 }
 function convertUint8ArrayToBase64(array) {
-  let latin1string = "";
-  for (let i = 0; i < array.length; i++) {
-    latin1string += String.fromCodePoint(array[i]);
+  const chunks = [];
+  const chunkSize = 4096;
+  for (let i = 0; i < array.length; i += chunkSize) {
+    chunks.push(String.fromCodePoint(...array.subarray(i, i + chunkSize)));
   }
-  return dist_btoa(latin1string);
+  return dist_btoa(chunks.join(""));
 }
 function dist_convertToBase64(value) {
   return value instanceof Uint8Array ? convertUint8ArrayToBase64(value) : value;
@@ -121099,6 +121490,15 @@ function isBrowserRuntime(globalThisAny = globalThis) {
   return globalThisAny.window != null;
 }
 
+// src/is-same-origin.ts
+function isSameOrigin(url, baseUrl) {
+  try {
+    return new URL(url).origin === new URL(baseUrl).origin;
+  } catch (e) {
+    return false;
+  }
+}
+
 // src/validate-download-url.ts
 function validateDownloadUrl(url) {
   let parsed;
@@ -121149,7 +121549,19 @@ function validateDownloadUrl(url) {
         message: `URL with IP address ${hostname} is not allowed`
       });
     }
-    return;
+  }
+}
+function validateDownloadAddress({
+  address,
+  family,
+  hostname
+}) {
+  const isUnsafe = family === 4 ? !isIPv4(address) || isPrivateIPv4(address) : family === 6 ? isPrivateIPv6(address) : true;
+  if (isUnsafe) {
+    throw new DownloadError({
+      url: hostname,
+      message: `Hostname ${hostname} resolved to disallowed IP address ${address}`
+    });
   }
 }
 function isIPv4(hostname) {
@@ -121238,21 +121650,140 @@ function isPrivateIPv6(ip) {
   return false;
 }
 
+// src/safe-node-fetch.ts
+function createSafeLookup(lookup) {
+  return ((hostname, options, callback) => {
+    lookup(hostname, { ...options, all: true }, (error, addresses) => {
+      if (error) {
+        callback(error);
+        return;
+      }
+      try {
+        const [firstAddress] = addresses;
+        if (firstAddress == null) {
+          throw new Error(`Hostname ${hostname} did not resolve to an address`);
+        }
+        for (const { address, family } of addresses) {
+          validateDownloadAddress({ address, family, hostname });
+        }
+        if (options.all === true) {
+          callback(null, addresses);
+        } else {
+          callback(
+            null,
+            firstAddress.address,
+            firstAddress.family
+          );
+        }
+      } catch (error2) {
+        callback(
+          error2 instanceof Error ? error2 : new Error(String(error2))
+        );
+      }
+    });
+  });
+}
+var safeNodeFetchPromise;
+function isNodeRuntime() {
+  var _a2, _b2, _c;
+  const runtimeProcess = globalThis.process;
+  return ((_a2 = runtimeProcess == null ? void 0 : runtimeProcess.release) == null ? void 0 : _a2.name) === "node" && ((_b2 = runtimeProcess.versions) == null ? void 0 : _b2.bun) == null && ((_c = runtimeProcess.versions) == null ? void 0 : _c.deno) == null && runtimeProcess.title !== "workerd" && globalThis.EdgeRuntime == null;
+}
+async function getDefaultDownloadFetch() {
+  if (!isNodeRuntime()) {
+    return globalThis.fetch;
+  }
+  return safeNodeFetchPromise != null ? safeNodeFetchPromise : safeNodeFetchPromise = createSafeNodeFetch();
+}
+async function createSafeNodeFetch() {
+  const [module, { lookup }] = await Promise.all([
+    loadNodeModule("node:module"),
+    loadNodeModule("node:dns")
+  ]);
+  const nodeRequire = module.createRequire(getCurrentModulePath());
+  const { Agent, fetch } = nodeRequire("undici");
+  const dispatcher = new Agent({
+    connect: {
+      lookup: createSafeLookup(lookup)
+    }
+  });
+  return ((input, init) => fetch(
+    input,
+    {
+      ...init,
+      dispatcher
+    }
+  ));
+}
+async function loadNodeModule(id) {
+  var _a2;
+  const processWithBuiltins = globalThis.process;
+  const builtinModule = (_a2 = processWithBuiltins == null ? void 0 : processWithBuiltins.getBuiltinModule) == null ? void 0 : _a2.call(processWithBuiltins, id);
+  if (builtinModule == null) {
+    throw new Error(`Node.js built-in module ${id} is unavailable`);
+  }
+  return builtinModule;
+}
+function getCurrentModulePath() {
+  const originalPrepareStackTrace = Error.prepareStackTrace;
+  try {
+    Error.prepareStackTrace = (_error, callSites) => callSites;
+    const error = new Error("Capture current module path");
+    Error.captureStackTrace(error, getCurrentModulePath);
+    const [caller] = error.stack;
+    const fileName = caller == null ? void 0 : caller.getFileName();
+    if (fileName == null) {
+      throw new Error("Unable to determine the current module path");
+    }
+    return fileName;
+  } finally {
+    Error.prepareStackTrace = originalPrepareStackTrace;
+  }
+}
+
 // src/fetch-with-validated-redirects.ts
 var MAX_DOWNLOAD_REDIRECTS = 10;
+async function getValidatedFetch(customFetch) {
+  return customFetch == null || customFetch === globalThis.fetch ? await getDefaultDownloadFetch() : customFetch;
+}
+async function fetchWithValidatedEndpoint({
+  url,
+  init,
+  fetch: customFetch,
+  trustedOrigin,
+  redirect = "error"
+}) {
+  const urlText = url.toString();
+  const isTrusted = trustedOrigin !== void 0 && isSameOrigin(urlText, trustedOrigin);
+  if (!isTrusted) {
+    validateDownloadUrl(urlText);
+  }
+  const fetch = isTrusted && customFetch != null ? customFetch : isTrusted ? globalThis.fetch : await getValidatedFetch(customFetch);
+  return await fetch(url, {
+    ...init,
+    redirect
+  });
+}
 async function fetchWithValidatedRedirects({
   url,
   headers,
   abortSignal,
-  maxRedirects = MAX_DOWNLOAD_REDIRECTS
+  maxRedirects = MAX_DOWNLOAD_REDIRECTS,
+  fetch: customFetch,
+  trustedOrigin
 }) {
+  var _a2;
   const baseInit = { signal: abortSignal };
   if (headers !== void 0) {
     baseInit.headers = headers;
   }
   let currentUrl = url;
   for (let redirectCount = 0; redirectCount <= maxRedirects; redirectCount++) {
-    validateDownloadUrl(currentUrl);
+    const isTrustedHop = trustedOrigin !== void 0 && isSameOrigin(currentUrl, trustedOrigin);
+    if (!isTrustedHop) {
+      validateDownloadUrl(currentUrl);
+    }
+    const fetch = isTrustedHop && customFetch != null ? customFetch : isTrustedHop ? globalThis.fetch : await getValidatedFetch(customFetch);
     const response = await fetch(currentUrl, {
       ...baseInit,
       redirect: "manual"
@@ -121266,7 +121797,7 @@ async function fetchWithValidatedRedirects({
       }
       return await fetch(currentUrl, { ...baseInit, redirect: "follow" });
     }
-    const location = response.headers.get("location");
+    const location = (_a2 = response.headers) == null ? void 0 : _a2.get("location");
     if (response.status >= 300 && response.status < 400 && location) {
       await cancelResponseBody(response);
       currentUrl = new URL(location, currentUrl).toString();
@@ -121323,6 +121854,7 @@ async function readResponseWithSizeLimit({
   } finally {
     try {
       await reader.cancel();
+    } catch (e) {
     } finally {
       reader.releaseLock();
     }
@@ -121366,6 +121898,14 @@ async function downloadBlob(url, options) {
     throw new DownloadError({ url, cause: error });
   }
 }
+
+// src/embedding-model-capabilities.ts
+var EMBEDDING_MODEL_MAX_INPUT_BYTES_PER_CALL = /* @__PURE__ */ (/* unused pure expression or super */ null && (Symbol.for(
+  "vercel.ai.embeddingModel.maxInputBytesPerCall"
+)));
+var EMBEDDING_MODEL_PROVIDER_OPTIONS_TRANSFORMER = /* @__PURE__ */ (/* unused pure expression or super */ null && (Symbol.for(
+  "vercel.ai.embeddingModel.providerOptionsTransformer"
+)));
 
 // src/generate-id.ts
 
@@ -121424,24 +121964,31 @@ function isAbortError(error) {
 
 // src/handle-fetch-error.ts
 var FETCH_FAILED_ERROR_MESSAGES = ["fetch failed", "failed to fetch"];
-var BUN_ERROR_CODES = [
+var RETRYABLE_NETWORK_ERROR_CODES = /* @__PURE__ */ new Set([
   "ConnectionRefused",
   "ConnectionClosed",
   "FailedToOpenSocket",
   "ECONNRESET",
   "ECONNREFUSED",
   "ETIMEDOUT",
-  "EPIPE"
-];
-function isBunNetworkError(error) {
-  if (!(error instanceof Error)) {
-    return false;
+  "EPIPE",
+  "UND_ERR_SOCKET",
+  "UND_ERR_HEADERS_TIMEOUT",
+  "UND_ERR_BODY_TIMEOUT",
+  "UND_ERR_CONNECT_TIMEOUT"
+]);
+function findNetworkError(error) {
+  const visited = /* @__PURE__ */ new Set();
+  let current = error;
+  while (current instanceof Error && !visited.has(current)) {
+    visited.add(current);
+    const errorWithCode = current;
+    if (typeof errorWithCode.code === "string" && RETRYABLE_NETWORK_ERROR_CODES.has(errorWithCode.code)) {
+      return errorWithCode;
+    }
+    current = current.cause;
   }
-  const code = error.code;
-  if (typeof code === "string" && BUN_ERROR_CODES.includes(code)) {
-    return true;
-  }
-  return false;
+  return void 0;
 }
 function handleFetchError({
   error,
@@ -121464,9 +122011,23 @@ function handleFetchError({
       });
     }
   }
-  if (isBunNetworkError(error)) {
+  const networkError = findNetworkError(error);
+  if (networkError != null) {
+    if (dist_APICallError.isInstance(error)) {
+      return new dist_APICallError({
+        message: error.message,
+        cause: error.cause,
+        url: error.url,
+        requestBodyValues: error.requestBodyValues,
+        statusCode: error.statusCode,
+        responseHeaders: error.responseHeaders,
+        responseBody: error.responseBody,
+        data: error.data,
+        isRetryable: true
+      });
+    }
     return new dist_APICallError({
-      message: `Cannot connect to API: ${error.message}`,
+      message: `Cannot connect to API: ${error instanceof Error ? error.message : networkError.message}`,
       cause: error,
       url,
       requestBodyValues,
@@ -121529,7 +122090,7 @@ function withUserAgentSuffix(headers, ...userAgentSuffixParts) {
 }
 
 // src/version.ts
-var dist_VERSION =  true ? "4.0.30" : 0;
+var dist_VERSION =  true ? "4.0.57" : 0;
 
 // src/get-from-api.ts
 var getOriginalFetch = () => globalThis.fetch;
@@ -121539,10 +122100,10 @@ var getFromApi = async ({
   successfulResponseHandler,
   failedResponseHandler,
   abortSignal,
-  fetch: fetch2 = getOriginalFetch()
+  fetch = getOriginalFetch()
 }) => {
   try {
-    const response = await fetch2(url, {
+    const response = await fetch(url, {
       method: "GET",
       headers: withUserAgentSuffix(
         headers,
@@ -121645,15 +122206,6 @@ function dist_isNonNullable(value) {
   return value != null;
 }
 
-// src/is-same-origin.ts
-function isSameOrigin(url, baseUrl) {
-  try {
-    return new URL(url).origin === new URL(baseUrl).origin;
-  } catch (e) {
-    return false;
-  }
-}
-
 // src/is-url-supported.ts
 function isUrlSupported({
   mediaType,
@@ -121665,7 +122217,9 @@ function isUrlSupported({
   return Object.entries(supportedUrls).map(([key, value]) => {
     const mediaType2 = key.toLowerCase();
     return mediaType2 === "*" || mediaType2 === "*/*" ? { mediaTypePrefix: "", regexes: value } : { mediaTypePrefix: mediaType2.replace(/\*/, ""), regexes: value };
-  }).filter(({ mediaTypePrefix }) => mediaType.startsWith(mediaTypePrefix)).flatMap(({ regexes }) => regexes).some((pattern) => pattern.test(url));
+  }).filter(
+    ({ mediaTypePrefix }) => mediaTypePrefix === "" || mediaTypePrefix.endsWith("/") ? mediaType.startsWith(mediaTypePrefix) : mediaType === mediaTypePrefix
+  ).flatMap(({ regexes }) => regexes).some((pattern) => pattern.test(url));
 }
 
 // src/load-api-key.ts
@@ -121733,23 +122287,23 @@ function loadSetting({
     return settingValue;
   }
   if (settingValue != null) {
-    throw new dist_LoadSettingError({
+    throw new LoadSettingError({
       message: `${description} setting must be a string.`
     });
   }
   if (typeof process === "undefined") {
-    throw new dist_LoadSettingError({
+    throw new LoadSettingError({
       message: `${description} setting is missing. Pass it using the '${settingName}' parameter. Environment variables are not supported in this environment.`
     });
   }
   settingValue = process.env[environmentVariableName];
   if (settingValue == null) {
-    throw new dist_LoadSettingError({
+    throw new LoadSettingError({
       message: `${description} setting is missing. Pass it using the '${settingName}' parameter or the ${environmentVariableName} environment variable.`
     });
   }
   if (typeof settingValue !== "string") {
-    throw new dist_LoadSettingError({
+    throw new LoadSettingError({
       message: `${description} setting must be a string. The value of the ${environmentVariableName} environment variable is not a string.`
     });
   }
@@ -121831,7 +122385,8 @@ function secureJsonParse(text) {
 // src/add-additional-properties-to-json-schema.ts
 function addAdditionalPropertiesToJsonSchema(jsonSchema2) {
   if (jsonSchema2.type === "object" || Array.isArray(jsonSchema2.type) && jsonSchema2.type.includes("object")) {
-    jsonSchema2.additionalProperties = false;
+    const { additionalProperties } = jsonSchema2;
+    jsonSchema2.additionalProperties = additionalProperties != null && typeof additionalProperties !== "boolean" ? visit(additionalProperties) : false;
     const { properties } = jsonSchema2;
     if (properties != null) {
       for (const key of Object.keys(properties)) {
@@ -122101,7 +122656,7 @@ var zodPatterns = {
   /**
    * `a-z` was added to replicate /i flag
    */
-  email: /^(?!\.)(?!.*\.\.)([a-zA-Z0-9_'+\-\.]*)[a-zA-Z0-9_+-]@([a-zA-Z0-9][a-zA-Z0-9\-]*\.)+[a-zA-Z]{2,}$/,
+  email: /^(?!\.)(?!.*\.\.)([a-zA-Z0-9_'+\-.]*)[a-zA-Z0-9_+-]@([a-zA-Z0-9][a-zA-Z0-9-]*\.)+[a-zA-Z]{2,}$/,
   /**
    * Constructed a valid Unicode RegExp
    *
@@ -123073,15 +123628,26 @@ function isSchema(value) {
   return typeof value === "object" && value !== null && schemaSymbol in value && value[schemaSymbol] === true && "jsonSchema" in value && "validate" in value;
 }
 function asSchema(schema) {
-  return schema == null ? jsonSchema({ properties: {}, additionalProperties: false }) : isSchema(schema) ? schema : "~standard" in schema ? schema["~standard"].vendor === "zod" ? zodSchema(schema) : standardSchema(schema) : schema();
+  return schema == null ? jsonSchema({
+    type: "object",
+    properties: {},
+    additionalProperties: false
+  }) : isSchema(schema) ? schema : "~standard" in schema ? schema["~standard"].vendor === "zod" ? zodSchema(schema) : standardSchema(schema) : schema();
 }
 function standardSchema(standardSchema2) {
   return jsonSchema(
-    () => addAdditionalPropertiesToJsonSchema(
-      standardSchema2["~standard"].jsonSchema.input({
-        target: "draft-07"
-      })
-    ),
+    () => {
+      if (!hasStandardJsonSchema(standardSchema2)) {
+        throw new Error(
+          `Standard schema vendor '${standardSchema2["~standard"].vendor}' does not support JSON Schema conversion.`
+        );
+      }
+      return addAdditionalPropertiesToJsonSchema(
+        standardSchema2["~standard"].jsonSchema.input({
+          target: "draft-07"
+        })
+      );
+    },
     {
       validate: async (value) => {
         const result = await standardSchema2["~standard"].validate(value);
@@ -123095,6 +123661,9 @@ function standardSchema(standardSchema2) {
       }
     }
   );
+}
+function hasStandardJsonSchema(schema) {
+  return schema["~standard"].jsonSchema != null;
 }
 function zod3Schema(zodSchema2, options) {
   var _a2;
@@ -123280,7 +123849,7 @@ var dist_postJsonToApi = async ({
   failedResponseHandler,
   successfulResponseHandler,
   abortSignal,
-  fetch: fetch2
+  fetch
 }) => postToApi({
   url,
   headers: {
@@ -123294,7 +123863,7 @@ var dist_postJsonToApi = async ({
   failedResponseHandler,
   successfulResponseHandler,
   abortSignal,
-  fetch: fetch2
+  fetch
 });
 var postFormDataToApi = async ({
   url,
@@ -123303,7 +123872,7 @@ var postFormDataToApi = async ({
   failedResponseHandler,
   successfulResponseHandler,
   abortSignal,
-  fetch: fetch2
+  fetch
 }) => postToApi({
   url,
   headers,
@@ -123314,7 +123883,7 @@ var postFormDataToApi = async ({
   failedResponseHandler,
   successfulResponseHandler,
   abortSignal,
-  fetch: fetch2
+  fetch
 });
 var postToApi = async ({
   url,
@@ -123323,10 +123892,10 @@ var postToApi = async ({
   successfulResponseHandler,
   failedResponseHandler,
   abortSignal,
-  fetch: fetch2 = getOriginalFetch2()
+  fetch = getOriginalFetch2()
 }) => {
   try {
-    const response = await fetch2(url, {
+    const response = await fetch(url, {
       method: "POST",
       headers: withUserAgentSuffix(
         headers,
@@ -123464,17 +124033,164 @@ async function dist_resolve(value) {
   if (typeof value === "function") {
     value = value();
   }
-  return Promise.resolve(value);
+  return value;
+}
+
+// src/retry-with-exponential-backoff.ts
+var retryWithExponentialBackoff = ({
+  maxRetries = 2,
+  initialDelayInMs = 2e3,
+  backoffFactor = 2,
+  abortSignal,
+  shouldRetry,
+  getDelayInMs = ({ exponentialBackoffDelay }) => exponentialBackoffDelay,
+  createRetryError = ({ message }) => new Error(message)
+}) => async (f) => retryWithExponentialBackoffInternal(f, {
+  maxRetries,
+  delayInMs: initialDelayInMs,
+  backoffFactor,
+  abortSignal,
+  shouldRetry,
+  getDelayInMs,
+  createRetryError
+});
+async function retryWithExponentialBackoffInternal(f, {
+  maxRetries,
+  delayInMs,
+  backoffFactor,
+  abortSignal,
+  shouldRetry,
+  getDelayInMs,
+  createRetryError
+}, errors = []) {
+  try {
+    return await f();
+  } catch (error) {
+    if (isAbortError(error)) {
+      throw error;
+    }
+    if (maxRetries === 0) {
+      throw error;
+    }
+    const errorMessage = dist_getErrorMessage(error);
+    const newErrors = [...errors, error];
+    const tryNumber = newErrors.length;
+    if (tryNumber > maxRetries) {
+      throw createRetryError({
+        message: `Failed after ${tryNumber} attempts. Last error: ${errorMessage}`,
+        reason: "maxRetriesExceeded",
+        errors: newErrors
+      });
+    }
+    if (await shouldRetry(error) && tryNumber <= maxRetries) {
+      await dist_delay(
+        getDelayInMs({
+          error,
+          exponentialBackoffDelay: delayInMs
+        }),
+        { abortSignal }
+      );
+      return retryWithExponentialBackoffInternal(
+        f,
+        {
+          maxRetries,
+          delayInMs: backoffFactor * delayInMs,
+          backoffFactor,
+          abortSignal,
+          shouldRetry,
+          getDelayInMs,
+          createRetryError
+        },
+        newErrors
+      );
+    }
+    if (tryNumber === 1) {
+      throw error;
+    }
+    throw createRetryError({
+      message: `Failed after ${tryNumber} attempts with non-retryable error: '${errorMessage}'`,
+      reason: "errorNotRetryable",
+      errors: newErrors
+    });
+  }
 }
 
 // src/response-handler.ts
 
+var textDecoder = new TextDecoder();
+function wrapResponseBodyStream({
+  stream,
+  url,
+  requestBodyValues,
+  statusCode,
+  responseHeaders
+}) {
+  const reader = stream.getReader();
+  let readerReleased = false;
+  const releaseReader = () => {
+    if (!readerReleased) {
+      reader.releaseLock();
+      readerReleased = true;
+    }
+  };
+  return new ReadableStream({
+    async pull(controller) {
+      try {
+        const { done, value } = await reader.read();
+        if (done) {
+          releaseReader();
+          controller.close();
+        } else {
+          controller.enqueue(value);
+        }
+      } catch (error) {
+        releaseReader();
+        if (isAbortError(error)) {
+          controller.error(error);
+          return;
+        }
+        controller.error(
+          handleFetchError({
+            error: new dist_APICallError({
+              message: "Failed to process successful response",
+              cause: error,
+              statusCode,
+              url,
+              responseHeaders,
+              requestBodyValues
+            }),
+            url,
+            requestBodyValues
+          })
+        );
+      }
+    },
+    async cancel(reason) {
+      try {
+        await reader.cancel(reason);
+      } finally {
+        releaseReader();
+      }
+    }
+  });
+}
+async function readResponseBodyAsText({
+  response,
+  url
+}) {
+  return textDecoder.decode(
+    await readResponseWithSizeLimit({
+      response,
+      url
+    })
+  );
+}
 var createJsonErrorResponseHandler = ({
   errorSchema,
   errorToMessage,
   isRetryable
 }) => async ({ response, url, requestBodyValues }) => {
-  const responseBody = await response.text();
+  const responseBody = await readResponseBodyAsText({ response, url });
   const responseHeaders = extractResponseHeaders(response);
   if (responseBody.trim() === "") {
     return {
@@ -123523,7 +124239,7 @@ var createJsonErrorResponseHandler = ({
     };
   }
 };
-var dist_createEventSourceResponseHandler = (chunkSchema) => async ({ response }) => {
+var dist_createEventSourceResponseHandler = (chunkSchema) => async ({ response, url, requestBodyValues }) => {
   const responseHeaders = extractResponseHeaders(response);
   if (response.body == null) {
     throw new EmptyResponseBodyError({});
@@ -123531,13 +124247,19 @@ var dist_createEventSourceResponseHandler = (chunkSchema) => async ({ response }
   return {
     responseHeaders,
     value: dist_parseJsonEventStream({
-      stream: response.body,
+      stream: wrapResponseBodyStream({
+        stream: response.body,
+        url,
+        requestBodyValues,
+        statusCode: response.status,
+        responseHeaders
+      }),
       schema: chunkSchema
     })
   };
 };
 var dist_createJsonResponseHandler = (responseSchema) => async ({ response, url, requestBodyValues }) => {
-  const responseBody = await response.text();
+  const responseBody = await readResponseBodyAsText({ response, url });
   const parsedResult = await dist_safeParseJSON({
     text: responseBody,
     schema: responseSchema
@@ -123592,7 +124314,7 @@ var createBinaryResponseHandler = () => async ({ response, url, requestBodyValue
 };
 var createStatusCodeErrorResponseHandler = () => async ({ response, url, requestBodyValues }) => {
   const responseHeaders = extractResponseHeaders(response);
-  const responseBody = await response.text();
+  const responseBody = await readResponseBodyAsText({ response, url });
   return {
     responseHeaders,
     value: new APICallError4({
@@ -123604,6 +124326,365 @@ var createStatusCodeErrorResponseHandler = () => async ({ response, url, request
       responseBody
     })
   };
+};
+
+// src/streaming-tool-call-tracker.ts
+
+
+// src/streaming-tool-call-argument-state.ts
+function startsWithStructuredValue(value) {
+  if (typeof value !== "string") {
+    return false;
+  }
+  const firstCharacter = value.trimStart()[0];
+  return firstCharacter === "{" || firstCharacter === "[";
+}
+var StreamingToolCallArgumentState = class {
+  constructor(initialValue = "") {
+    this.structure = { kind: "undetermined" };
+    this.append(initialValue);
+  }
+  get hasCompleteStructuredValue() {
+    return this.structure.kind === "structured" && this.structure.complete === true;
+  }
+  append(delta) {
+    let nextStructure = this.structure;
+    for (const character of delta) {
+      if (nextStructure.kind === "undetermined") {
+        if (/\s/.test(character)) {
+          continue;
+        }
+        if (character !== "{" && character !== "[") {
+          nextStructure = { kind: "other" };
+          continue;
+        }
+        nextStructure = {
+          kind: "structured",
+          stack: [character],
+          inString: false,
+          escaped: false,
+          complete: false
+        };
+        continue;
+      }
+      if (nextStructure.kind !== "structured" || nextStructure.complete) {
+        continue;
+      }
+      if (nextStructure.inString) {
+        if (nextStructure.escaped) {
+          nextStructure.escaped = false;
+        } else if (character === "\\") {
+          nextStructure.escaped = true;
+        } else if (character === '"') {
+          nextStructure.inString = false;
+        }
+        continue;
+      }
+      if (character === '"') {
+        nextStructure.inString = true;
+      } else if (character === "{" || character === "[") {
+        nextStructure.stack.push(character);
+      } else if (character === "}" || character === "]") {
+        const expectedOpening = character === "}" ? "{" : "[";
+        if (nextStructure.stack[nextStructure.stack.length - 1] !== expectedOpening) {
+          nextStructure = { kind: "other" };
+          continue;
+        }
+        nextStructure.stack.pop();
+        if (nextStructure.stack.length === 0) {
+          nextStructure.complete = true;
+        }
+      }
+    }
+    this.structure = nextStructure;
+  }
+};
+
+// src/streaming-tool-call-tracker.ts
+var StreamingToolCallTracker = class {
+  constructor(controller, options = {}) {
+    this.toolCalls = [];
+    this.toolCallsById = /* @__PURE__ */ new Map();
+    this.toolCallsByIndex = /* @__PURE__ */ new Map();
+    this.usedToolCallIds = /* @__PURE__ */ new Set();
+    this.nextGeneratedIdSuffixes = /* @__PURE__ */ new Map();
+    var _a2, _b2;
+    this.controller = controller;
+    this._generateId = (_a2 = options.generateId) != null ? _a2 : dist_generateId;
+    this.typeValidation = (_b2 = options.typeValidation) != null ? _b2 : "none";
+    this.extractMetadata = options.extractMetadata;
+    this.buildToolCallProviderMetadata = options.buildToolCallProviderMetadata;
+  }
+  processDelta(toolCallDelta) {
+    var _a2, _b2;
+    const wireName = (_a2 = toolCallDelta.function) == null ? void 0 : _a2.name;
+    const hasBlankName = typeof wireName === "string" && wireName.trim().length === 0;
+    const wireId = this.getNonBlankString(toolCallDelta.id);
+    const name2 = this.getNonBlankString(wireName);
+    const { index } = toolCallDelta;
+    const resolution = this.resolveToolCall({
+      wireId,
+      index,
+      name: name2,
+      hasExplicitCallStart: name2 != null && startsWithStructuredValue((_b2 = toolCallDelta.function) == null ? void 0 : _b2.arguments)
+    });
+    if (resolution.kind === "ambiguous") {
+      return;
+    }
+    let toolCall;
+    if (resolution.kind === "new") {
+      if (hasBlankName) {
+        return;
+      }
+      toolCall = this.processNewToolCall(toolCallDelta, {
+        wireId,
+        index,
+        name: name2
+      });
+    } else {
+      toolCall = resolution.toolCall;
+      if (wireId != null) {
+        this.associateWireId(toolCall, wireId);
+      }
+      this.processExistingToolCall(toolCall, toolCallDelta);
+    }
+    if (index != null) {
+      this.associateIndex(toolCall, index);
+    }
+  }
+  flush() {
+    const toolCalls = this.toolCalls.every((toolCall) => toolCall.index != null) ? [...this.toolCalls].sort(
+      (a, b) => a.index - b.index || a.sequence - b.sequence
+    ) : this.toolCalls;
+    for (const toolCall of toolCalls) {
+      if (!toolCall.hasFinished) {
+        this.finishToolCall(toolCall);
+      }
+    }
+  }
+  resolveToolCall({
+    wireId,
+    index,
+    name: name2,
+    hasExplicitCallStart
+  }) {
+    const indexedToolCalls = index != null ? this.toolCallsByIndex.get(index) : void 0;
+    const matchingIndexedToolCalls = this.filterToolCallsByName(
+      indexedToolCalls,
+      name2
+    );
+    if (wireId != null) {
+      const toolCallsWithId = this.toolCallsById.get(wireId);
+      if (toolCallsWithId != null) {
+        if (index != null) {
+          const matchingToolCalls = matchingIndexedToolCalls.filter(
+            (toolCall) => toolCallsWithId.has(toolCall)
+          );
+          const matchingToolCall = this.resolveMatchingToolCall(
+            matchingToolCalls,
+            hasExplicitCallStart
+          );
+          if (matchingToolCall.kind !== "new") {
+            return matchingToolCall;
+          }
+          if (name2 != null) {
+            return { kind: "new" };
+          }
+          if (indexedToolCalls != null) {
+            return { kind: "ambiguous" };
+          }
+          return this.resolveMatchingToolCall([...toolCallsWithId], false);
+        }
+        if (name2 != null) {
+          const matchingToolCalls = [...toolCallsWithId].filter(
+            (toolCall) => toolCall.function.name === name2
+          );
+          return this.resolveMatchingToolCall(
+            matchingToolCalls,
+            hasExplicitCallStart
+          );
+        }
+        return this.resolveMatchingToolCall([...toolCallsWithId], false);
+      }
+      if (matchingIndexedToolCalls.length > 0) {
+        return hasExplicitCallStart ? { kind: "new" } : this.resolveMatchingToolCall(matchingIndexedToolCalls, false);
+      }
+      return { kind: "new" };
+    }
+    if (indexedToolCalls != null) {
+      return this.resolveMatchingToolCall(
+        matchingIndexedToolCalls,
+        hasExplicitCallStart
+      );
+    }
+    if (name2 != null) {
+      return { kind: "new" };
+    }
+    const unfinishedToolCalls = this.toolCalls.filter(
+      (toolCall) => !toolCall.hasFinished
+    );
+    if (unfinishedToolCalls.length === 1) {
+      return { kind: "existing", toolCall: unfinishedToolCalls[0] };
+    }
+    return unfinishedToolCalls.length > 1 ? { kind: "ambiguous" } : { kind: "new" };
+  }
+  filterToolCallsByName(toolCalls, name2) {
+    if (toolCalls == null) {
+      return [];
+    }
+    return [...toolCalls].filter(
+      (toolCall) => name2 == null || toolCall.function.name === name2
+    );
+  }
+  resolveMatchingToolCall(toolCalls, hasExplicitCallStart) {
+    if (toolCalls.length === 0) {
+      return { kind: "new" };
+    }
+    if (!hasExplicitCallStart) {
+      return toolCalls.length === 1 ? { kind: "existing", toolCall: toolCalls[0] } : { kind: "ambiguous" };
+    }
+    const continuableToolCalls = toolCalls.filter(
+      (toolCall) => !toolCall.argumentState.hasCompleteStructuredValue
+    );
+    if (continuableToolCalls.length === 1) {
+      return { kind: "existing", toolCall: continuableToolCalls[0] };
+    }
+    return continuableToolCalls.length > 1 ? { kind: "ambiguous" } : { kind: "new" };
+  }
+  processNewToolCall(toolCallDelta, {
+    wireId,
+    index,
+    name: name2
+  }) {
+    var _a2, _b2, _c, _d, _e;
+    if (this.typeValidation === "required") {
+      if (toolCallDelta.type !== "function") {
+        throw new InvalidResponseDataError({
+          data: toolCallDelta,
+          message: `Expected 'function' type.`
+        });
+      }
+    } else if (this.typeValidation === "if-present") {
+      if (toolCallDelta.type != null && toolCallDelta.type !== "function") {
+        throw new InvalidResponseDataError({
+          data: toolCallDelta,
+          message: `Expected 'function' type.`
+        });
+      }
+    }
+    if (name2 == null) {
+      throw new InvalidResponseDataError({
+        data: toolCallDelta,
+        message: `Expected 'function.name' to be a string.`
+      });
+    }
+    const id = this.createToolCallId(wireId);
+    this.controller.enqueue({
+      type: "tool-input-start",
+      id,
+      toolName: name2
+    });
+    const toolCall = {
+      id,
+      index: index != null ? index : void 0,
+      sequence: this.toolCalls.length,
+      type: "function",
+      function: {
+        name: name2,
+        arguments: (_b2 = (_a2 = toolCallDelta.function) == null ? void 0 : _a2.arguments) != null ? _b2 : ""
+      },
+      argumentState: new StreamingToolCallArgumentState(
+        (_d = (_c = toolCallDelta.function) == null ? void 0 : _c.arguments) != null ? _d : ""
+      ),
+      hasFinished: false,
+      metadata: (_e = this.extractMetadata) == null ? void 0 : _e.call(this, toolCallDelta)
+    };
+    this.toolCalls.push(toolCall);
+    if (wireId != null) {
+      this.associateWireId(toolCall, wireId);
+    }
+    if (toolCall.function.arguments.length > 0) {
+      this.controller.enqueue({
+        type: "tool-input-delta",
+        id: toolCall.id,
+        delta: toolCall.function.arguments
+      });
+    }
+    return toolCall;
+  }
+  associateWireId(toolCall, wireId) {
+    let toolCallsWithId = this.toolCallsById.get(wireId);
+    if (toolCallsWithId == null) {
+      toolCallsWithId = /* @__PURE__ */ new Set();
+      this.toolCallsById.set(wireId, toolCallsWithId);
+    }
+    toolCallsWithId.add(toolCall);
+  }
+  associateIndex(toolCall, index) {
+    let toolCallsWithIndex = this.toolCallsByIndex.get(index);
+    if (toolCallsWithIndex == null) {
+      toolCallsWithIndex = /* @__PURE__ */ new Set();
+      this.toolCallsByIndex.set(index, toolCallsWithIndex);
+    }
+    toolCallsWithIndex.add(toolCall);
+  }
+  createToolCallId(wireId) {
+    var _a2, _b2;
+    if (wireId != null && !this.usedToolCallIds.has(wireId)) {
+      this.usedToolCallIds.add(wireId);
+      return wireId;
+    }
+    const generatedId = (_a2 = this.getNonBlankString(this._generateId())) != null ? _a2 : "tool-call";
+    if (!this.usedToolCallIds.has(generatedId)) {
+      this.usedToolCallIds.add(generatedId);
+      return generatedId;
+    }
+    const initialSuffix = (_b2 = this.nextGeneratedIdSuffixes.get(generatedId)) != null ? _b2 : 1;
+    const maximumSuffix = initialSuffix + this.usedToolCallIds.size;
+    for (let suffix = initialSuffix; suffix <= maximumSuffix; suffix++) {
+      const suffixedId = `${generatedId}-${suffix}`;
+      if (!this.usedToolCallIds.has(suffixedId)) {
+        this.usedToolCallIds.add(suffixedId);
+        this.nextGeneratedIdSuffixes.set(generatedId, suffix + 1);
+        return suffixedId;
+      }
+    }
+    throw new Error("Failed to create a unique tool call ID.");
+  }
+  getNonBlankString(value) {
+    return value != null && value.trim().length > 0 ? value : void 0;
+  }
+  processExistingToolCall(toolCall, toolCallDelta) {
+    var _a2;
+    if (!toolCall.hasFinished && ((_a2 = toolCallDelta.function) == null ? void 0 : _a2.arguments) != null) {
+      toolCall.argumentState.append(toolCallDelta.function.arguments);
+      toolCall.function.arguments += toolCallDelta.function.arguments;
+      this.controller.enqueue({
+        type: "tool-input-delta",
+        id: toolCall.id,
+        delta: toolCallDelta.function.arguments
+      });
+    }
+  }
+  finishToolCall(toolCall) {
+    var _a2;
+    this.controller.enqueue({
+      type: "tool-input-end",
+      id: toolCall.id
+    });
+    const providerMetadata = (_a2 = this.buildToolCallProviderMetadata) == null ? void 0 : _a2.call(
+      this,
+      toolCall.metadata
+    );
+    this.controller.enqueue({
+      type: "tool-call",
+      toolCallId: toolCall.id,
+      toolName: toolCall.function.name,
+      input: toolCall.function.arguments,
+      ...providerMetadata ? { providerMetadata } : {}
+    });
+    toolCall.hasFinished = true;
+  }
 };
 
 // src/strip-file-extension.ts
@@ -123643,6 +124724,392 @@ async function* executeTool({
 
 // src/index.ts
 
+
+//# sourceMappingURL=index.mjs.map
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+provider@3.0.10/node_modules/@ai-sdk/provider/dist/index.mjs
+// src/errors/ai-sdk-error.ts
+var provider_dist_marker = "vercel.ai.error";
+var provider_dist_symbol = Symbol.for(provider_dist_marker);
+var provider_dist_a, provider_dist_b;
+var dist_AISDKError = class _AISDKError extends (provider_dist_b = Error, provider_dist_a = provider_dist_symbol, provider_dist_b) {
+  /**
+   * Creates an AI SDK Error.
+   *
+   * @param {Object} params - The parameters for creating the error.
+   * @param {string} params.name - The name of the error.
+   * @param {string} params.message - The error message.
+   * @param {unknown} [params.cause] - The underlying cause of the error.
+   */
+  constructor({
+    name: name14,
+    message,
+    cause
+  }) {
+    super(message);
+    this[provider_dist_a] = true;
+    this.name = name14;
+    this.cause = cause;
+  }
+  /**
+   * Checks if the given error is an AI SDK Error.
+   * @param {unknown} error - The error to check.
+   * @returns {boolean} True if the error is an AI SDK Error, false otherwise.
+   */
+  static isInstance(error) {
+    return _AISDKError.hasMarker(error, provider_dist_marker);
+  }
+  static hasMarker(error, marker15) {
+    const markerSymbol = Symbol.for(marker15);
+    return error != null && typeof error === "object" && markerSymbol in error && typeof error[markerSymbol] === "boolean" && error[markerSymbol] === true;
+  }
+};
+
+// src/errors/api-call-error.ts
+var provider_dist_name = "AI_APICallError";
+var dist_marker2 = `vercel.ai.error.${provider_dist_name}`;
+var dist_symbol2 = Symbol.for(dist_marker2);
+var dist_a2, dist_b2;
+var provider_dist_APICallError = class extends (dist_b2 = dist_AISDKError, dist_a2 = dist_symbol2, dist_b2) {
+  constructor({
+    message,
+    url,
+    requestBodyValues,
+    statusCode,
+    responseHeaders,
+    responseBody,
+    cause,
+    isRetryable = statusCode != null && (statusCode === 408 || // request timeout
+    statusCode === 409 || // conflict
+    statusCode === 429 || // too many requests
+    statusCode >= 500),
+    // server error
+    data
+  }) {
+    super({ name: provider_dist_name, message, cause });
+    this[dist_a2] = true;
+    this.url = url;
+    this.requestBodyValues = requestBodyValues;
+    this.statusCode = statusCode;
+    this.responseHeaders = responseHeaders;
+    this.responseBody = responseBody;
+    this.isRetryable = isRetryable;
+    this.data = data;
+  }
+  static isInstance(error) {
+    return dist_AISDKError.hasMarker(error, dist_marker2);
+  }
+};
+
+// src/errors/empty-response-body-error.ts
+var dist_name2 = "AI_EmptyResponseBodyError";
+var dist_marker3 = `vercel.ai.error.${dist_name2}`;
+var dist_symbol3 = Symbol.for(dist_marker3);
+var dist_a3, dist_b3;
+var dist_EmptyResponseBodyError = class extends (dist_b3 = dist_AISDKError, dist_a3 = dist_symbol3, dist_b3) {
+  // used in isInstance
+  constructor({ message = "Empty response body" } = {}) {
+    super({ name: dist_name2, message });
+    this[dist_a3] = true;
+  }
+  static isInstance(error) {
+    return dist_AISDKError.hasMarker(error, dist_marker3);
+  }
+};
+
+// src/errors/get-error-message.ts
+function provider_dist_getErrorMessage(error) {
+  if (error == null) {
+    return "unknown error";
+  }
+  if (typeof error === "string") {
+    return error;
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return JSON.stringify(error);
+}
+
+// src/errors/invalid-argument-error.ts
+var dist_name3 = "AI_InvalidArgumentError";
+var dist_marker4 = `vercel.ai.error.${dist_name3}`;
+var dist_symbol4 = Symbol.for(dist_marker4);
+var dist_a4, dist_b4;
+var dist_InvalidArgumentError = class extends (dist_b4 = dist_AISDKError, dist_a4 = dist_symbol4, dist_b4) {
+  constructor({
+    message,
+    cause,
+    argument
+  }) {
+    super({ name: dist_name3, message, cause });
+    this[dist_a4] = true;
+    this.argument = argument;
+  }
+  static isInstance(error) {
+    return dist_AISDKError.hasMarker(error, dist_marker4);
+  }
+};
+
+// src/errors/invalid-prompt-error.ts
+var dist_name4 = "AI_InvalidPromptError";
+var dist_marker5 = `vercel.ai.error.${dist_name4}`;
+var dist_symbol5 = Symbol.for(dist_marker5);
+var dist_a5, dist_b5;
+var dist_InvalidPromptError = class extends (dist_b5 = dist_AISDKError, dist_a5 = dist_symbol5, dist_b5) {
+  constructor({
+    prompt,
+    message,
+    cause
+  }) {
+    super({ name: dist_name4, message: `Invalid prompt: ${message}`, cause });
+    this[dist_a5] = true;
+    this.prompt = prompt;
+  }
+  static isInstance(error) {
+    return dist_AISDKError.hasMarker(error, dist_marker5);
+  }
+};
+
+// src/errors/invalid-response-data-error.ts
+var dist_name5 = "AI_InvalidResponseDataError";
+var dist_marker6 = `vercel.ai.error.${dist_name5}`;
+var dist_symbol6 = Symbol.for(dist_marker6);
+var dist_a6, dist_b6;
+var provider_dist_InvalidResponseDataError = class extends (dist_b6 = dist_AISDKError, dist_a6 = dist_symbol6, dist_b6) {
+  constructor({
+    data,
+    message = `Invalid response data: ${JSON.stringify(data)}.`
+  }) {
+    super({ name: dist_name5, message });
+    this[dist_a6] = true;
+    this.data = data;
+  }
+  static isInstance(error) {
+    return dist_AISDKError.hasMarker(error, dist_marker6);
+  }
+};
+
+// src/errors/json-parse-error.ts
+var dist_name6 = "AI_JSONParseError";
+var dist_marker7 = `vercel.ai.error.${dist_name6}`;
+var dist_symbol7 = Symbol.for(dist_marker7);
+var dist_a7, dist_b7;
+var dist_JSONParseError = class extends (dist_b7 = dist_AISDKError, dist_a7 = dist_symbol7, dist_b7) {
+  constructor({ text, cause }) {
+    super({
+      name: dist_name6,
+      message: `JSON parsing failed: Text: ${text}.
+Error message: ${provider_dist_getErrorMessage(cause)}`,
+      cause
+    });
+    this[dist_a7] = true;
+    this.text = text;
+  }
+  static isInstance(error) {
+    return dist_AISDKError.hasMarker(error, dist_marker7);
+  }
+};
+
+// src/errors/load-api-key-error.ts
+var dist_name7 = "AI_LoadAPIKeyError";
+var dist_marker8 = `vercel.ai.error.${dist_name7}`;
+var dist_symbol8 = Symbol.for(dist_marker8);
+var dist_a8, dist_b8;
+var dist_LoadAPIKeyError = class extends (dist_b8 = dist_AISDKError, dist_a8 = dist_symbol8, dist_b8) {
+  // used in isInstance
+  constructor({ message }) {
+    super({ name: dist_name7, message });
+    this[dist_a8] = true;
+  }
+  static isInstance(error) {
+    return dist_AISDKError.hasMarker(error, dist_marker8);
+  }
+};
+
+// src/errors/load-setting-error.ts
+var dist_name8 = "AI_LoadSettingError";
+var dist_marker9 = `vercel.ai.error.${dist_name8}`;
+var dist_symbol9 = Symbol.for(dist_marker9);
+var dist_a9, dist_b9;
+var dist_LoadSettingError = class extends (dist_b9 = dist_AISDKError, dist_a9 = dist_symbol9, dist_b9) {
+  // used in isInstance
+  constructor({ message }) {
+    super({ name: dist_name8, message });
+    this[dist_a9] = true;
+  }
+  static isInstance(error) {
+    return dist_AISDKError.hasMarker(error, dist_marker9);
+  }
+};
+
+// src/errors/no-content-generated-error.ts
+var dist_name9 = "AI_NoContentGeneratedError";
+var dist_marker10 = `vercel.ai.error.${dist_name9}`;
+var dist_symbol10 = Symbol.for(dist_marker10);
+var dist_a10, dist_b10;
+var dist_NoContentGeneratedError = class extends (dist_b10 = dist_AISDKError, dist_a10 = dist_symbol10, dist_b10) {
+  // used in isInstance
+  constructor({
+    message = "No content generated."
+  } = {}) {
+    super({ name: dist_name9, message });
+    this[dist_a10] = true;
+  }
+  static isInstance(error) {
+    return dist_AISDKError.hasMarker(error, dist_marker10);
+  }
+};
+
+// src/errors/no-such-model-error.ts
+var dist_name10 = "AI_NoSuchModelError";
+var dist_marker11 = `vercel.ai.error.${dist_name10}`;
+var dist_symbol11 = Symbol.for(dist_marker11);
+var dist_a11, dist_b11;
+var dist_NoSuchModelError = class extends (dist_b11 = dist_AISDKError, dist_a11 = dist_symbol11, dist_b11) {
+  constructor({
+    errorName = dist_name10,
+    modelId,
+    modelType,
+    message = `No such ${modelType}: ${modelId}`
+  }) {
+    super({ name: errorName, message });
+    this[dist_a11] = true;
+    this.modelId = modelId;
+    this.modelType = modelType;
+  }
+  static isInstance(error) {
+    return dist_AISDKError.hasMarker(error, dist_marker11);
+  }
+};
+
+// src/errors/too-many-embedding-values-for-call-error.ts
+var dist_name11 = "AI_TooManyEmbeddingValuesForCallError";
+var dist_marker12 = `vercel.ai.error.${dist_name11}`;
+var dist_symbol12 = Symbol.for(dist_marker12);
+var dist_a12, dist_b12;
+var dist_TooManyEmbeddingValuesForCallError = class extends (dist_b12 = dist_AISDKError, dist_a12 = dist_symbol12, dist_b12) {
+  constructor(options) {
+    super({
+      name: dist_name11,
+      message: `Too many values for a single embedding call. The ${options.provider} model "${options.modelId}" can only embed up to ${options.maxEmbeddingsPerCall} values per call, but ${options.values.length} values were provided.`
+    });
+    this[dist_a12] = true;
+    this.provider = options.provider;
+    this.modelId = options.modelId;
+    this.maxEmbeddingsPerCall = options.maxEmbeddingsPerCall;
+    this.values = options.values;
+  }
+  static isInstance(error) {
+    return dist_AISDKError.hasMarker(error, dist_marker12);
+  }
+};
+
+// src/errors/type-validation-error.ts
+var dist_name12 = "AI_TypeValidationError";
+var dist_marker13 = `vercel.ai.error.${dist_name12}`;
+var dist_symbol13 = Symbol.for(dist_marker13);
+var dist_a13, dist_b13;
+var dist_TypeValidationError = class _TypeValidationError extends (dist_b13 = dist_AISDKError, dist_a13 = dist_symbol13, dist_b13) {
+  constructor({
+    value,
+    cause,
+    context
+  }) {
+    let contextPrefix = "Type validation failed";
+    if (context == null ? void 0 : context.field) {
+      contextPrefix += ` for ${context.field}`;
+    }
+    if ((context == null ? void 0 : context.entityName) || (context == null ? void 0 : context.entityId)) {
+      contextPrefix += " (";
+      const parts = [];
+      if (context.entityName) {
+        parts.push(context.entityName);
+      }
+      if (context.entityId) {
+        parts.push(`id: "${context.entityId}"`);
+      }
+      contextPrefix += parts.join(", ");
+      contextPrefix += ")";
+    }
+    super({
+      name: dist_name12,
+      message: `${contextPrefix}: Value: ${JSON.stringify(value)}.
+Error message: ${provider_dist_getErrorMessage(cause)}`,
+      cause
+    });
+    this[dist_a13] = true;
+    this.value = value;
+    this.context = context;
+  }
+  static isInstance(error) {
+    return dist_AISDKError.hasMarker(error, dist_marker13);
+  }
+  /**
+   * Wraps an error into a TypeValidationError.
+   * If the cause is already a TypeValidationError with the same value and context, it returns the cause.
+   * Otherwise, it creates a new TypeValidationError.
+   *
+   * @param {Object} params - The parameters for wrapping the error.
+   * @param {unknown} params.value - The value that failed validation.
+   * @param {unknown} params.cause - The original error or cause of the validation failure.
+   * @param {TypeValidationContext} params.context - Optional context about what is being validated.
+   * @returns {TypeValidationError} A TypeValidationError instance.
+   */
+  static wrap({
+    value,
+    cause,
+    context
+  }) {
+    var _a15, _b15, _c;
+    if (_TypeValidationError.isInstance(cause) && cause.value === value && ((_a15 = cause.context) == null ? void 0 : _a15.field) === (context == null ? void 0 : context.field) && ((_b15 = cause.context) == null ? void 0 : _b15.entityName) === (context == null ? void 0 : context.entityName) && ((_c = cause.context) == null ? void 0 : _c.entityId) === (context == null ? void 0 : context.entityId)) {
+      return cause;
+    }
+    return new _TypeValidationError({ value, cause, context });
+  }
+};
+
+// src/errors/unsupported-functionality-error.ts
+var dist_name13 = "AI_UnsupportedFunctionalityError";
+var dist_marker14 = `vercel.ai.error.${dist_name13}`;
+var dist_symbol14 = Symbol.for(dist_marker14);
+var dist_a14, dist_b14;
+var dist_UnsupportedFunctionalityError = class extends (dist_b14 = dist_AISDKError, dist_a14 = dist_symbol14, dist_b14) {
+  constructor({
+    functionality,
+    message = `'${functionality}' functionality not supported.`
+  }) {
+    super({ name: dist_name13, message });
+    this[dist_a14] = true;
+    this.functionality = functionality;
+  }
+  static isInstance(error) {
+    return dist_AISDKError.hasMarker(error, dist_marker14);
+  }
+};
+
+// src/json-value/is-json.ts
+function dist_isJSONValue(value) {
+  if (value === null || typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+    return true;
+  }
+  if (Array.isArray(value)) {
+    return value.every(dist_isJSONValue);
+  }
+  if (typeof value === "object") {
+    return Object.entries(value).every(
+      ([key, val]) => typeof key === "string" && (val === void 0 || dist_isJSONValue(val))
+    );
+  }
+  return false;
+}
+function provider_dist_isJSONArray(value) {
+  return Array.isArray(value) && value.every(dist_isJSONValue);
+}
+function provider_dist_isJSONObject(value) {
+  return value != null && typeof value === "object" && Object.entries(value).every(
+    ([key, val]) => typeof key === "string" && (val === void 0 || dist_isJSONValue(val))
+  );
+}
 
 //# sourceMappingURL=index.mjs.map
 ;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+anthropic@3.0.85_zod@4.4.3/node_modules/@ai-sdk/anthropic/dist/internal/index.mjs
@@ -125411,7 +126878,7 @@ async function prepareTools({
       };
     default: {
       const _exhaustiveCheck = type;
-      throw new UnsupportedFunctionalityError({
+      throw new dist_UnsupportedFunctionalityError({
         functionality: `tool choice type: ${_exhaustiveCheck}`
       });
     }
@@ -129811,7 +131278,7 @@ function createBedrockEventStreamDecoder(body, processEvent) {
 var createBedrockEventStreamResponseHandler = (chunkSchema) => async ({ response }) => {
   const responseHeaders = extractResponseHeaders(response);
   if (response.body == null) {
-    throw new EmptyResponseBodyError({});
+    throw new dist_EmptyResponseBodyError({});
   }
   return {
     responseHeaders,
@@ -129966,7 +131433,7 @@ async function dist_prepareTools({
         break;
       default: {
         const _exhaustiveCheck = type;
-        throw new UnsupportedFunctionalityError({
+        throw new dist_UnsupportedFunctionalityError({
           functionality: `tool choice type: ${_exhaustiveCheck}`
         });
       }
@@ -130081,7 +131548,7 @@ async function convertToBedrockChatMessages(prompt, isMistral = false) {
     switch (type) {
       case "system": {
         if (messages.length > 0) {
-          throw new UnsupportedFunctionalityError({
+          throw new dist_UnsupportedFunctionalityError({
             functionality: "Multiple system messages that are separated by user/assistant messages"
           });
         }
@@ -130111,7 +131578,7 @@ async function convertToBedrockChatMessages(prompt, isMistral = false) {
                   }
                   case "file": {
                     if (part.data instanceof URL) {
-                      throw new UnsupportedFunctionalityError({
+                      throw new dist_UnsupportedFunctionalityError({
                         functionality: "File URL data"
                       });
                     }
@@ -130124,7 +131591,7 @@ async function convertToBedrockChatMessages(prompt, isMistral = false) {
                       });
                     } else {
                       if (!part.mediaType) {
-                        throw new UnsupportedFunctionalityError({
+                        throw new dist_UnsupportedFunctionalityError({
                           functionality: "file without mime type",
                           message: "File mime type is required in user message part content"
                         });
@@ -130208,7 +131675,7 @@ async function convertToBedrockChatMessages(prompt, isMistral = false) {
                             };
                           }
                           default: {
-                            throw new UnsupportedFunctionalityError({
+                            throw new dist_UnsupportedFunctionalityError({
                               functionality: `unsupported tool content part type: ${contentPart.type}`
                             });
                           }
@@ -130340,14 +131807,14 @@ async function convertToBedrockChatMessages(prompt, isMistral = false) {
 }
 function getBedrockImageFormat(mimeType) {
   if (!mimeType) {
-    throw new UnsupportedFunctionalityError({
+    throw new dist_UnsupportedFunctionalityError({
       functionality: "image without mime type",
       message: "Image mime type is required in user message part content"
     });
   }
   const format = BEDROCK_IMAGE_MIME_TYPES[mimeType];
   if (!format) {
-    throw new UnsupportedFunctionalityError({
+    throw new dist_UnsupportedFunctionalityError({
       functionality: `image mime type: ${mimeType}`,
       message: `Unsupported image mime type: ${mimeType}, expected one of: ${Object.keys(BEDROCK_IMAGE_MIME_TYPES).join(", ")}`
     });
@@ -130357,7 +131824,7 @@ function getBedrockImageFormat(mimeType) {
 function getBedrockDocumentFormat(mimeType) {
   const format = BEDROCK_DOCUMENT_MIME_TYPES[mimeType];
   if (!format) {
-    throw new UnsupportedFunctionalityError({
+    throw new dist_UnsupportedFunctionalityError({
       functionality: `file mime type: ${mimeType}`,
       message: `Unsupported file mime type: ${mimeType}, expected one of: ${Object.keys(BEDROCK_DOCUMENT_MIME_TYPES).join(", ")}`
     });
@@ -131340,7 +132807,7 @@ var BedrockEmbeddingModel = class {
   }) {
     var _a, _b, _c, _d, _e, _f;
     if (values.length > this.maxEmbeddingsPerCall) {
-      throw new TooManyEmbeddingValuesForCallError({
+      throw new dist_TooManyEmbeddingValuesForCallError({
         provider: this.provider,
         modelId: this.modelId,
         maxEmbeddingsPerCall: this.maxEmbeddingsPerCall,
@@ -132005,3879 +133472,6 @@ Original error: ${errorMessage}`
 var bedrock = createAmazonBedrock();
 
 //# sourceMappingURL=index.mjs.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+provider@3.0.18/node_modules/@ai-sdk/provider/dist/index.mjs
-// src/errors/ai-sdk-error.ts
-var provider_dist_marker = "vercel.ai.error";
-var provider_dist_symbol = Symbol.for(provider_dist_marker);
-var provider_dist_a, provider_dist_b;
-var dist_AISDKError = class _AISDKError extends (provider_dist_b = Error, provider_dist_a = provider_dist_symbol, provider_dist_b) {
-  /**
-   * Creates an AI SDK Error.
-   *
-   * @param {Object} params - The parameters for creating the error.
-   * @param {string} params.name - The name of the error.
-   * @param {string} params.message - The error message.
-   * @param {unknown} [params.cause] - The underlying cause of the error.
-   */
-  constructor({
-    name: name14,
-    message,
-    cause
-  }) {
-    super(message);
-    this[provider_dist_a] = true;
-    this.name = name14;
-    this.cause = cause;
-  }
-  /**
-   * Checks if the given error is an AI SDK Error.
-   * @param {unknown} error - The error to check.
-   * @returns {boolean} True if the error is an AI SDK Error, false otherwise.
-   */
-  static isInstance(error) {
-    return _AISDKError.hasMarker(error, provider_dist_marker);
-  }
-  static hasMarker(error, marker15) {
-    const markerSymbol = Symbol.for(marker15);
-    return error != null && typeof error === "object" && markerSymbol in error && typeof error[markerSymbol] === "boolean" && error[markerSymbol] === true;
-  }
-};
-
-// src/errors/api-call-error.ts
-var provider_dist_name = "AI_APICallError";
-var dist_marker2 = `vercel.ai.error.${provider_dist_name}`;
-var dist_symbol2 = Symbol.for(dist_marker2);
-var dist_a2, dist_b2;
-var provider_dist_APICallError = class extends (dist_b2 = dist_AISDKError, dist_a2 = dist_symbol2, dist_b2) {
-  constructor({
-    message,
-    url,
-    requestBodyValues,
-    statusCode,
-    responseHeaders,
-    responseBody,
-    cause,
-    isRetryable = statusCode != null && (statusCode === 408 || // request timeout
-    statusCode === 409 || // conflict
-    statusCode === 429 || // too many requests
-    statusCode >= 500),
-    // server error
-    data
-  }) {
-    super({ name: provider_dist_name, message, cause });
-    this[dist_a2] = true;
-    this.url = url;
-    this.requestBodyValues = requestBodyValues;
-    this.statusCode = statusCode;
-    this.responseHeaders = responseHeaders;
-    this.responseBody = responseBody;
-    this.isRetryable = isRetryable;
-    this.data = data;
-  }
-  static isInstance(error) {
-    return dist_AISDKError.hasMarker(error, dist_marker2);
-  }
-};
-
-// src/errors/empty-response-body-error.ts
-var dist_name2 = "AI_EmptyResponseBodyError";
-var dist_marker3 = `vercel.ai.error.${dist_name2}`;
-var dist_symbol3 = Symbol.for(dist_marker3);
-var dist_a3, dist_b3;
-var dist_EmptyResponseBodyError = class extends (dist_b3 = dist_AISDKError, dist_a3 = dist_symbol3, dist_b3) {
-  // used in isInstance
-  constructor({ message = "Empty response body" } = {}) {
-    super({ name: dist_name2, message });
-    this[dist_a3] = true;
-  }
-  static isInstance(error) {
-    return dist_AISDKError.hasMarker(error, dist_marker3);
-  }
-};
-
-// src/errors/get-error-message.ts
-function provider_dist_getErrorMessage(error) {
-  if (error == null) {
-    return "unknown error";
-  }
-  if (typeof error === "string") {
-    return error;
-  }
-  if (error instanceof Error) {
-    return error.message;
-  }
-  return JSON.stringify(error);
-}
-
-// src/errors/invalid-argument-error.ts
-var dist_name3 = "AI_InvalidArgumentError";
-var dist_marker4 = `vercel.ai.error.${dist_name3}`;
-var dist_symbol4 = Symbol.for(dist_marker4);
-var dist_a4, dist_b4;
-var dist_InvalidArgumentError = class extends (dist_b4 = dist_AISDKError, dist_a4 = dist_symbol4, dist_b4) {
-  constructor({
-    message,
-    cause,
-    argument
-  }) {
-    super({ name: dist_name3, message, cause });
-    this[dist_a4] = true;
-    this.argument = argument;
-  }
-  static isInstance(error) {
-    return dist_AISDKError.hasMarker(error, dist_marker4);
-  }
-};
-
-// src/errors/invalid-prompt-error.ts
-var dist_name4 = "AI_InvalidPromptError";
-var dist_marker5 = `vercel.ai.error.${dist_name4}`;
-var dist_symbol5 = Symbol.for(dist_marker5);
-var dist_a5, dist_b5;
-var dist_InvalidPromptError = class extends (dist_b5 = dist_AISDKError, dist_a5 = dist_symbol5, dist_b5) {
-  constructor({
-    prompt,
-    message,
-    cause
-  }) {
-    super({ name: dist_name4, message: `Invalid prompt: ${message}`, cause });
-    this[dist_a5] = true;
-    this.prompt = prompt;
-  }
-  static isInstance(error) {
-    return dist_AISDKError.hasMarker(error, dist_marker5);
-  }
-};
-
-// src/errors/invalid-response-data-error.ts
-var dist_name5 = "AI_InvalidResponseDataError";
-var dist_marker6 = `vercel.ai.error.${dist_name5}`;
-var dist_symbol6 = Symbol.for(dist_marker6);
-var dist_a6, dist_b6;
-var provider_dist_InvalidResponseDataError = class extends (dist_b6 = dist_AISDKError, dist_a6 = dist_symbol6, dist_b6) {
-  constructor({
-    data,
-    message = `Invalid response data: ${JSON.stringify(data)}.`
-  }) {
-    super({ name: dist_name5, message });
-    this[dist_a6] = true;
-    this.data = data;
-  }
-  static isInstance(error) {
-    return dist_AISDKError.hasMarker(error, dist_marker6);
-  }
-};
-
-// src/errors/json-parse-error.ts
-var dist_name6 = "AI_JSONParseError";
-var dist_marker7 = `vercel.ai.error.${dist_name6}`;
-var dist_symbol7 = Symbol.for(dist_marker7);
-var dist_a7, dist_b7;
-var dist_JSONParseError = class extends (dist_b7 = dist_AISDKError, dist_a7 = dist_symbol7, dist_b7) {
-  constructor({ text, cause }) {
-    super({
-      name: dist_name6,
-      message: `JSON parsing failed: Text: ${text}.
-Error message: ${provider_dist_getErrorMessage(cause)}`,
-      cause
-    });
-    this[dist_a7] = true;
-    this.text = text;
-  }
-  static isInstance(error) {
-    return dist_AISDKError.hasMarker(error, dist_marker7);
-  }
-};
-
-// src/errors/load-api-key-error.ts
-var dist_name7 = "AI_LoadAPIKeyError";
-var dist_marker8 = `vercel.ai.error.${dist_name7}`;
-var dist_symbol8 = Symbol.for(dist_marker8);
-var dist_a8, dist_b8;
-var dist_LoadAPIKeyError = class extends (dist_b8 = dist_AISDKError, dist_a8 = dist_symbol8, dist_b8) {
-  // used in isInstance
-  constructor({ message }) {
-    super({ name: dist_name7, message });
-    this[dist_a8] = true;
-  }
-  static isInstance(error) {
-    return dist_AISDKError.hasMarker(error, dist_marker8);
-  }
-};
-
-// src/errors/load-setting-error.ts
-var dist_name8 = "AI_LoadSettingError";
-var dist_marker9 = `vercel.ai.error.${dist_name8}`;
-var dist_symbol9 = Symbol.for(dist_marker9);
-var dist_a9, dist_b9;
-var provider_dist_LoadSettingError = class extends (dist_b9 = dist_AISDKError, dist_a9 = dist_symbol9, dist_b9) {
-  // used in isInstance
-  constructor({ message }) {
-    super({ name: dist_name8, message });
-    this[dist_a9] = true;
-  }
-  static isInstance(error) {
-    return dist_AISDKError.hasMarker(error, dist_marker9);
-  }
-};
-
-// src/errors/no-content-generated-error.ts
-var dist_name9 = "AI_NoContentGeneratedError";
-var dist_marker10 = `vercel.ai.error.${dist_name9}`;
-var dist_symbol10 = Symbol.for(dist_marker10);
-var dist_a10, dist_b10;
-var dist_NoContentGeneratedError = class extends (dist_b10 = dist_AISDKError, dist_a10 = dist_symbol10, dist_b10) {
-  // used in isInstance
-  constructor({
-    message = "No content generated."
-  } = {}) {
-    super({ name: dist_name9, message });
-    this[dist_a10] = true;
-  }
-  static isInstance(error) {
-    return dist_AISDKError.hasMarker(error, dist_marker10);
-  }
-};
-
-// src/errors/no-such-model-error.ts
-var dist_name10 = "AI_NoSuchModelError";
-var dist_marker11 = `vercel.ai.error.${dist_name10}`;
-var dist_symbol11 = Symbol.for(dist_marker11);
-var dist_a11, dist_b11;
-var dist_NoSuchModelError = class extends (dist_b11 = dist_AISDKError, dist_a11 = dist_symbol11, dist_b11) {
-  constructor({
-    errorName = dist_name10,
-    modelId,
-    modelType,
-    message = `No such ${modelType}: ${modelId}`
-  }) {
-    super({ name: errorName, message });
-    this[dist_a11] = true;
-    this.modelId = modelId;
-    this.modelType = modelType;
-  }
-  static isInstance(error) {
-    return dist_AISDKError.hasMarker(error, dist_marker11);
-  }
-};
-
-// src/errors/too-many-embedding-values-for-call-error.ts
-var dist_name11 = "AI_TooManyEmbeddingValuesForCallError";
-var dist_marker12 = `vercel.ai.error.${dist_name11}`;
-var dist_symbol12 = Symbol.for(dist_marker12);
-var dist_a12, dist_b12;
-var dist_TooManyEmbeddingValuesForCallError = class extends (dist_b12 = dist_AISDKError, dist_a12 = dist_symbol12, dist_b12) {
-  constructor(options) {
-    super({
-      name: dist_name11,
-      message: `Too many values for a single embedding call. The ${options.provider} model "${options.modelId}" can only embed up to ${options.maxEmbeddingsPerCall} values per call, but ${options.values.length} values were provided.`
-    });
-    this[dist_a12] = true;
-    this.provider = options.provider;
-    this.modelId = options.modelId;
-    this.maxEmbeddingsPerCall = options.maxEmbeddingsPerCall;
-    this.values = options.values;
-  }
-  static isInstance(error) {
-    return dist_AISDKError.hasMarker(error, dist_marker12);
-  }
-};
-
-// src/errors/type-validation-error.ts
-var dist_name12 = "AI_TypeValidationError";
-var dist_marker13 = `vercel.ai.error.${dist_name12}`;
-var dist_symbol13 = Symbol.for(dist_marker13);
-var dist_a13, dist_b13;
-var dist_TypeValidationError = class _TypeValidationError extends (dist_b13 = dist_AISDKError, dist_a13 = dist_symbol13, dist_b13) {
-  constructor({
-    value,
-    cause,
-    context
-  }) {
-    let contextPrefix = "Type validation failed";
-    if (context == null ? void 0 : context.field) {
-      contextPrefix += ` for ${context.field}`;
-    }
-    if ((context == null ? void 0 : context.entityName) || (context == null ? void 0 : context.entityId)) {
-      contextPrefix += " (";
-      const parts = [];
-      if (context.entityName) {
-        parts.push(context.entityName);
-      }
-      if (context.entityId) {
-        parts.push(`id: "${context.entityId}"`);
-      }
-      contextPrefix += parts.join(", ");
-      contextPrefix += ")";
-    }
-    super({
-      name: dist_name12,
-      message: `${contextPrefix}: Value: ${JSON.stringify(value)}.
-Error message: ${provider_dist_getErrorMessage(cause)}`,
-      cause
-    });
-    this[dist_a13] = true;
-    this.value = value;
-    this.context = context;
-  }
-  static isInstance(error) {
-    return dist_AISDKError.hasMarker(error, dist_marker13);
-  }
-  /**
-   * Wraps an error into a TypeValidationError.
-   * If the cause is already a TypeValidationError with the same value and context, it returns the cause.
-   * Otherwise, it creates a new TypeValidationError.
-   *
-   * @param {Object} params - The parameters for wrapping the error.
-   * @param {unknown} params.value - The value that failed validation.
-   * @param {unknown} params.cause - The original error or cause of the validation failure.
-   * @param {TypeValidationContext} params.context - Optional context about what is being validated.
-   * @returns {TypeValidationError} A TypeValidationError instance.
-   */
-  static wrap({
-    value,
-    cause,
-    context
-  }) {
-    var _a15, _b15, _c;
-    if (_TypeValidationError.isInstance(cause) && cause.value === value && ((_a15 = cause.context) == null ? void 0 : _a15.field) === (context == null ? void 0 : context.field) && ((_b15 = cause.context) == null ? void 0 : _b15.entityName) === (context == null ? void 0 : context.entityName) && ((_c = cause.context) == null ? void 0 : _c.entityId) === (context == null ? void 0 : context.entityId)) {
-      return cause;
-    }
-    return new _TypeValidationError({ value, cause, context });
-  }
-};
-
-// src/errors/unsupported-functionality-error.ts
-var dist_name13 = "AI_UnsupportedFunctionalityError";
-var dist_marker14 = `vercel.ai.error.${dist_name13}`;
-var dist_symbol14 = Symbol.for(dist_marker14);
-var dist_a14, dist_b14;
-var dist_UnsupportedFunctionalityError = class extends (dist_b14 = dist_AISDKError, dist_a14 = dist_symbol14, dist_b14) {
-  constructor({
-    functionality,
-    message = `'${functionality}' functionality not supported.`
-  }) {
-    super({ name: dist_name13, message });
-    this[dist_a14] = true;
-    this.functionality = functionality;
-  }
-  static isInstance(error) {
-    return dist_AISDKError.hasMarker(error, dist_marker14);
-  }
-};
-
-// src/json-value/is-json.ts
-function dist_isJSONValue(value) {
-  if (value === null || typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
-    return true;
-  }
-  if (Array.isArray(value)) {
-    return value.every(dist_isJSONValue);
-  }
-  if (typeof value === "object") {
-    return Object.entries(value).every(
-      ([key, val]) => typeof key === "string" && (val === void 0 || dist_isJSONValue(val))
-    );
-  }
-  return false;
-}
-function provider_dist_isJSONArray(value) {
-  return Array.isArray(value) && value.every(dist_isJSONValue);
-}
-function provider_dist_isJSONObject(value) {
-  return value != null && typeof value === "object" && Object.entries(value).every(
-    ([key, val]) => typeof key === "string" && (val === void 0 || dist_isJSONValue(val))
-  );
-}
-
-//# sourceMappingURL=index.mjs.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+provider-utils@4.0.57_zod@4.4.3/node_modules/@ai-sdk/provider-utils/dist/index.mjs
-// src/combine-headers.ts
-function provider_utils_dist_combineHeaders(...headers) {
-  return headers.reduce(
-    (combinedHeaders, currentHeaders) => ({
-      ...combinedHeaders,
-      ...currentHeaders
-    }),
-    {}
-  );
-}
-
-// src/convert-async-iterator-to-readable-stream.ts
-function dist_convertAsyncIteratorToReadableStream(iterator) {
-  let cancelled = false;
-  return new ReadableStream({
-    /**
-     * Called when the consumer wants to pull more data from the stream.
-     *
-     * @param {ReadableStreamDefaultController<T>} controller - The controller to enqueue data into the stream.
-     * @returns {Promise<void>}
-     */
-    async pull(controller) {
-      if (cancelled) return;
-      try {
-        const { value, done } = await iterator.next();
-        if (done) {
-          controller.close();
-        } else {
-          controller.enqueue(value);
-        }
-      } catch (error) {
-        controller.error(error);
-      }
-    },
-    /**
-     * Called when the consumer cancels the stream.
-     */
-    async cancel(reason) {
-      cancelled = true;
-      if (iterator.return) {
-        try {
-          await iterator.return(reason);
-        } catch (e) {
-        }
-      }
-    }
-  });
-}
-
-// src/create-tool-name-mapping.ts
-function provider_utils_dist_createToolNameMapping({
-  tools = [],
-  providerToolNames,
-  resolveProviderToolName
-}) {
-  var _a2;
-  const customToolNameToProviderToolName = {};
-  const providerToolNameToCustomToolName = {};
-  for (const tool2 of tools) {
-    if (tool2.type === "provider") {
-      const providerToolName = (_a2 = resolveProviderToolName == null ? void 0 : resolveProviderToolName(tool2)) != null ? _a2 : tool2.id in providerToolNames ? providerToolNames[tool2.id] : void 0;
-      if (providerToolName == null) {
-        continue;
-      }
-      customToolNameToProviderToolName[tool2.name] = providerToolName;
-      providerToolNameToCustomToolName[providerToolName] = tool2.name;
-    }
-  }
-  return {
-    toProviderToolName: (customToolName) => {
-      var _a3;
-      return (_a3 = customToolNameToProviderToolName[customToolName]) != null ? _a3 : customToolName;
-    },
-    toCustomToolName: (providerToolName) => {
-      var _a3;
-      return (_a3 = providerToolNameToCustomToolName[providerToolName]) != null ? _a3 : providerToolName;
-    }
-  };
-}
-
-// src/delay.ts
-async function provider_utils_dist_delay(delayInMs, options) {
-  if (delayInMs == null) {
-    return;
-  }
-  const signal = options == null ? void 0 : options.abortSignal;
-  return new Promise((resolve2, reject) => {
-    if (signal == null ? void 0 : signal.aborted) {
-      reject(dist_createAbortError());
-      return;
-    }
-    const timeoutId = setTimeout(() => {
-      cleanup();
-      resolve2();
-    }, delayInMs);
-    const cleanup = () => {
-      clearTimeout(timeoutId);
-      signal == null ? void 0 : signal.removeEventListener("abort", onAbort);
-    };
-    const onAbort = () => {
-      cleanup();
-      reject(dist_createAbortError());
-    };
-    signal == null ? void 0 : signal.addEventListener("abort", onAbort);
-  });
-}
-function dist_createAbortError() {
-  return new DOMException("Delay was aborted", "AbortError");
-}
-
-// src/delayed-promise.ts
-var provider_utils_dist_DelayedPromise = class {
-  constructor() {
-    this.status = { type: "pending" };
-    this._resolve = void 0;
-    this._reject = void 0;
-  }
-  get promise() {
-    if (this._promise) {
-      return this._promise;
-    }
-    this._promise = new Promise((resolve2, reject) => {
-      if (this.status.type === "resolved") {
-        resolve2(this.status.value);
-      } else if (this.status.type === "rejected") {
-        reject(this.status.error);
-      }
-      this._resolve = resolve2;
-      this._reject = reject;
-    });
-    return this._promise;
-  }
-  resolve(value) {
-    var _a2;
-    this.status = { type: "resolved", value };
-    if (this._promise) {
-      (_a2 = this._resolve) == null ? void 0 : _a2.call(this, value);
-    }
-  }
-  reject(error) {
-    var _a2;
-    this.status = { type: "rejected", error };
-    if (this._promise) {
-      (_a2 = this._reject) == null ? void 0 : _a2.call(this, error);
-    }
-  }
-  isResolved() {
-    return this.status.type === "resolved";
-  }
-  isRejected() {
-    return this.status.type === "rejected";
-  }
-  isPending() {
-    return this.status.type === "pending";
-  }
-};
-
-// src/extract-response-headers.ts
-function dist_extractResponseHeaders(response) {
-  return Object.fromEntries([...response.headers]);
-}
-
-// src/uint8-utils.ts
-var { btoa: provider_utils_dist_btoa, atob: provider_utils_dist_atob } = globalThis;
-function provider_utils_dist_convertBase64ToUint8Array(base64String) {
-  const base64Url = base64String.replace(/-/g, "+").replace(/_/g, "/");
-  const latin1string = provider_utils_dist_atob(base64Url);
-  return Uint8Array.from(latin1string, (byte) => byte.codePointAt(0));
-}
-function dist_convertUint8ArrayToBase64(array) {
-  const chunks = [];
-  const chunkSize = 4096;
-  for (let i = 0; i < array.length; i += chunkSize) {
-    chunks.push(String.fromCodePoint(...array.subarray(i, i + chunkSize)));
-  }
-  return provider_utils_dist_btoa(chunks.join(""));
-}
-function provider_utils_dist_convertToBase64(value) {
-  return value instanceof Uint8Array ? dist_convertUint8ArrayToBase64(value) : value;
-}
-
-// src/convert-image-model-file-to-data-uri.ts
-function dist_convertImageModelFileToDataUri(file) {
-  if (file.type === "url") return file.url;
-  return `data:${file.mediaType};base64,${typeof file.data === "string" ? file.data : dist_convertUint8ArrayToBase64(file.data)}`;
-}
-
-// src/convert-to-form-data.ts
-function dist_convertToFormData(input, options = {}) {
-  const { useArrayBrackets = true } = options;
-  const formData = new FormData();
-  for (const [key, value] of Object.entries(input)) {
-    if (value == null) {
-      continue;
-    }
-    if (Array.isArray(value)) {
-      if (value.length === 1) {
-        formData.append(key, value[0]);
-        continue;
-      }
-      const arrayKey = useArrayBrackets ? `${key}[]` : key;
-      for (const item of value) {
-        formData.append(arrayKey, item);
-      }
-      continue;
-    }
-    formData.append(key, value);
-  }
-  return formData;
-}
-
-// src/cancel-response-body.ts
-async function dist_cancelResponseBody(response) {
-  var _a2;
-  try {
-    await ((_a2 = response.body) == null ? void 0 : _a2.cancel());
-  } catch (e) {
-  }
-}
-
-// src/download-error.ts
-
-var _ai_sdk_provider_utils_dist_name = "AI_DownloadError";
-var provider_utils_dist_marker = `vercel.ai.error.${_ai_sdk_provider_utils_dist_name}`;
-var _ai_sdk_provider_utils_dist_symbol = Symbol.for(provider_utils_dist_marker);
-var _ai_sdk_provider_utils_dist_a, provider_utils_dist_b;
-var dist_DownloadError = class extends (provider_utils_dist_b = dist_AISDKError, _ai_sdk_provider_utils_dist_a = _ai_sdk_provider_utils_dist_symbol, provider_utils_dist_b) {
-  constructor({
-    url,
-    statusCode,
-    statusText,
-    cause,
-    message = cause == null ? `Failed to download ${url}: ${statusCode} ${statusText}` : `Failed to download ${url}: ${cause}`
-  }) {
-    super({ name: _ai_sdk_provider_utils_dist_name, message, cause });
-    this[_ai_sdk_provider_utils_dist_a] = true;
-    this.url = url;
-    this.statusCode = statusCode;
-    this.statusText = statusText;
-  }
-  static isInstance(error) {
-    return dist_AISDKError.hasMarker(error, provider_utils_dist_marker);
-  }
-};
-
-// src/is-browser-runtime.ts
-function dist_isBrowserRuntime(globalThisAny = globalThis) {
-  return globalThisAny.window != null;
-}
-
-// src/is-same-origin.ts
-function dist_isSameOrigin(url, baseUrl) {
-  try {
-    return new URL(url).origin === new URL(baseUrl).origin;
-  } catch (e) {
-    return false;
-  }
-}
-
-// src/validate-download-url.ts
-function dist_validateDownloadUrl(url) {
-  let parsed;
-  try {
-    parsed = new URL(url);
-  } catch (e) {
-    throw new dist_DownloadError({
-      url,
-      message: `Invalid URL: ${url}`
-    });
-  }
-  if (parsed.protocol === "data:") {
-    return;
-  }
-  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
-    throw new dist_DownloadError({
-      url,
-      message: `URL scheme must be http, https, or data, got ${parsed.protocol}`
-    });
-  }
-  const hostname = parsed.hostname.toLowerCase().replace(/\.+$/, "");
-  if (!hostname) {
-    throw new dist_DownloadError({
-      url,
-      message: `URL must have a hostname`
-    });
-  }
-  if (hostname === "localhost" || hostname.endsWith(".local") || hostname.endsWith(".localhost")) {
-    throw new dist_DownloadError({
-      url,
-      message: `URL with hostname ${hostname} is not allowed`
-    });
-  }
-  if (hostname.startsWith("[") && hostname.endsWith("]")) {
-    const ipv6 = hostname.slice(1, -1);
-    if (dist_isPrivateIPv6(ipv6)) {
-      throw new dist_DownloadError({
-        url,
-        message: `URL with IPv6 address ${hostname} is not allowed`
-      });
-    }
-    return;
-  }
-  if (dist_isIPv4(hostname)) {
-    if (dist_isPrivateIPv4(hostname)) {
-      throw new dist_DownloadError({
-        url,
-        message: `URL with IP address ${hostname} is not allowed`
-      });
-    }
-  }
-}
-function validateDownloadAddress({
-  address,
-  family,
-  hostname
-}) {
-  const isUnsafe = family === 4 ? !dist_isIPv4(address) || dist_isPrivateIPv4(address) : family === 6 ? dist_isPrivateIPv6(address) : true;
-  if (isUnsafe) {
-    throw new dist_DownloadError({
-      url: hostname,
-      message: `Hostname ${hostname} resolved to disallowed IP address ${address}`
-    });
-  }
-}
-function dist_isIPv4(hostname) {
-  const parts = hostname.split(".");
-  if (parts.length !== 4) return false;
-  return parts.every((part) => {
-    const num = Number(part);
-    return Number.isInteger(num) && num >= 0 && num <= 255 && String(num) === part;
-  });
-}
-function dist_isPrivateIPv4(ip) {
-  const parts = ip.split(".").map(Number);
-  const [a, b, c] = parts;
-  if (a === 0) return true;
-  if (a === 10) return true;
-  if (a === 100 && b >= 64 && b <= 127) return true;
-  if (a === 127) return true;
-  if (a === 169 && b === 254) return true;
-  if (a === 172 && b >= 16 && b <= 31) return true;
-  if (a === 192 && b === 0 && c === 0) return true;
-  if (a === 192 && b === 168) return true;
-  if (a === 198 && (b === 18 || b === 19)) return true;
-  if (a >= 240) return true;
-  return false;
-}
-function dist_parseIPv6(ip) {
-  let address = ip.toLowerCase();
-  const zoneIndex = address.indexOf("%");
-  if (zoneIndex !== -1) {
-    address = address.slice(0, zoneIndex);
-  }
-  const halves = address.split("::");
-  if (halves.length > 2) return null;
-  const toGroups = (segment) => {
-    if (segment === "") return [];
-    const groups = [];
-    const parts = segment.split(":");
-    for (let i = 0; i < parts.length; i++) {
-      const part = parts[i];
-      if (part.includes(".")) {
-        if (i !== parts.length - 1 || !dist_isIPv4(part)) return null;
-        const [a, b, c, d] = part.split(".").map(Number);
-        groups.push(a << 8 | b, c << 8 | d);
-        continue;
-      }
-      if (!/^[0-9a-f]{1,4}$/.test(part)) return null;
-      groups.push(parseInt(part, 16));
-    }
-    return groups;
-  };
-  const head = toGroups(halves[0]);
-  if (head === null) return null;
-  if (halves.length === 2) {
-    const tail = toGroups(halves[1]);
-    if (tail === null) return null;
-    const fill = 8 - head.length - tail.length;
-    if (fill < 0) return null;
-    return [...head, ...new Array(fill).fill(0), ...tail];
-  }
-  return head.length === 8 ? head : null;
-}
-function dist_isPrivateIPv6(ip) {
-  const groups = dist_parseIPv6(ip);
-  if (groups === null) return true;
-  const topZero = (count) => groups.slice(0, count).every((group) => group === 0);
-  if (topZero(7) && (groups[7] === 0 || groups[7] === 1)) return true;
-  if ((groups[0] & 65024) === 64512) return true;
-  if ((groups[0] & 65472) === 65152) return true;
-  if ((groups[0] & 65472) === 65216) return true;
-  if ((groups[0] & 65280) === 65280) return true;
-  const embedsIPv4 = (
-    // ::/96 — IPv4-compatible (deprecated)
-    topZero(6) || // ::ffff:0:0/96 — IPv4-mapped (ffff in group 5)
-    topZero(5) && groups[5] === 65535 || // ::ffff:0:0/96 — IPv4-translated form (ffff in group 4, group 5 zero)
-    topZero(4) && groups[4] === 65535 && groups[5] === 0 || // 64:ff9b::/96 — NAT64 well-known prefix
-    groups[0] === 100 && groups[1] === 65435 && groups[2] === 0 && groups[3] === 0 && groups[4] === 0 && groups[5] === 0 || // 64:ff9b:1::/48 — NAT64 local-use prefix
-    groups[0] === 100 && groups[1] === 65435 && groups[2] === 1
-  );
-  if (embedsIPv4) {
-    const a = groups[6] >> 8 & 255;
-    const b = groups[6] & 255;
-    const c = groups[7] >> 8 & 255;
-    const d = groups[7] & 255;
-    return dist_isPrivateIPv4(`${a}.${b}.${c}.${d}`);
-  }
-  return false;
-}
-
-// src/safe-node-fetch.ts
-function createSafeLookup(lookup) {
-  return ((hostname, options, callback) => {
-    lookup(hostname, { ...options, all: true }, (error, addresses) => {
-      if (error) {
-        callback(error);
-        return;
-      }
-      try {
-        const [firstAddress] = addresses;
-        if (firstAddress == null) {
-          throw new Error(`Hostname ${hostname} did not resolve to an address`);
-        }
-        for (const { address, family } of addresses) {
-          validateDownloadAddress({ address, family, hostname });
-        }
-        if (options.all === true) {
-          callback(null, addresses);
-        } else {
-          callback(
-            null,
-            firstAddress.address,
-            firstAddress.family
-          );
-        }
-      } catch (error2) {
-        callback(
-          error2 instanceof Error ? error2 : new Error(String(error2))
-        );
-      }
-    });
-  });
-}
-var safeNodeFetchPromise;
-function isNodeRuntime() {
-  var _a2, _b2, _c;
-  const runtimeProcess = globalThis.process;
-  return ((_a2 = runtimeProcess == null ? void 0 : runtimeProcess.release) == null ? void 0 : _a2.name) === "node" && ((_b2 = runtimeProcess.versions) == null ? void 0 : _b2.bun) == null && ((_c = runtimeProcess.versions) == null ? void 0 : _c.deno) == null && runtimeProcess.title !== "workerd" && globalThis.EdgeRuntime == null;
-}
-async function getDefaultDownloadFetch() {
-  if (!isNodeRuntime()) {
-    return globalThis.fetch;
-  }
-  return safeNodeFetchPromise != null ? safeNodeFetchPromise : safeNodeFetchPromise = createSafeNodeFetch();
-}
-async function createSafeNodeFetch() {
-  const [module, { lookup }] = await Promise.all([
-    loadNodeModule("node:module"),
-    loadNodeModule("node:dns")
-  ]);
-  const nodeRequire = module.createRequire(getCurrentModulePath());
-  const { Agent, fetch } = nodeRequire("undici");
-  const dispatcher = new Agent({
-    connect: {
-      lookup: createSafeLookup(lookup)
-    }
-  });
-  return ((input, init) => fetch(
-    input,
-    {
-      ...init,
-      dispatcher
-    }
-  ));
-}
-async function loadNodeModule(id) {
-  var _a2;
-  const processWithBuiltins = globalThis.process;
-  const builtinModule = (_a2 = processWithBuiltins == null ? void 0 : processWithBuiltins.getBuiltinModule) == null ? void 0 : _a2.call(processWithBuiltins, id);
-  if (builtinModule == null) {
-    throw new Error(`Node.js built-in module ${id} is unavailable`);
-  }
-  return builtinModule;
-}
-function getCurrentModulePath() {
-  const originalPrepareStackTrace = Error.prepareStackTrace;
-  try {
-    Error.prepareStackTrace = (_error, callSites) => callSites;
-    const error = new Error("Capture current module path");
-    Error.captureStackTrace(error, getCurrentModulePath);
-    const [caller] = error.stack;
-    const fileName = caller == null ? void 0 : caller.getFileName();
-    if (fileName == null) {
-      throw new Error("Unable to determine the current module path");
-    }
-    return fileName;
-  } finally {
-    Error.prepareStackTrace = originalPrepareStackTrace;
-  }
-}
-
-// src/fetch-with-validated-redirects.ts
-var dist_MAX_DOWNLOAD_REDIRECTS = 10;
-async function getValidatedFetch(customFetch) {
-  return customFetch == null || customFetch === globalThis.fetch ? await getDefaultDownloadFetch() : customFetch;
-}
-async function fetchWithValidatedEndpoint({
-  url,
-  init,
-  fetch: customFetch,
-  trustedOrigin,
-  redirect = "error"
-}) {
-  const urlText = url.toString();
-  const isTrusted = trustedOrigin !== void 0 && dist_isSameOrigin(urlText, trustedOrigin);
-  if (!isTrusted) {
-    dist_validateDownloadUrl(urlText);
-  }
-  const fetch = isTrusted && customFetch != null ? customFetch : isTrusted ? globalThis.fetch : await getValidatedFetch(customFetch);
-  return await fetch(url, {
-    ...init,
-    redirect
-  });
-}
-async function dist_fetchWithValidatedRedirects({
-  url,
-  headers,
-  abortSignal,
-  maxRedirects = dist_MAX_DOWNLOAD_REDIRECTS,
-  fetch: customFetch,
-  trustedOrigin
-}) {
-  var _a2;
-  const baseInit = { signal: abortSignal };
-  if (headers !== void 0) {
-    baseInit.headers = headers;
-  }
-  let currentUrl = url;
-  for (let redirectCount = 0; redirectCount <= maxRedirects; redirectCount++) {
-    const isTrustedHop = trustedOrigin !== void 0 && dist_isSameOrigin(currentUrl, trustedOrigin);
-    if (!isTrustedHop) {
-      dist_validateDownloadUrl(currentUrl);
-    }
-    const fetch = isTrustedHop && customFetch != null ? customFetch : isTrustedHop ? globalThis.fetch : await getValidatedFetch(customFetch);
-    const response = await fetch(currentUrl, {
-      ...baseInit,
-      redirect: "manual"
-    });
-    if (response.type === "opaqueredirect") {
-      if (!dist_isBrowserRuntime()) {
-        throw new dist_DownloadError({
-          url,
-          message: `Redirect from ${currentUrl} could not be validated and was blocked`
-        });
-      }
-      return await fetch(currentUrl, { ...baseInit, redirect: "follow" });
-    }
-    const location = (_a2 = response.headers) == null ? void 0 : _a2.get("location");
-    if (response.status >= 300 && response.status < 400 && location) {
-      await dist_cancelResponseBody(response);
-      currentUrl = new URL(location, currentUrl).toString();
-      continue;
-    }
-    return response;
-  }
-  throw new dist_DownloadError({
-    url,
-    message: `Too many redirects (max ${maxRedirects})`
-  });
-}
-
-// src/read-response-with-size-limit.ts
-var dist_DEFAULT_MAX_DOWNLOAD_SIZE = 2 * 1024 * 1024 * 1024;
-async function dist_readResponseWithSizeLimit({
-  response,
-  url,
-  maxBytes = dist_DEFAULT_MAX_DOWNLOAD_SIZE
-}) {
-  const contentLength = response.headers.get("content-length");
-  if (contentLength != null) {
-    const length = parseInt(contentLength, 10);
-    if (!isNaN(length) && length > maxBytes) {
-      await dist_cancelResponseBody(response);
-      throw new dist_DownloadError({
-        url,
-        message: `Download of ${url} exceeded maximum size of ${maxBytes} bytes (Content-Length: ${length}).`
-      });
-    }
-  }
-  const body = response.body;
-  if (body == null) {
-    return new Uint8Array(0);
-  }
-  const reader = body.getReader();
-  const chunks = [];
-  let totalBytes = 0;
-  try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) {
-        break;
-      }
-      totalBytes += value.length;
-      if (totalBytes > maxBytes) {
-        throw new dist_DownloadError({
-          url,
-          message: `Download of ${url} exceeded maximum size of ${maxBytes} bytes.`
-        });
-      }
-      chunks.push(value);
-    }
-  } finally {
-    try {
-      await reader.cancel();
-    } catch (e) {
-    } finally {
-      reader.releaseLock();
-    }
-  }
-  const result = new Uint8Array(totalBytes);
-  let offset = 0;
-  for (const chunk of chunks) {
-    result.set(chunk, offset);
-    offset += chunk.length;
-  }
-  return result;
-}
-
-// src/download-blob.ts
-async function dist_downloadBlob(url, options) {
-  var _a2, _b2;
-  try {
-    const response = await dist_fetchWithValidatedRedirects({
-      url,
-      abortSignal: options == null ? void 0 : options.abortSignal
-    });
-    if (!response.ok) {
-      await dist_cancelResponseBody(response);
-      throw new dist_DownloadError({
-        url,
-        statusCode: response.status,
-        statusText: response.statusText
-      });
-    }
-    const data = await dist_readResponseWithSizeLimit({
-      response,
-      url,
-      maxBytes: (_a2 = options == null ? void 0 : options.maxBytes) != null ? _a2 : dist_DEFAULT_MAX_DOWNLOAD_SIZE
-    });
-    const contentType = (_b2 = response.headers.get("content-type")) != null ? _b2 : void 0;
-    return new Blob([data], contentType ? { type: contentType } : void 0);
-  } catch (error) {
-    if (dist_DownloadError.isInstance(error)) {
-      throw error;
-    }
-    throw new dist_DownloadError({ url, cause: error });
-  }
-}
-
-// src/embedding-model-capabilities.ts
-var EMBEDDING_MODEL_MAX_INPUT_BYTES_PER_CALL = /* @__PURE__ */ (/* unused pure expression or super */ null && (Symbol.for(
-  "vercel.ai.embeddingModel.maxInputBytesPerCall"
-)));
-var EMBEDDING_MODEL_PROVIDER_OPTIONS_TRANSFORMER = /* @__PURE__ */ (/* unused pure expression or super */ null && (Symbol.for(
-  "vercel.ai.embeddingModel.providerOptionsTransformer"
-)));
-
-// src/generate-id.ts
-
-var dist_createIdGenerator = ({
-  prefix,
-  size = 16,
-  alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-  separator = "-"
-} = {}) => {
-  const generator = () => {
-    const alphabetLength = alphabet.length;
-    const chars = new Array(size);
-    for (let i = 0; i < size; i++) {
-      chars[i] = alphabet[Math.random() * alphabetLength | 0];
-    }
-    return chars.join("");
-  };
-  if (prefix == null) {
-    return generator;
-  }
-  if (alphabet.includes(separator)) {
-    throw new dist_InvalidArgumentError({
-      argument: "separator",
-      message: `The separator "${separator}" must not be part of the alphabet "${alphabet}".`
-    });
-  }
-  return () => `${prefix}${separator}${generator()}`;
-};
-var provider_utils_dist_generateId = dist_createIdGenerator();
-
-// src/get-error-message.ts
-function provider_utils_dist_getErrorMessage(error) {
-  if (error == null) {
-    return "unknown error";
-  }
-  if (typeof error === "string") {
-    return error;
-  }
-  if (error instanceof Error) {
-    return error.message;
-  }
-  return JSON.stringify(error);
-}
-
-// src/get-from-api.ts
-
-
-// src/handle-fetch-error.ts
-
-
-// src/is-abort-error.ts
-function dist_isAbortError(error) {
-  return (error instanceof Error || error instanceof DOMException) && (error.name === "AbortError" || error.name === "ResponseAborted" || // Next.js
-  error.name === "TimeoutError");
-}
-
-// src/handle-fetch-error.ts
-var dist_FETCH_FAILED_ERROR_MESSAGES = ["fetch failed", "failed to fetch"];
-var RETRYABLE_NETWORK_ERROR_CODES = /* @__PURE__ */ new Set([
-  "ConnectionRefused",
-  "ConnectionClosed",
-  "FailedToOpenSocket",
-  "ECONNRESET",
-  "ECONNREFUSED",
-  "ETIMEDOUT",
-  "EPIPE",
-  "UND_ERR_SOCKET",
-  "UND_ERR_HEADERS_TIMEOUT",
-  "UND_ERR_BODY_TIMEOUT",
-  "UND_ERR_CONNECT_TIMEOUT"
-]);
-function findNetworkError(error) {
-  const visited = /* @__PURE__ */ new Set();
-  let current = error;
-  while (current instanceof Error && !visited.has(current)) {
-    visited.add(current);
-    const errorWithCode = current;
-    if (typeof errorWithCode.code === "string" && RETRYABLE_NETWORK_ERROR_CODES.has(errorWithCode.code)) {
-      return errorWithCode;
-    }
-    current = current.cause;
-  }
-  return void 0;
-}
-function dist_handleFetchError({
-  error,
-  url,
-  requestBodyValues
-}) {
-  if (dist_isAbortError(error)) {
-    return error;
-  }
-  if (error instanceof TypeError && dist_FETCH_FAILED_ERROR_MESSAGES.includes(error.message.toLowerCase())) {
-    const cause = error.cause;
-    if (cause != null) {
-      return new provider_dist_APICallError({
-        message: `Cannot connect to API: ${cause.message}`,
-        cause,
-        url,
-        requestBodyValues,
-        isRetryable: true
-        // retry when network error
-      });
-    }
-  }
-  const networkError = findNetworkError(error);
-  if (networkError != null) {
-    if (provider_dist_APICallError.isInstance(error)) {
-      return new provider_dist_APICallError({
-        message: error.message,
-        cause: error.cause,
-        url: error.url,
-        requestBodyValues: error.requestBodyValues,
-        statusCode: error.statusCode,
-        responseHeaders: error.responseHeaders,
-        responseBody: error.responseBody,
-        data: error.data,
-        isRetryable: true
-      });
-    }
-    return new provider_dist_APICallError({
-      message: `Cannot connect to API: ${error instanceof Error ? error.message : networkError.message}`,
-      cause: error,
-      url,
-      requestBodyValues,
-      isRetryable: true
-    });
-  }
-  return error;
-}
-
-// src/get-runtime-environment-user-agent.ts
-function dist_getRuntimeEnvironmentUserAgent(globalThisAny = globalThis) {
-  var _a2, _b2, _c;
-  if (globalThisAny.window) {
-    return `runtime/browser`;
-  }
-  if ((_a2 = globalThisAny.navigator) == null ? void 0 : _a2.userAgent) {
-    return `runtime/${globalThisAny.navigator.userAgent.toLowerCase()}`;
-  }
-  if ((_c = (_b2 = globalThisAny.process) == null ? void 0 : _b2.versions) == null ? void 0 : _c.node) {
-    return `runtime/node.js/${globalThisAny.process.version.substring(0)}`;
-  }
-  if (globalThisAny.EdgeRuntime) {
-    return `runtime/vercel-edge`;
-  }
-  return "runtime/unknown";
-}
-
-// src/normalize-headers.ts
-function dist_normalizeHeaders(headers) {
-  if (headers == null) {
-    return {};
-  }
-  const normalized = {};
-  if (headers instanceof Headers) {
-    headers.forEach((value, key) => {
-      normalized[key.toLowerCase()] = value;
-    });
-  } else {
-    if (!Array.isArray(headers)) {
-      headers = Object.entries(headers);
-    }
-    for (const [key, value] of headers) {
-      if (value != null) {
-        normalized[key.toLowerCase()] = value;
-      }
-    }
-  }
-  return normalized;
-}
-
-// src/with-user-agent-suffix.ts
-function dist_withUserAgentSuffix(headers, ...userAgentSuffixParts) {
-  const normalizedHeaders = new Headers(dist_normalizeHeaders(headers));
-  const currentUserAgentHeader = normalizedHeaders.get("user-agent") || "";
-  normalizedHeaders.set(
-    "user-agent",
-    [currentUserAgentHeader, ...userAgentSuffixParts].filter(Boolean).join(" ")
-  );
-  return Object.fromEntries(normalizedHeaders.entries());
-}
-
-// src/version.ts
-var provider_utils_dist_VERSION =  true ? "4.0.57" : 0;
-
-// src/get-from-api.ts
-var dist_getOriginalFetch = () => globalThis.fetch;
-var dist_getFromApi = async ({
-  url,
-  headers = {},
-  successfulResponseHandler,
-  failedResponseHandler,
-  abortSignal,
-  fetch = dist_getOriginalFetch()
-}) => {
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: dist_withUserAgentSuffix(
-        headers,
-        `ai-sdk/provider-utils/${provider_utils_dist_VERSION}`,
-        dist_getRuntimeEnvironmentUserAgent()
-      ),
-      signal: abortSignal
-    });
-    const responseHeaders = dist_extractResponseHeaders(response);
-    if (!response.ok) {
-      let errorInformation;
-      try {
-        errorInformation = await failedResponseHandler({
-          response,
-          url,
-          requestBodyValues: {}
-        });
-      } catch (error) {
-        if (dist_isAbortError(error) || APICallError2.isInstance(error)) {
-          throw error;
-        }
-        throw new APICallError2({
-          message: "Failed to process error response",
-          cause: error,
-          statusCode: response.status,
-          url,
-          responseHeaders,
-          requestBodyValues: {}
-        });
-      }
-      throw errorInformation.value;
-    }
-    try {
-      return await successfulResponseHandler({
-        response,
-        url,
-        requestBodyValues: {}
-      });
-    } catch (error) {
-      if (error instanceof Error) {
-        if (dist_isAbortError(error) || APICallError2.isInstance(error)) {
-          throw error;
-        }
-      }
-      throw new APICallError2({
-        message: "Failed to process successful response",
-        cause: error,
-        statusCode: response.status,
-        url,
-        responseHeaders,
-        requestBodyValues: {}
-      });
-    }
-  } catch (error) {
-    throw dist_handleFetchError({ error, url, requestBodyValues: {} });
-  }
-};
-
-// src/inject-json-instruction.ts
-var dist_DEFAULT_SCHEMA_PREFIX = "JSON schema:";
-var dist_DEFAULT_SCHEMA_SUFFIX = "You MUST answer with a JSON object that matches the JSON schema above.";
-var dist_DEFAULT_GENERIC_SUFFIX = "You MUST answer with JSON.";
-function dist_injectJsonInstruction({
-  prompt,
-  schema,
-  schemaPrefix = schema != null ? dist_DEFAULT_SCHEMA_PREFIX : void 0,
-  schemaSuffix = schema != null ? dist_DEFAULT_SCHEMA_SUFFIX : dist_DEFAULT_GENERIC_SUFFIX
-}) {
-  return [
-    prompt != null && prompt.length > 0 ? prompt : void 0,
-    prompt != null && prompt.length > 0 ? "" : void 0,
-    // add a newline if prompt is not null
-    schemaPrefix,
-    schema != null ? JSON.stringify(schema) : void 0,
-    schemaSuffix
-  ].filter((line) => line != null).join("\n");
-}
-function dist_injectJsonInstructionIntoMessages({
-  messages,
-  schema,
-  schemaPrefix,
-  schemaSuffix
-}) {
-  var _a2, _b2;
-  const systemMessage = ((_a2 = messages[0]) == null ? void 0 : _a2.role) === "system" ? { ...messages[0] } : { role: "system", content: "" };
-  systemMessage.content = dist_injectJsonInstruction({
-    prompt: systemMessage.content,
-    schema,
-    schemaPrefix,
-    schemaSuffix
-  });
-  return [
-    systemMessage,
-    ...((_b2 = messages[0]) == null ? void 0 : _b2.role) === "system" ? messages.slice(1) : messages
-  ];
-}
-
-// src/is-non-nullable.ts
-function provider_utils_dist_isNonNullable(value) {
-  return value != null;
-}
-
-// src/is-url-supported.ts
-function dist_isUrlSupported({
-  mediaType,
-  url,
-  supportedUrls
-}) {
-  url = url.toLowerCase();
-  mediaType = mediaType.toLowerCase();
-  return Object.entries(supportedUrls).map(([key, value]) => {
-    const mediaType2 = key.toLowerCase();
-    return mediaType2 === "*" || mediaType2 === "*/*" ? { mediaTypePrefix: "", regexes: value } : { mediaTypePrefix: mediaType2.replace(/\*/, ""), regexes: value };
-  }).filter(
-    ({ mediaTypePrefix }) => mediaTypePrefix === "" || mediaTypePrefix.endsWith("/") ? mediaType.startsWith(mediaTypePrefix) : mediaType === mediaTypePrefix
-  ).flatMap(({ regexes }) => regexes).some((pattern) => pattern.test(url));
-}
-
-// src/load-api-key.ts
-
-function dist_loadApiKey({
-  apiKey,
-  environmentVariableName,
-  apiKeyParameterName = "apiKey",
-  description
-}) {
-  if (typeof apiKey === "string") {
-    return apiKey;
-  }
-  if (apiKey != null) {
-    throw new dist_LoadAPIKeyError({
-      message: `${description} API key must be a string.`
-    });
-  }
-  if (typeof process === "undefined") {
-    throw new dist_LoadAPIKeyError({
-      message: `${description} API key is missing. Pass it using the '${apiKeyParameterName}' parameter. Environment variables are not supported in this environment.`
-    });
-  }
-  apiKey = process.env[environmentVariableName];
-  if (apiKey == null) {
-    throw new dist_LoadAPIKeyError({
-      message: `${description} API key is missing. Pass it using the '${apiKeyParameterName}' parameter or the ${environmentVariableName} environment variable.`
-    });
-  }
-  if (typeof apiKey !== "string") {
-    throw new dist_LoadAPIKeyError({
-      message: `${description} API key must be a string. The value of the ${environmentVariableName} environment variable is not a string.`
-    });
-  }
-  return apiKey;
-}
-
-// src/load-optional-setting.ts
-function dist_loadOptionalSetting({
-  settingValue,
-  environmentVariableName
-}) {
-  if (typeof settingValue === "string") {
-    return settingValue;
-  }
-  if (settingValue != null || typeof process === "undefined") {
-    return void 0;
-  }
-  settingValue = process.env[environmentVariableName];
-  if (settingValue == null || typeof settingValue !== "string") {
-    return void 0;
-  }
-  return settingValue;
-}
-
-// src/load-setting.ts
-
-function dist_loadSetting({
-  settingValue,
-  environmentVariableName,
-  settingName,
-  description
-}) {
-  if (typeof settingValue === "string") {
-    return settingValue;
-  }
-  if (settingValue != null) {
-    throw new LoadSettingError({
-      message: `${description} setting must be a string.`
-    });
-  }
-  if (typeof process === "undefined") {
-    throw new LoadSettingError({
-      message: `${description} setting is missing. Pass it using the '${settingName}' parameter. Environment variables are not supported in this environment.`
-    });
-  }
-  settingValue = process.env[environmentVariableName];
-  if (settingValue == null) {
-    throw new LoadSettingError({
-      message: `${description} setting is missing. Pass it using the '${settingName}' parameter or the ${environmentVariableName} environment variable.`
-    });
-  }
-  if (typeof settingValue !== "string") {
-    throw new LoadSettingError({
-      message: `${description} setting must be a string. The value of the ${environmentVariableName} environment variable is not a string.`
-    });
-  }
-  return settingValue;
-}
-
-// src/media-type-to-extension.ts
-function dist_mediaTypeToExtension(mediaType) {
-  var _a2;
-  const [_type, subtype = ""] = mediaType.toLowerCase().split("/");
-  return (_a2 = {
-    mpeg: "mp3",
-    "x-wav": "wav",
-    opus: "ogg",
-    mp4: "m4a",
-    "x-m4a": "m4a"
-  }[subtype]) != null ? _a2 : subtype;
-}
-
-// src/parse-json.ts
-
-
-// src/secure-json-parse.ts
-var dist_suspectProtoRx = /"(?:_|\\u005[Ff])(?:_|\\u005[Ff])(?:p|\\u0070)(?:r|\\u0072)(?:o|\\u006[Ff])(?:t|\\u0074)(?:o|\\u006[Ff])(?:_|\\u005[Ff])(?:_|\\u005[Ff])"\s*:/;
-var dist_suspectConstructorRx = /"(?:c|\\u0063)(?:o|\\u006[Ff])(?:n|\\u006[Ee])(?:s|\\u0073)(?:t|\\u0074)(?:r|\\u0072)(?:u|\\u0075)(?:c|\\u0063)(?:t|\\u0074)(?:o|\\u006[Ff])(?:r|\\u0072)"\s*:/;
-function provider_utils_dist_parse(text) {
-  const obj = JSON.parse(text);
-  if (obj === null || typeof obj !== "object") {
-    return obj;
-  }
-  if (dist_suspectProtoRx.test(text) === false && dist_suspectConstructorRx.test(text) === false) {
-    return obj;
-  }
-  return provider_utils_dist_filter(obj);
-}
-function provider_utils_dist_filter(obj) {
-  let next = [obj];
-  while (next.length) {
-    const nodes = next;
-    next = [];
-    for (const node of nodes) {
-      if (Object.prototype.hasOwnProperty.call(node, "__proto__")) {
-        throw new SyntaxError("Object contains forbidden prototype property");
-      }
-      if (Object.prototype.hasOwnProperty.call(node, "constructor") && node.constructor !== null && typeof node.constructor === "object" && Object.prototype.hasOwnProperty.call(node.constructor, "prototype")) {
-        throw new SyntaxError("Object contains forbidden prototype property");
-      }
-      for (const key in node) {
-        const value = node[key];
-        if (value && typeof value === "object") {
-          next.push(value);
-        }
-      }
-    }
-  }
-  return obj;
-}
-function dist_secureJsonParse(text) {
-  const { stackTraceLimit } = Error;
-  try {
-    Error.stackTraceLimit = 0;
-  } catch (e) {
-    return provider_utils_dist_parse(text);
-  }
-  try {
-    return provider_utils_dist_parse(text);
-  } finally {
-    Error.stackTraceLimit = stackTraceLimit;
-  }
-}
-
-// src/validate-types.ts
-
-
-// src/schema.ts
-
-
-
-// src/add-additional-properties-to-json-schema.ts
-function dist_addAdditionalPropertiesToJsonSchema(jsonSchema2) {
-  if (jsonSchema2.type === "object" || Array.isArray(jsonSchema2.type) && jsonSchema2.type.includes("object")) {
-    const { additionalProperties } = jsonSchema2;
-    jsonSchema2.additionalProperties = additionalProperties != null && typeof additionalProperties !== "boolean" ? dist_visit(additionalProperties) : false;
-    const { properties } = jsonSchema2;
-    if (properties != null) {
-      for (const key of Object.keys(properties)) {
-        properties[key] = dist_visit(properties[key]);
-      }
-    }
-  }
-  if (jsonSchema2.items != null) {
-    jsonSchema2.items = Array.isArray(jsonSchema2.items) ? jsonSchema2.items.map(dist_visit) : dist_visit(jsonSchema2.items);
-  }
-  if (jsonSchema2.anyOf != null) {
-    jsonSchema2.anyOf = jsonSchema2.anyOf.map(dist_visit);
-  }
-  if (jsonSchema2.allOf != null) {
-    jsonSchema2.allOf = jsonSchema2.allOf.map(dist_visit);
-  }
-  if (jsonSchema2.oneOf != null) {
-    jsonSchema2.oneOf = jsonSchema2.oneOf.map(dist_visit);
-  }
-  const { definitions } = jsonSchema2;
-  if (definitions != null) {
-    for (const key of Object.keys(definitions)) {
-      definitions[key] = dist_visit(definitions[key]);
-    }
-  }
-  return jsonSchema2;
-}
-function dist_visit(def) {
-  if (typeof def === "boolean") return def;
-  return dist_addAdditionalPropertiesToJsonSchema(def);
-}
-
-// src/to-json-schema/zod3-to-json-schema/options.ts
-var dist_ignoreOverride = /* @__PURE__ */ Symbol(
-  "Let zodToJsonSchema decide on which parser to use"
-);
-var dist_defaultOptions = {
-  name: void 0,
-  $refStrategy: "root",
-  basePath: ["#"],
-  effectStrategy: "input",
-  pipeStrategy: "all",
-  dateStrategy: "format:date-time",
-  mapStrategy: "entries",
-  removeAdditionalStrategy: "passthrough",
-  allowedAdditionalProperties: true,
-  rejectedAdditionalProperties: false,
-  definitionPath: "definitions",
-  strictUnions: false,
-  definitions: {},
-  errorMessages: false,
-  patternStrategy: "escape",
-  applyRegexFlags: false,
-  emailStrategy: "format:email",
-  base64Strategy: "contentEncoding:base64",
-  nameStrategy: "ref"
-};
-var dist_getDefaultOptions = (options) => typeof options === "string" ? {
-  ...dist_defaultOptions,
-  name: options
-} : {
-  ...dist_defaultOptions,
-  ...options
-};
-
-// src/to-json-schema/zod3-to-json-schema/select-parser.ts
-
-
-// src/to-json-schema/zod3-to-json-schema/parsers/any.ts
-function dist_parseAnyDef() {
-  return {};
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/array.ts
-
-function dist_parseArrayDef(def, refs) {
-  var _a2, _b2, _c;
-  const res = {
-    type: "array"
-  };
-  if (((_a2 = def.type) == null ? void 0 : _a2._def) && ((_c = (_b2 = def.type) == null ? void 0 : _b2._def) == null ? void 0 : _c.typeName) !== ZodFirstPartyTypeKind.ZodAny) {
-    res.items = dist_parseDef(def.type._def, {
-      ...refs,
-      currentPath: [...refs.currentPath, "items"]
-    });
-  }
-  if (def.minLength) {
-    res.minItems = def.minLength.value;
-  }
-  if (def.maxLength) {
-    res.maxItems = def.maxLength.value;
-  }
-  if (def.exactLength) {
-    res.minItems = def.exactLength.value;
-    res.maxItems = def.exactLength.value;
-  }
-  return res;
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/bigint.ts
-function dist_parseBigintDef(def) {
-  const res = {
-    type: "integer",
-    format: "int64"
-  };
-  if (!def.checks) return res;
-  for (const check of def.checks) {
-    switch (check.kind) {
-      case "min":
-        if (check.inclusive) {
-          res.minimum = check.value;
-        } else {
-          res.exclusiveMinimum = check.value;
-        }
-        break;
-      case "max":
-        if (check.inclusive) {
-          res.maximum = check.value;
-        } else {
-          res.exclusiveMaximum = check.value;
-        }
-        break;
-      case "multipleOf":
-        res.multipleOf = check.value;
-        break;
-    }
-  }
-  return res;
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/boolean.ts
-function dist_parseBooleanDef() {
-  return { type: "boolean" };
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/branded.ts
-function dist_parseBrandedDef(_def, refs) {
-  return dist_parseDef(_def.type._def, refs);
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/catch.ts
-var dist_parseCatchDef = (def, refs) => {
-  return dist_parseDef(def.innerType._def, refs);
-};
-
-// src/to-json-schema/zod3-to-json-schema/parsers/date.ts
-function dist_parseDateDef(def, refs, overrideDateStrategy) {
-  const strategy = overrideDateStrategy != null ? overrideDateStrategy : refs.dateStrategy;
-  if (Array.isArray(strategy)) {
-    return {
-      anyOf: strategy.map((item, i) => dist_parseDateDef(def, refs, item))
-    };
-  }
-  switch (strategy) {
-    case "string":
-    case "format:date-time":
-      return {
-        type: "string",
-        format: "date-time"
-      };
-    case "format:date":
-      return {
-        type: "string",
-        format: "date"
-      };
-    case "integer":
-      return dist_integerDateParser(def);
-  }
-}
-var dist_integerDateParser = (def) => {
-  const res = {
-    type: "integer",
-    format: "unix-time"
-  };
-  for (const check of def.checks) {
-    switch (check.kind) {
-      case "min":
-        res.minimum = check.value;
-        break;
-      case "max":
-        res.maximum = check.value;
-        break;
-    }
-  }
-  return res;
-};
-
-// src/to-json-schema/zod3-to-json-schema/parsers/default.ts
-function dist_parseDefaultDef(_def, refs) {
-  return {
-    ...dist_parseDef(_def.innerType._def, refs),
-    default: _def.defaultValue()
-  };
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/effects.ts
-function dist_parseEffectsDef(_def, refs) {
-  return refs.effectStrategy === "input" ? dist_parseDef(_def.schema._def, refs) : dist_parseAnyDef();
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/enum.ts
-function dist_parseEnumDef(def) {
-  return {
-    type: "string",
-    enum: Array.from(def.values)
-  };
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/intersection.ts
-var dist_isJsonSchema7AllOfType = (type) => {
-  if ("type" in type && type.type === "string") return false;
-  return "allOf" in type;
-};
-function dist_parseIntersectionDef(def, refs) {
-  const allOf = [
-    dist_parseDef(def.left._def, {
-      ...refs,
-      currentPath: [...refs.currentPath, "allOf", "0"]
-    }),
-    dist_parseDef(def.right._def, {
-      ...refs,
-      currentPath: [...refs.currentPath, "allOf", "1"]
-    })
-  ].filter((x) => !!x);
-  const mergedAllOf = [];
-  allOf.forEach((schema) => {
-    if (dist_isJsonSchema7AllOfType(schema)) {
-      mergedAllOf.push(...schema.allOf);
-    } else {
-      let nestedSchema = schema;
-      if ("additionalProperties" in schema && schema.additionalProperties === false) {
-        const { additionalProperties, ...rest } = schema;
-        nestedSchema = rest;
-      }
-      mergedAllOf.push(nestedSchema);
-    }
-  });
-  return mergedAllOf.length ? { allOf: mergedAllOf } : void 0;
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/literal.ts
-function dist_parseLiteralDef(def) {
-  const parsedType = typeof def.value;
-  if (parsedType !== "bigint" && parsedType !== "number" && parsedType !== "boolean" && parsedType !== "string") {
-    return {
-      type: Array.isArray(def.value) ? "array" : "object"
-    };
-  }
-  return {
-    type: parsedType === "bigint" ? "integer" : parsedType,
-    const: def.value
-  };
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/record.ts
-
-
-// src/to-json-schema/zod3-to-json-schema/parsers/string.ts
-var provider_utils_dist_emojiRegex = void 0;
-var dist_zodPatterns = {
-  /**
-   * `c` was changed to `[cC]` to replicate /i flag
-   */
-  cuid: /^[cC][^\s-]{8,}$/,
-  cuid2: /^[0-9a-z]+$/,
-  ulid: /^[0-9A-HJKMNP-TV-Z]{26}$/,
-  /**
-   * `a-z` was added to replicate /i flag
-   */
-  email: /^(?!\.)(?!.*\.\.)([a-zA-Z0-9_'+\-.]*)[a-zA-Z0-9_+-]@([a-zA-Z0-9][a-zA-Z0-9-]*\.)+[a-zA-Z]{2,}$/,
-  /**
-   * Constructed a valid Unicode RegExp
-   *
-   * Lazily instantiate since this type of regex isn't supported
-   * in all envs (e.g. React Native).
-   *
-   * See:
-   * https://github.com/colinhacks/zod/issues/2433
-   * Fix in Zod:
-   * https://github.com/colinhacks/zod/commit/9340fd51e48576a75adc919bff65dbc4a5d4c99b
-   */
-  emoji: () => {
-    if (provider_utils_dist_emojiRegex === void 0) {
-      provider_utils_dist_emojiRegex = RegExp(
-        "^(\\p{Extended_Pictographic}|\\p{Emoji_Component})+$",
-        "u"
-      );
-    }
-    return provider_utils_dist_emojiRegex;
-  },
-  /**
-   * Unused
-   */
-  uuid: /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/,
-  /**
-   * Unused
-   */
-  ipv4: /^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$/,
-  ipv4Cidr: /^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\/(3[0-2]|[12]?[0-9])$/,
-  /**
-   * Unused
-   */
-  ipv6: /^(([a-f0-9]{1,4}:){7}|::([a-f0-9]{1,4}:){0,6}|([a-f0-9]{1,4}:){1}:([a-f0-9]{1,4}:){0,5}|([a-f0-9]{1,4}:){2}:([a-f0-9]{1,4}:){0,4}|([a-f0-9]{1,4}:){3}:([a-f0-9]{1,4}:){0,3}|([a-f0-9]{1,4}:){4}:([a-f0-9]{1,4}:){0,2}|([a-f0-9]{1,4}:){5}:([a-f0-9]{1,4}:){0,1})([a-f0-9]{1,4}|(((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2}))\.){3}((25[0-5])|(2[0-4][0-9])|(1[0-9]{2})|([0-9]{1,2})))$/,
-  ipv6Cidr: /^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))\/(12[0-8]|1[01][0-9]|[1-9]?[0-9])$/,
-  base64: /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/,
-  base64url: /^([0-9a-zA-Z-_]{4})*(([0-9a-zA-Z-_]{2}(==)?)|([0-9a-zA-Z-_]{3}(=)?))?$/,
-  nanoid: /^[a-zA-Z0-9_-]{21}$/,
-  jwt: /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*$/
-};
-function dist_parseStringDef(def, refs) {
-  const res = {
-    type: "string"
-  };
-  if (def.checks) {
-    for (const check of def.checks) {
-      switch (check.kind) {
-        case "min":
-          res.minLength = typeof res.minLength === "number" ? Math.max(res.minLength, check.value) : check.value;
-          break;
-        case "max":
-          res.maxLength = typeof res.maxLength === "number" ? Math.min(res.maxLength, check.value) : check.value;
-          break;
-        case "email":
-          switch (refs.emailStrategy) {
-            case "format:email":
-              dist_addFormat(res, "email", check.message, refs);
-              break;
-            case "format:idn-email":
-              dist_addFormat(res, "idn-email", check.message, refs);
-              break;
-            case "pattern:zod":
-              dist_addPattern(res, dist_zodPatterns.email, check.message, refs);
-              break;
-          }
-          break;
-        case "url":
-          dist_addFormat(res, "uri", check.message, refs);
-          break;
-        case "uuid":
-          dist_addFormat(res, "uuid", check.message, refs);
-          break;
-        case "regex":
-          dist_addPattern(res, check.regex, check.message, refs);
-          break;
-        case "cuid":
-          dist_addPattern(res, dist_zodPatterns.cuid, check.message, refs);
-          break;
-        case "cuid2":
-          dist_addPattern(res, dist_zodPatterns.cuid2, check.message, refs);
-          break;
-        case "startsWith":
-          dist_addPattern(
-            res,
-            RegExp(`^${dist_escapeLiteralCheckValue(check.value, refs)}`),
-            check.message,
-            refs
-          );
-          break;
-        case "endsWith":
-          dist_addPattern(
-            res,
-            RegExp(`${dist_escapeLiteralCheckValue(check.value, refs)}$`),
-            check.message,
-            refs
-          );
-          break;
-        case "datetime":
-          dist_addFormat(res, "date-time", check.message, refs);
-          break;
-        case "date":
-          dist_addFormat(res, "date", check.message, refs);
-          break;
-        case "time":
-          dist_addFormat(res, "time", check.message, refs);
-          break;
-        case "duration":
-          dist_addFormat(res, "duration", check.message, refs);
-          break;
-        case "length":
-          res.minLength = typeof res.minLength === "number" ? Math.max(res.minLength, check.value) : check.value;
-          res.maxLength = typeof res.maxLength === "number" ? Math.min(res.maxLength, check.value) : check.value;
-          break;
-        case "includes": {
-          dist_addPattern(
-            res,
-            RegExp(dist_escapeLiteralCheckValue(check.value, refs)),
-            check.message,
-            refs
-          );
-          break;
-        }
-        case "ip": {
-          if (check.version !== "v6") {
-            dist_addFormat(res, "ipv4", check.message, refs);
-          }
-          if (check.version !== "v4") {
-            dist_addFormat(res, "ipv6", check.message, refs);
-          }
-          break;
-        }
-        case "base64url":
-          dist_addPattern(res, dist_zodPatterns.base64url, check.message, refs);
-          break;
-        case "jwt":
-          dist_addPattern(res, dist_zodPatterns.jwt, check.message, refs);
-          break;
-        case "cidr": {
-          if (check.version !== "v6") {
-            dist_addPattern(res, dist_zodPatterns.ipv4Cidr, check.message, refs);
-          }
-          if (check.version !== "v4") {
-            dist_addPattern(res, dist_zodPatterns.ipv6Cidr, check.message, refs);
-          }
-          break;
-        }
-        case "emoji":
-          dist_addPattern(res, dist_zodPatterns.emoji(), check.message, refs);
-          break;
-        case "ulid": {
-          dist_addPattern(res, dist_zodPatterns.ulid, check.message, refs);
-          break;
-        }
-        case "base64": {
-          switch (refs.base64Strategy) {
-            case "format:binary": {
-              dist_addFormat(res, "binary", check.message, refs);
-              break;
-            }
-            case "contentEncoding:base64": {
-              res.contentEncoding = "base64";
-              break;
-            }
-            case "pattern:zod": {
-              dist_addPattern(res, dist_zodPatterns.base64, check.message, refs);
-              break;
-            }
-          }
-          break;
-        }
-        case "nanoid": {
-          dist_addPattern(res, dist_zodPatterns.nanoid, check.message, refs);
-        }
-        case "toLowerCase":
-        case "toUpperCase":
-        case "trim":
-          break;
-        default:
-          /* @__PURE__ */ ((_) => {
-          })(check);
-      }
-    }
-  }
-  return res;
-}
-function dist_escapeLiteralCheckValue(literal, refs) {
-  return refs.patternStrategy === "escape" ? dist_escapeNonAlphaNumeric(literal) : literal;
-}
-var dist_ALPHA_NUMERIC = new Set(
-  "ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvxyz0123456789"
-);
-function dist_escapeNonAlphaNumeric(source) {
-  let result = "";
-  for (let i = 0; i < source.length; i++) {
-    if (!dist_ALPHA_NUMERIC.has(source[i])) {
-      result += "\\";
-    }
-    result += source[i];
-  }
-  return result;
-}
-function dist_addFormat(schema, value, message, refs) {
-  var _a2;
-  if (schema.format || ((_a2 = schema.anyOf) == null ? void 0 : _a2.some((x) => x.format))) {
-    if (!schema.anyOf) {
-      schema.anyOf = [];
-    }
-    if (schema.format) {
-      schema.anyOf.push({
-        format: schema.format
-      });
-      delete schema.format;
-    }
-    schema.anyOf.push({
-      format: value,
-      ...message && refs.errorMessages && { errorMessage: { format: message } }
-    });
-  } else {
-    schema.format = value;
-  }
-}
-function dist_addPattern(schema, regex, message, refs) {
-  var _a2;
-  if (schema.pattern || ((_a2 = schema.allOf) == null ? void 0 : _a2.some((x) => x.pattern))) {
-    if (!schema.allOf) {
-      schema.allOf = [];
-    }
-    if (schema.pattern) {
-      schema.allOf.push({
-        pattern: schema.pattern
-      });
-      delete schema.pattern;
-    }
-    schema.allOf.push({
-      pattern: dist_stringifyRegExpWithFlags(regex, refs),
-      ...message && refs.errorMessages && { errorMessage: { pattern: message } }
-    });
-  } else {
-    schema.pattern = dist_stringifyRegExpWithFlags(regex, refs);
-  }
-}
-function dist_stringifyRegExpWithFlags(regex, refs) {
-  var _a2;
-  if (!refs.applyRegexFlags || !regex.flags) {
-    return regex.source;
-  }
-  const flags = {
-    i: regex.flags.includes("i"),
-    // Case-insensitive
-    m: regex.flags.includes("m"),
-    // `^` and `$` matches adjacent to newline characters
-    s: regex.flags.includes("s")
-    // `.` matches newlines
-  };
-  const source = flags.i ? regex.source.toLowerCase() : regex.source;
-  let pattern = "";
-  let isEscaped = false;
-  let inCharGroup = false;
-  let inCharRange = false;
-  for (let i = 0; i < source.length; i++) {
-    if (isEscaped) {
-      pattern += source[i];
-      isEscaped = false;
-      continue;
-    }
-    if (flags.i) {
-      if (inCharGroup) {
-        if (source[i].match(/[a-z]/)) {
-          if (inCharRange) {
-            pattern += source[i];
-            pattern += `${source[i - 2]}-${source[i]}`.toUpperCase();
-            inCharRange = false;
-          } else if (source[i + 1] === "-" && ((_a2 = source[i + 2]) == null ? void 0 : _a2.match(/[a-z]/))) {
-            pattern += source[i];
-            inCharRange = true;
-          } else {
-            pattern += `${source[i]}${source[i].toUpperCase()}`;
-          }
-          continue;
-        }
-      } else if (source[i].match(/[a-z]/)) {
-        pattern += `[${source[i]}${source[i].toUpperCase()}]`;
-        continue;
-      }
-    }
-    if (flags.m) {
-      if (source[i] === "^") {
-        pattern += `(^|(?<=[\r
-]))`;
-        continue;
-      } else if (source[i] === "$") {
-        pattern += `($|(?=[\r
-]))`;
-        continue;
-      }
-    }
-    if (flags.s && source[i] === ".") {
-      pattern += inCharGroup ? `${source[i]}\r
-` : `[${source[i]}\r
-]`;
-      continue;
-    }
-    pattern += source[i];
-    if (source[i] === "\\") {
-      isEscaped = true;
-    } else if (inCharGroup && source[i] === "]") {
-      inCharGroup = false;
-    } else if (!inCharGroup && source[i] === "[") {
-      inCharGroup = true;
-    }
-  }
-  try {
-    new RegExp(pattern);
-  } catch (e) {
-    console.warn(
-      `Could not convert regex pattern at ${refs.currentPath.join(
-        "/"
-      )} to a flag-independent form! Falling back to the flag-ignorant source`
-    );
-    return regex.source;
-  }
-  return pattern;
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/record.ts
-function dist_parseRecordDef(def, refs) {
-  var _a2, _b2, _c, _d, _e, _f;
-  const schema = {
-    type: "object",
-    additionalProperties: (_a2 = dist_parseDef(def.valueType._def, {
-      ...refs,
-      currentPath: [...refs.currentPath, "additionalProperties"]
-    })) != null ? _a2 : refs.allowedAdditionalProperties
-  };
-  if (((_b2 = def.keyType) == null ? void 0 : _b2._def.typeName) === ZodFirstPartyTypeKind.ZodString && ((_c = def.keyType._def.checks) == null ? void 0 : _c.length)) {
-    const { type, ...keyType } = dist_parseStringDef(def.keyType._def, refs);
-    return {
-      ...schema,
-      propertyNames: keyType
-    };
-  } else if (((_d = def.keyType) == null ? void 0 : _d._def.typeName) === ZodFirstPartyTypeKind.ZodEnum) {
-    return {
-      ...schema,
-      propertyNames: {
-        enum: def.keyType._def.values
-      }
-    };
-  } else if (((_e = def.keyType) == null ? void 0 : _e._def.typeName) === ZodFirstPartyTypeKind.ZodBranded && def.keyType._def.type._def.typeName === ZodFirstPartyTypeKind.ZodString && ((_f = def.keyType._def.type._def.checks) == null ? void 0 : _f.length)) {
-    const { type, ...keyType } = dist_parseBrandedDef(
-      def.keyType._def,
-      refs
-    );
-    return {
-      ...schema,
-      propertyNames: keyType
-    };
-  }
-  return schema;
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/map.ts
-function dist_parseMapDef(def, refs) {
-  if (refs.mapStrategy === "record") {
-    return dist_parseRecordDef(def, refs);
-  }
-  const keys = dist_parseDef(def.keyType._def, {
-    ...refs,
-    currentPath: [...refs.currentPath, "items", "items", "0"]
-  }) || dist_parseAnyDef();
-  const values = dist_parseDef(def.valueType._def, {
-    ...refs,
-    currentPath: [...refs.currentPath, "items", "items", "1"]
-  }) || dist_parseAnyDef();
-  return {
-    type: "array",
-    maxItems: 125,
-    items: {
-      type: "array",
-      items: [keys, values],
-      minItems: 2,
-      maxItems: 2
-    }
-  };
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/native-enum.ts
-function dist_parseNativeEnumDef(def) {
-  const object = def.values;
-  const actualKeys = Object.keys(def.values).filter((key) => {
-    return typeof object[object[key]] !== "number";
-  });
-  const actualValues = actualKeys.map((key) => object[key]);
-  const parsedTypes = Array.from(
-    new Set(actualValues.map((values) => typeof values))
-  );
-  return {
-    type: parsedTypes.length === 1 ? parsedTypes[0] === "string" ? "string" : "number" : ["string", "number"],
-    enum: actualValues
-  };
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/never.ts
-function dist_parseNeverDef() {
-  return { not: dist_parseAnyDef() };
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/null.ts
-function dist_parseNullDef() {
-  return {
-    type: "null"
-  };
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/union.ts
-var dist_primitiveMappings = {
-  ZodString: "string",
-  ZodNumber: "number",
-  ZodBigInt: "integer",
-  ZodBoolean: "boolean",
-  ZodNull: "null"
-};
-function dist_parseUnionDef(def, refs) {
-  const options = def.options instanceof Map ? Array.from(def.options.values()) : def.options;
-  if (options.every(
-    (x) => x._def.typeName in dist_primitiveMappings && (!x._def.checks || !x._def.checks.length)
-  )) {
-    const types = options.reduce((types2, x) => {
-      const type = dist_primitiveMappings[x._def.typeName];
-      return type && !types2.includes(type) ? [...types2, type] : types2;
-    }, []);
-    return {
-      type: types.length > 1 ? types : types[0]
-    };
-  } else if (options.every((x) => x._def.typeName === "ZodLiteral" && !x.description)) {
-    const types = options.reduce(
-      (acc, x) => {
-        const type = typeof x._def.value;
-        switch (type) {
-          case "string":
-          case "number":
-          case "boolean":
-            return [...acc, type];
-          case "bigint":
-            return [...acc, "integer"];
-          case "object":
-            if (x._def.value === null) return [...acc, "null"];
-          case "symbol":
-          case "undefined":
-          case "function":
-          default:
-            return acc;
-        }
-      },
-      []
-    );
-    if (types.length === options.length) {
-      const uniqueTypes = types.filter((x, i, a) => a.indexOf(x) === i);
-      return {
-        type: uniqueTypes.length > 1 ? uniqueTypes : uniqueTypes[0],
-        enum: options.reduce(
-          (acc, x) => {
-            return acc.includes(x._def.value) ? acc : [...acc, x._def.value];
-          },
-          []
-        )
-      };
-    }
-  } else if (options.every((x) => x._def.typeName === "ZodEnum")) {
-    return {
-      type: "string",
-      enum: options.reduce(
-        (acc, x) => [
-          ...acc,
-          ...x._def.values.filter((x2) => !acc.includes(x2))
-        ],
-        []
-      )
-    };
-  }
-  return dist_asAnyOf(def, refs);
-}
-var dist_asAnyOf = (def, refs) => {
-  const anyOf = (def.options instanceof Map ? Array.from(def.options.values()) : def.options).map(
-    (x, i) => dist_parseDef(x._def, {
-      ...refs,
-      currentPath: [...refs.currentPath, "anyOf", `${i}`]
-    })
-  ).filter(
-    (x) => !!x && (!refs.strictUnions || typeof x === "object" && Object.keys(x).length > 0)
-  );
-  return anyOf.length ? { anyOf } : void 0;
-};
-
-// src/to-json-schema/zod3-to-json-schema/parsers/nullable.ts
-function dist_parseNullableDef(def, refs) {
-  if (["ZodString", "ZodNumber", "ZodBigInt", "ZodBoolean", "ZodNull"].includes(
-    def.innerType._def.typeName
-  ) && (!def.innerType._def.checks || !def.innerType._def.checks.length)) {
-    return {
-      type: [
-        dist_primitiveMappings[def.innerType._def.typeName],
-        "null"
-      ]
-    };
-  }
-  const base = dist_parseDef(def.innerType._def, {
-    ...refs,
-    currentPath: [...refs.currentPath, "anyOf", "0"]
-  });
-  return base && { anyOf: [base, { type: "null" }] };
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/number.ts
-function dist_parseNumberDef(def) {
-  const res = {
-    type: "number"
-  };
-  if (!def.checks) return res;
-  for (const check of def.checks) {
-    switch (check.kind) {
-      case "int":
-        res.type = "integer";
-        break;
-      case "min":
-        if (check.inclusive) {
-          res.minimum = check.value;
-        } else {
-          res.exclusiveMinimum = check.value;
-        }
-        break;
-      case "max":
-        if (check.inclusive) {
-          res.maximum = check.value;
-        } else {
-          res.exclusiveMaximum = check.value;
-        }
-        break;
-      case "multipleOf":
-        res.multipleOf = check.value;
-        break;
-    }
-  }
-  return res;
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/object.ts
-function dist_parseObjectDef(def, refs) {
-  const result = {
-    type: "object",
-    properties: {}
-  };
-  const required = [];
-  const shape = def.shape();
-  for (const propName in shape) {
-    let propDef = shape[propName];
-    if (propDef === void 0 || propDef._def === void 0) {
-      continue;
-    }
-    const propOptional = dist_safeIsOptional(propDef);
-    const parsedDef = dist_parseDef(propDef._def, {
-      ...refs,
-      currentPath: [...refs.currentPath, "properties", propName],
-      propertyPath: [...refs.currentPath, "properties", propName]
-    });
-    if (parsedDef === void 0) {
-      continue;
-    }
-    result.properties[propName] = parsedDef;
-    if (!propOptional) {
-      required.push(propName);
-    }
-  }
-  if (required.length) {
-    result.required = required;
-  }
-  const additionalProperties = dist_decideAdditionalProperties(def, refs);
-  if (additionalProperties !== void 0) {
-    result.additionalProperties = additionalProperties;
-  }
-  return result;
-}
-function dist_decideAdditionalProperties(def, refs) {
-  if (def.catchall._def.typeName !== "ZodNever") {
-    return dist_parseDef(def.catchall._def, {
-      ...refs,
-      currentPath: [...refs.currentPath, "additionalProperties"]
-    });
-  }
-  switch (def.unknownKeys) {
-    case "passthrough":
-      return refs.allowedAdditionalProperties;
-    case "strict":
-      return refs.rejectedAdditionalProperties;
-    case "strip":
-      return refs.removeAdditionalStrategy === "strict" ? refs.allowedAdditionalProperties : refs.rejectedAdditionalProperties;
-  }
-}
-function dist_safeIsOptional(schema) {
-  try {
-    return schema.isOptional();
-  } catch (e) {
-    return true;
-  }
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/optional.ts
-var dist_parseOptionalDef = (def, refs) => {
-  var _a2;
-  if (refs.currentPath.toString() === ((_a2 = refs.propertyPath) == null ? void 0 : _a2.toString())) {
-    return dist_parseDef(def.innerType._def, refs);
-  }
-  const innerSchema = dist_parseDef(def.innerType._def, {
-    ...refs,
-    currentPath: [...refs.currentPath, "anyOf", "1"]
-  });
-  return innerSchema ? { anyOf: [{ not: dist_parseAnyDef() }, innerSchema] } : dist_parseAnyDef();
-};
-
-// src/to-json-schema/zod3-to-json-schema/parsers/pipeline.ts
-var dist_parsePipelineDef = (def, refs) => {
-  if (refs.pipeStrategy === "input") {
-    return dist_parseDef(def.in._def, refs);
-  } else if (refs.pipeStrategy === "output") {
-    return dist_parseDef(def.out._def, refs);
-  }
-  const a = dist_parseDef(def.in._def, {
-    ...refs,
-    currentPath: [...refs.currentPath, "allOf", "0"]
-  });
-  const b = dist_parseDef(def.out._def, {
-    ...refs,
-    currentPath: [...refs.currentPath, "allOf", a ? "1" : "0"]
-  });
-  return {
-    allOf: [a, b].filter((x) => x !== void 0)
-  };
-};
-
-// src/to-json-schema/zod3-to-json-schema/parsers/promise.ts
-function dist_parsePromiseDef(def, refs) {
-  return dist_parseDef(def.type._def, refs);
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/set.ts
-function dist_parseSetDef(def, refs) {
-  const items = dist_parseDef(def.valueType._def, {
-    ...refs,
-    currentPath: [...refs.currentPath, "items"]
-  });
-  const schema = {
-    type: "array",
-    uniqueItems: true,
-    items
-  };
-  if (def.minSize) {
-    schema.minItems = def.minSize.value;
-  }
-  if (def.maxSize) {
-    schema.maxItems = def.maxSize.value;
-  }
-  return schema;
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/tuple.ts
-function dist_parseTupleDef(def, refs) {
-  if (def.rest) {
-    return {
-      type: "array",
-      minItems: def.items.length,
-      items: def.items.map(
-        (x, i) => dist_parseDef(x._def, {
-          ...refs,
-          currentPath: [...refs.currentPath, "items", `${i}`]
-        })
-      ).reduce(
-        (acc, x) => x === void 0 ? acc : [...acc, x],
-        []
-      ),
-      additionalItems: dist_parseDef(def.rest._def, {
-        ...refs,
-        currentPath: [...refs.currentPath, "additionalItems"]
-      })
-    };
-  } else {
-    return {
-      type: "array",
-      minItems: def.items.length,
-      maxItems: def.items.length,
-      items: def.items.map(
-        (x, i) => dist_parseDef(x._def, {
-          ...refs,
-          currentPath: [...refs.currentPath, "items", `${i}`]
-        })
-      ).reduce(
-        (acc, x) => x === void 0 ? acc : [...acc, x],
-        []
-      )
-    };
-  }
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/undefined.ts
-function dist_parseUndefinedDef() {
-  return {
-    not: dist_parseAnyDef()
-  };
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/unknown.ts
-function dist_parseUnknownDef() {
-  return dist_parseAnyDef();
-}
-
-// src/to-json-schema/zod3-to-json-schema/parsers/readonly.ts
-var dist_parseReadonlyDef = (def, refs) => {
-  return dist_parseDef(def.innerType._def, refs);
-};
-
-// src/to-json-schema/zod3-to-json-schema/select-parser.ts
-var dist_selectParser = (def, typeName, refs) => {
-  switch (typeName) {
-    case ZodFirstPartyTypeKind.ZodString:
-      return dist_parseStringDef(def, refs);
-    case ZodFirstPartyTypeKind.ZodNumber:
-      return dist_parseNumberDef(def);
-    case ZodFirstPartyTypeKind.ZodObject:
-      return dist_parseObjectDef(def, refs);
-    case ZodFirstPartyTypeKind.ZodBigInt:
-      return dist_parseBigintDef(def);
-    case ZodFirstPartyTypeKind.ZodBoolean:
-      return dist_parseBooleanDef();
-    case ZodFirstPartyTypeKind.ZodDate:
-      return dist_parseDateDef(def, refs);
-    case ZodFirstPartyTypeKind.ZodUndefined:
-      return dist_parseUndefinedDef();
-    case ZodFirstPartyTypeKind.ZodNull:
-      return dist_parseNullDef();
-    case ZodFirstPartyTypeKind.ZodArray:
-      return dist_parseArrayDef(def, refs);
-    case ZodFirstPartyTypeKind.ZodUnion:
-    case ZodFirstPartyTypeKind.ZodDiscriminatedUnion:
-      return dist_parseUnionDef(def, refs);
-    case ZodFirstPartyTypeKind.ZodIntersection:
-      return dist_parseIntersectionDef(def, refs);
-    case ZodFirstPartyTypeKind.ZodTuple:
-      return dist_parseTupleDef(def, refs);
-    case ZodFirstPartyTypeKind.ZodRecord:
-      return dist_parseRecordDef(def, refs);
-    case ZodFirstPartyTypeKind.ZodLiteral:
-      return dist_parseLiteralDef(def);
-    case ZodFirstPartyTypeKind.ZodEnum:
-      return dist_parseEnumDef(def);
-    case ZodFirstPartyTypeKind.ZodNativeEnum:
-      return dist_parseNativeEnumDef(def);
-    case ZodFirstPartyTypeKind.ZodNullable:
-      return dist_parseNullableDef(def, refs);
-    case ZodFirstPartyTypeKind.ZodOptional:
-      return dist_parseOptionalDef(def, refs);
-    case ZodFirstPartyTypeKind.ZodMap:
-      return dist_parseMapDef(def, refs);
-    case ZodFirstPartyTypeKind.ZodSet:
-      return dist_parseSetDef(def, refs);
-    case ZodFirstPartyTypeKind.ZodLazy:
-      return () => def.getter()._def;
-    case ZodFirstPartyTypeKind.ZodPromise:
-      return dist_parsePromiseDef(def, refs);
-    case ZodFirstPartyTypeKind.ZodNaN:
-    case ZodFirstPartyTypeKind.ZodNever:
-      return dist_parseNeverDef();
-    case ZodFirstPartyTypeKind.ZodEffects:
-      return dist_parseEffectsDef(def, refs);
-    case ZodFirstPartyTypeKind.ZodAny:
-      return dist_parseAnyDef();
-    case ZodFirstPartyTypeKind.ZodUnknown:
-      return dist_parseUnknownDef();
-    case ZodFirstPartyTypeKind.ZodDefault:
-      return dist_parseDefaultDef(def, refs);
-    case ZodFirstPartyTypeKind.ZodBranded:
-      return dist_parseBrandedDef(def, refs);
-    case ZodFirstPartyTypeKind.ZodReadonly:
-      return dist_parseReadonlyDef(def, refs);
-    case ZodFirstPartyTypeKind.ZodCatch:
-      return dist_parseCatchDef(def, refs);
-    case ZodFirstPartyTypeKind.ZodPipeline:
-      return dist_parsePipelineDef(def, refs);
-    case ZodFirstPartyTypeKind.ZodFunction:
-    case ZodFirstPartyTypeKind.ZodVoid:
-    case ZodFirstPartyTypeKind.ZodSymbol:
-      return void 0;
-    default:
-      return /* @__PURE__ */ ((_) => void 0)(typeName);
-  }
-};
-
-// src/to-json-schema/zod3-to-json-schema/get-relative-path.ts
-var dist_getRelativePath = (pathA, pathB) => {
-  let i = 0;
-  for (; i < pathA.length && i < pathB.length; i++) {
-    if (pathA[i] !== pathB[i]) break;
-  }
-  return [(pathA.length - i).toString(), ...pathB.slice(i)].join("/");
-};
-
-// src/to-json-schema/zod3-to-json-schema/parse-def.ts
-function dist_parseDef(def, refs, forceResolution = false) {
-  var _a2;
-  const seenItem = refs.seen.get(def);
-  if (refs.override) {
-    const overrideResult = (_a2 = refs.override) == null ? void 0 : _a2.call(
-      refs,
-      def,
-      refs,
-      seenItem,
-      forceResolution
-    );
-    if (overrideResult !== dist_ignoreOverride) {
-      return overrideResult;
-    }
-  }
-  if (seenItem && !forceResolution) {
-    const seenSchema = dist_get$ref(seenItem, refs);
-    if (seenSchema !== void 0) {
-      return seenSchema;
-    }
-  }
-  const newItem = { def, path: refs.currentPath, jsonSchema: void 0 };
-  refs.seen.set(def, newItem);
-  const jsonSchemaOrGetter = dist_selectParser(def, def.typeName, refs);
-  const jsonSchema2 = typeof jsonSchemaOrGetter === "function" ? dist_parseDef(jsonSchemaOrGetter(), refs) : jsonSchemaOrGetter;
-  if (jsonSchema2) {
-    dist_addMeta(def, refs, jsonSchema2);
-  }
-  if (refs.postProcess) {
-    const postProcessResult = refs.postProcess(jsonSchema2, def, refs);
-    newItem.jsonSchema = jsonSchema2;
-    return postProcessResult;
-  }
-  newItem.jsonSchema = jsonSchema2;
-  return jsonSchema2;
-}
-var dist_get$ref = (item, refs) => {
-  switch (refs.$refStrategy) {
-    case "root":
-      return { $ref: item.path.join("/") };
-    case "relative":
-      return { $ref: dist_getRelativePath(refs.currentPath, item.path) };
-    case "none":
-    case "seen": {
-      if (item.path.length < refs.currentPath.length && item.path.every((value, index) => refs.currentPath[index] === value)) {
-        console.warn(
-          `Recursive reference detected at ${refs.currentPath.join(
-            "/"
-          )}! Defaulting to any`
-        );
-        return dist_parseAnyDef();
-      }
-      return refs.$refStrategy === "seen" ? dist_parseAnyDef() : void 0;
-    }
-  }
-};
-var dist_addMeta = (def, refs, jsonSchema2) => {
-  if (def.description) {
-    jsonSchema2.description = def.description;
-  }
-  return jsonSchema2;
-};
-
-// src/to-json-schema/zod3-to-json-schema/refs.ts
-var dist_getRefs = (options) => {
-  const _options = dist_getDefaultOptions(options);
-  const currentPath = _options.name !== void 0 ? [..._options.basePath, _options.definitionPath, _options.name] : _options.basePath;
-  return {
-    ..._options,
-    currentPath,
-    propertyPath: void 0,
-    seen: new Map(
-      Object.entries(_options.definitions).map(([name2, def]) => [
-        def._def,
-        {
-          def: def._def,
-          path: [..._options.basePath, _options.definitionPath, name2],
-          // Resolution of references will be forced even though seen, so it's ok that the schema is undefined here for now.
-          jsonSchema: void 0
-        }
-      ])
-    )
-  };
-};
-
-// src/to-json-schema/zod3-to-json-schema/zod3-to-json-schema.ts
-var dist_zod3ToJsonSchema = (schema, options) => {
-  var _a2;
-  const refs = dist_getRefs(options);
-  let definitions = typeof options === "object" && options.definitions ? Object.entries(options.definitions).reduce(
-    (acc, [name3, schema2]) => {
-      var _a3;
-      return {
-        ...acc,
-        [name3]: (_a3 = dist_parseDef(
-          schema2._def,
-          {
-            ...refs,
-            currentPath: [...refs.basePath, refs.definitionPath, name3]
-          },
-          true
-        )) != null ? _a3 : dist_parseAnyDef()
-      };
-    },
-    {}
-  ) : void 0;
-  const name2 = typeof options === "string" ? options : (options == null ? void 0 : options.nameStrategy) === "title" ? void 0 : options == null ? void 0 : options.name;
-  const main = (_a2 = dist_parseDef(
-    schema._def,
-    name2 === void 0 ? refs : {
-      ...refs,
-      currentPath: [...refs.basePath, refs.definitionPath, name2]
-    },
-    false
-  )) != null ? _a2 : dist_parseAnyDef();
-  const title = typeof options === "object" && options.name !== void 0 && options.nameStrategy === "title" ? options.name : void 0;
-  if (title !== void 0) {
-    main.title = title;
-  }
-  const combined = name2 === void 0 ? definitions ? {
-    ...main,
-    [refs.definitionPath]: definitions
-  } : main : {
-    $ref: [
-      ...refs.$refStrategy === "relative" ? [] : refs.basePath,
-      refs.definitionPath,
-      name2
-    ].join("/"),
-    [refs.definitionPath]: {
-      ...definitions,
-      [name2]: main
-    }
-  };
-  combined.$schema = "http://json-schema.org/draft-07/schema#";
-  return combined;
-};
-
-// src/schema.ts
-var dist_schemaSymbol = /* @__PURE__ */ Symbol.for("vercel.ai.schema");
-function dist_lazySchema(createSchema) {
-  let schema;
-  return () => {
-    if (schema == null) {
-      schema = createSchema();
-    }
-    return schema;
-  };
-}
-function dist_jsonSchema(jsonSchema2, {
-  validate
-} = {}) {
-  return {
-    [dist_schemaSymbol]: true,
-    _type: void 0,
-    // should never be used directly
-    get jsonSchema() {
-      if (typeof jsonSchema2 === "function") {
-        jsonSchema2 = jsonSchema2();
-      }
-      return jsonSchema2;
-    },
-    validate
-  };
-}
-function dist_isSchema(value) {
-  return typeof value === "object" && value !== null && dist_schemaSymbol in value && value[dist_schemaSymbol] === true && "jsonSchema" in value && "validate" in value;
-}
-function dist_asSchema(schema) {
-  return schema == null ? dist_jsonSchema({
-    type: "object",
-    properties: {},
-    additionalProperties: false
-  }) : dist_isSchema(schema) ? schema : "~standard" in schema ? schema["~standard"].vendor === "zod" ? dist_zodSchema(schema) : dist_standardSchema(schema) : schema();
-}
-function dist_standardSchema(standardSchema2) {
-  return dist_jsonSchema(
-    () => {
-      if (!hasStandardJsonSchema(standardSchema2)) {
-        throw new Error(
-          `Standard schema vendor '${standardSchema2["~standard"].vendor}' does not support JSON Schema conversion.`
-        );
-      }
-      return dist_addAdditionalPropertiesToJsonSchema(
-        standardSchema2["~standard"].jsonSchema.input({
-          target: "draft-07"
-        })
-      );
-    },
-    {
-      validate: async (value) => {
-        const result = await standardSchema2["~standard"].validate(value);
-        return "value" in result ? { success: true, value: result.value } : {
-          success: false,
-          error: new dist_TypeValidationError({
-            value,
-            cause: result.issues
-          })
-        };
-      }
-    }
-  );
-}
-function hasStandardJsonSchema(schema) {
-  return schema["~standard"].jsonSchema != null;
-}
-function dist_zod3Schema(zodSchema2, options) {
-  var _a2;
-  const useReferences = (_a2 = options == null ? void 0 : options.useReferences) != null ? _a2 : false;
-  return dist_jsonSchema(
-    // defer json schema creation to avoid unnecessary computation when only validation is needed
-    () => dist_zod3ToJsonSchema(zodSchema2, {
-      $refStrategy: useReferences ? "root" : "none"
-    }),
-    {
-      validate: async (value) => {
-        const result = await zodSchema2.safeParseAsync(value);
-        return result.success ? { success: true, value: result.data } : { success: false, error: result.error };
-      }
-    }
-  );
-}
-function dist_zod4Schema(zodSchema2, options) {
-  var _a2;
-  const useReferences = (_a2 = options == null ? void 0 : options.useReferences) != null ? _a2 : false;
-  return dist_jsonSchema(
-    // defer json schema creation to avoid unnecessary computation when only validation is needed
-    () => dist_addAdditionalPropertiesToJsonSchema(
-      toJSONSchema(zodSchema2, {
-        target: "draft-7",
-        io: "input",
-        reused: useReferences ? "ref" : "inline"
-      })
-    ),
-    {
-      validate: async (value) => {
-        const result = await parse_safeParseAsync(zodSchema2, value);
-        return result.success ? { success: true, value: result.data } : { success: false, error: result.error };
-      }
-    }
-  );
-}
-function dist_isZod4Schema(zodSchema2) {
-  return "_zod" in zodSchema2;
-}
-function dist_zodSchema(zodSchema2, options) {
-  if (dist_isZod4Schema(zodSchema2)) {
-    return dist_zod4Schema(zodSchema2, options);
-  } else {
-    return dist_zod3Schema(zodSchema2, options);
-  }
-}
-
-// src/validate-types.ts
-async function provider_utils_dist_validateTypes({
-  value,
-  schema,
-  context
-}) {
-  const result = await dist_safeValidateTypes({ value, schema, context });
-  if (!result.success) {
-    throw dist_TypeValidationError.wrap({ value, cause: result.error, context });
-  }
-  return result.value;
-}
-async function dist_safeValidateTypes({
-  value,
-  schema,
-  context
-}) {
-  const actualSchema = dist_asSchema(schema);
-  try {
-    if (actualSchema.validate == null) {
-      return { success: true, value, rawValue: value };
-    }
-    const result = await actualSchema.validate(value);
-    if (result.success) {
-      return { success: true, value: result.value, rawValue: value };
-    }
-    return {
-      success: false,
-      error: dist_TypeValidationError.wrap({ value, cause: result.error, context }),
-      rawValue: value
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: dist_TypeValidationError.wrap({ value, cause: error, context }),
-      rawValue: value
-    };
-  }
-}
-
-// src/parse-json.ts
-async function dist_parseJSON({
-  text,
-  schema
-}) {
-  try {
-    const value = dist_secureJsonParse(text);
-    if (schema == null) {
-      return value;
-    }
-    return provider_utils_dist_validateTypes({ value, schema });
-  } catch (error) {
-    if (dist_JSONParseError.isInstance(error) || dist_TypeValidationError.isInstance(error)) {
-      throw error;
-    }
-    throw new dist_JSONParseError({ text, cause: error });
-  }
-}
-async function provider_utils_dist_safeParseJSON({
-  text,
-  schema
-}) {
-  try {
-    const value = dist_secureJsonParse(text);
-    if (schema == null) {
-      return { success: true, value, rawValue: value };
-    }
-    return await dist_safeValidateTypes({ value, schema });
-  } catch (error) {
-    return {
-      success: false,
-      error: dist_JSONParseError.isInstance(error) ? error : new dist_JSONParseError({ text, cause: error }),
-      rawValue: void 0
-    };
-  }
-}
-function dist_isParsableJson(input) {
-  try {
-    dist_secureJsonParse(input);
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
-// src/parse-json-event-stream.ts
-
-function provider_utils_dist_parseJsonEventStream({
-  stream,
-  schema
-}) {
-  return stream.pipeThrough(new TextDecoderStream()).pipeThrough(new EventSourceParserStream()).pipeThrough(
-    new TransformStream({
-      async transform({ data }, controller) {
-        if (data === "[DONE]") {
-          return;
-        }
-        controller.enqueue(await provider_utils_dist_safeParseJSON({ text: data, schema }));
-      }
-    })
-  );
-}
-
-// src/parse-provider-options.ts
-
-async function provider_utils_dist_parseProviderOptions({
-  provider,
-  providerOptions,
-  schema
-}) {
-  if ((providerOptions == null ? void 0 : providerOptions[provider]) == null) {
-    return void 0;
-  }
-  const parsedProviderOptions = await dist_safeValidateTypes({
-    value: providerOptions[provider],
-    schema
-  });
-  if (!parsedProviderOptions.success) {
-    throw new dist_InvalidArgumentError({
-      argument: "providerOptions",
-      message: `invalid ${provider} provider options`,
-      cause: parsedProviderOptions.error
-    });
-  }
-  return parsedProviderOptions.value;
-}
-
-// src/post-to-api.ts
-
-var dist_getOriginalFetch2 = () => globalThis.fetch;
-var provider_utils_dist_postJsonToApi = async ({
-  url,
-  headers,
-  body,
-  failedResponseHandler,
-  successfulResponseHandler,
-  abortSignal,
-  fetch
-}) => dist_postToApi({
-  url,
-  headers: {
-    "Content-Type": "application/json",
-    ...headers
-  },
-  body: {
-    content: JSON.stringify(body),
-    values: body
-  },
-  failedResponseHandler,
-  successfulResponseHandler,
-  abortSignal,
-  fetch
-});
-var dist_postFormDataToApi = async ({
-  url,
-  headers,
-  formData,
-  failedResponseHandler,
-  successfulResponseHandler,
-  abortSignal,
-  fetch
-}) => dist_postToApi({
-  url,
-  headers,
-  body: {
-    content: formData,
-    values: Object.fromEntries(formData.entries())
-  },
-  failedResponseHandler,
-  successfulResponseHandler,
-  abortSignal,
-  fetch
-});
-var dist_postToApi = async ({
-  url,
-  headers = {},
-  body,
-  successfulResponseHandler,
-  failedResponseHandler,
-  abortSignal,
-  fetch = dist_getOriginalFetch2()
-}) => {
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: dist_withUserAgentSuffix(
-        headers,
-        `ai-sdk/provider-utils/${provider_utils_dist_VERSION}`,
-        dist_getRuntimeEnvironmentUserAgent()
-      ),
-      body: body.content,
-      signal: abortSignal
-    });
-    const responseHeaders = dist_extractResponseHeaders(response);
-    if (!response.ok) {
-      let errorInformation;
-      try {
-        errorInformation = await failedResponseHandler({
-          response,
-          url,
-          requestBodyValues: body.values
-        });
-      } catch (error) {
-        if (dist_isAbortError(error) || provider_dist_APICallError.isInstance(error)) {
-          throw error;
-        }
-        throw new provider_dist_APICallError({
-          message: "Failed to process error response",
-          cause: error,
-          statusCode: response.status,
-          url,
-          responseHeaders,
-          requestBodyValues: body.values
-        });
-      }
-      throw errorInformation.value;
-    }
-    try {
-      return await successfulResponseHandler({
-        response,
-        url,
-        requestBodyValues: body.values
-      });
-    } catch (error) {
-      if (error instanceof Error) {
-        if (dist_isAbortError(error) || provider_dist_APICallError.isInstance(error)) {
-          throw error;
-        }
-      }
-      throw new provider_dist_APICallError({
-        message: "Failed to process successful response",
-        cause: error,
-        statusCode: response.status,
-        url,
-        responseHeaders,
-        requestBodyValues: body.values
-      });
-    }
-  } catch (error) {
-    throw dist_handleFetchError({ error, url, requestBodyValues: body.values });
-  }
-};
-
-// src/types/tool.ts
-function dist_tool(tool2) {
-  return tool2;
-}
-function dist_dynamicTool(tool2) {
-  return { ...tool2, type: "dynamic" };
-}
-
-// src/provider-tool-factory.ts
-function dist_createProviderToolFactory({
-  id,
-  inputSchema
-}) {
-  return ({
-    execute,
-    outputSchema,
-    needsApproval,
-    toModelOutput,
-    onInputStart,
-    onInputDelta,
-    onInputAvailable,
-    ...args
-  }) => dist_tool({
-    type: "provider",
-    id,
-    args,
-    inputSchema,
-    outputSchema,
-    execute,
-    needsApproval,
-    toModelOutput,
-    onInputStart,
-    onInputDelta,
-    onInputAvailable
-  });
-}
-function dist_createProviderToolFactoryWithOutputSchema({
-  id,
-  inputSchema,
-  outputSchema,
-  supportsDeferredResults
-}) {
-  return ({
-    execute,
-    needsApproval,
-    toModelOutput,
-    onInputStart,
-    onInputDelta,
-    onInputAvailable,
-    ...args
-  }) => dist_tool({
-    type: "provider",
-    id,
-    args,
-    inputSchema,
-    outputSchema,
-    execute,
-    needsApproval,
-    toModelOutput,
-    onInputStart,
-    onInputDelta,
-    onInputAvailable,
-    supportsDeferredResults
-  });
-}
-
-// src/remove-undefined-entries.ts
-function dist_removeUndefinedEntries(record) {
-  return Object.fromEntries(
-    Object.entries(record).filter(([_key, value]) => value != null)
-  );
-}
-
-// src/resolve.ts
-async function provider_utils_dist_resolve(value) {
-  if (typeof value === "function") {
-    value = value();
-  }
-  return value;
-}
-
-// src/retry-with-exponential-backoff.ts
-var retryWithExponentialBackoff = ({
-  maxRetries = 2,
-  initialDelayInMs = 2e3,
-  backoffFactor = 2,
-  abortSignal,
-  shouldRetry,
-  getDelayInMs = ({ exponentialBackoffDelay }) => exponentialBackoffDelay,
-  createRetryError = ({ message }) => new Error(message)
-}) => async (f) => retryWithExponentialBackoffInternal(f, {
-  maxRetries,
-  delayInMs: initialDelayInMs,
-  backoffFactor,
-  abortSignal,
-  shouldRetry,
-  getDelayInMs,
-  createRetryError
-});
-async function retryWithExponentialBackoffInternal(f, {
-  maxRetries,
-  delayInMs,
-  backoffFactor,
-  abortSignal,
-  shouldRetry,
-  getDelayInMs,
-  createRetryError
-}, errors = []) {
-  try {
-    return await f();
-  } catch (error) {
-    if (dist_isAbortError(error)) {
-      throw error;
-    }
-    if (maxRetries === 0) {
-      throw error;
-    }
-    const errorMessage = provider_utils_dist_getErrorMessage(error);
-    const newErrors = [...errors, error];
-    const tryNumber = newErrors.length;
-    if (tryNumber > maxRetries) {
-      throw createRetryError({
-        message: `Failed after ${tryNumber} attempts. Last error: ${errorMessage}`,
-        reason: "maxRetriesExceeded",
-        errors: newErrors
-      });
-    }
-    if (await shouldRetry(error) && tryNumber <= maxRetries) {
-      await provider_utils_dist_delay(
-        getDelayInMs({
-          error,
-          exponentialBackoffDelay: delayInMs
-        }),
-        { abortSignal }
-      );
-      return retryWithExponentialBackoffInternal(
-        f,
-        {
-          maxRetries,
-          delayInMs: backoffFactor * delayInMs,
-          backoffFactor,
-          abortSignal,
-          shouldRetry,
-          getDelayInMs,
-          createRetryError
-        },
-        newErrors
-      );
-    }
-    if (tryNumber === 1) {
-      throw error;
-    }
-    throw createRetryError({
-      message: `Failed after ${tryNumber} attempts with non-retryable error: '${errorMessage}'`,
-      reason: "errorNotRetryable",
-      errors: newErrors
-    });
-  }
-}
-
-// src/response-handler.ts
-
-var textDecoder = new TextDecoder();
-function wrapResponseBodyStream({
-  stream,
-  url,
-  requestBodyValues,
-  statusCode,
-  responseHeaders
-}) {
-  const reader = stream.getReader();
-  let readerReleased = false;
-  const releaseReader = () => {
-    if (!readerReleased) {
-      reader.releaseLock();
-      readerReleased = true;
-    }
-  };
-  return new ReadableStream({
-    async pull(controller) {
-      try {
-        const { done, value } = await reader.read();
-        if (done) {
-          releaseReader();
-          controller.close();
-        } else {
-          controller.enqueue(value);
-        }
-      } catch (error) {
-        releaseReader();
-        if (dist_isAbortError(error)) {
-          controller.error(error);
-          return;
-        }
-        controller.error(
-          dist_handleFetchError({
-            error: new provider_dist_APICallError({
-              message: "Failed to process successful response",
-              cause: error,
-              statusCode,
-              url,
-              responseHeaders,
-              requestBodyValues
-            }),
-            url,
-            requestBodyValues
-          })
-        );
-      }
-    },
-    async cancel(reason) {
-      try {
-        await reader.cancel(reason);
-      } finally {
-        releaseReader();
-      }
-    }
-  });
-}
-async function readResponseBodyAsText({
-  response,
-  url
-}) {
-  return textDecoder.decode(
-    await dist_readResponseWithSizeLimit({
-      response,
-      url
-    })
-  );
-}
-var dist_createJsonErrorResponseHandler = ({
-  errorSchema,
-  errorToMessage,
-  isRetryable
-}) => async ({ response, url, requestBodyValues }) => {
-  const responseBody = await readResponseBodyAsText({ response, url });
-  const responseHeaders = dist_extractResponseHeaders(response);
-  if (responseBody.trim() === "") {
-    return {
-      responseHeaders,
-      value: new provider_dist_APICallError({
-        message: response.statusText,
-        url,
-        requestBodyValues,
-        statusCode: response.status,
-        responseHeaders,
-        responseBody,
-        isRetryable: isRetryable == null ? void 0 : isRetryable(response)
-      })
-    };
-  }
-  try {
-    const parsedError = await dist_parseJSON({
-      text: responseBody,
-      schema: errorSchema
-    });
-    return {
-      responseHeaders,
-      value: new provider_dist_APICallError({
-        message: errorToMessage(parsedError),
-        url,
-        requestBodyValues,
-        statusCode: response.status,
-        responseHeaders,
-        responseBody,
-        data: parsedError,
-        isRetryable: isRetryable == null ? void 0 : isRetryable(response, parsedError)
-      })
-    };
-  } catch (parseError) {
-    return {
-      responseHeaders,
-      value: new provider_dist_APICallError({
-        message: response.statusText,
-        url,
-        requestBodyValues,
-        statusCode: response.status,
-        responseHeaders,
-        responseBody,
-        isRetryable: isRetryable == null ? void 0 : isRetryable(response)
-      })
-    };
-  }
-};
-var provider_utils_dist_createEventSourceResponseHandler = (chunkSchema) => async ({ response, url, requestBodyValues }) => {
-  const responseHeaders = dist_extractResponseHeaders(response);
-  if (response.body == null) {
-    throw new dist_EmptyResponseBodyError({});
-  }
-  return {
-    responseHeaders,
-    value: provider_utils_dist_parseJsonEventStream({
-      stream: wrapResponseBodyStream({
-        stream: response.body,
-        url,
-        requestBodyValues,
-        statusCode: response.status,
-        responseHeaders
-      }),
-      schema: chunkSchema
-    })
-  };
-};
-var provider_utils_dist_createJsonResponseHandler = (responseSchema) => async ({ response, url, requestBodyValues }) => {
-  const responseBody = await readResponseBodyAsText({ response, url });
-  const parsedResult = await provider_utils_dist_safeParseJSON({
-    text: responseBody,
-    schema: responseSchema
-  });
-  const responseHeaders = dist_extractResponseHeaders(response);
-  if (!parsedResult.success) {
-    throw new provider_dist_APICallError({
-      message: "Invalid JSON response",
-      cause: parsedResult.error,
-      statusCode: response.status,
-      responseHeaders,
-      responseBody,
-      url,
-      requestBodyValues
-    });
-  }
-  return {
-    responseHeaders,
-    value: parsedResult.value,
-    rawValue: parsedResult.rawValue
-  };
-};
-var dist_createBinaryResponseHandler = () => async ({ response, url, requestBodyValues }) => {
-  const responseHeaders = dist_extractResponseHeaders(response);
-  if (!response.body) {
-    throw new APICallError4({
-      message: "Response body is empty",
-      url,
-      requestBodyValues,
-      statusCode: response.status,
-      responseHeaders,
-      responseBody: void 0
-    });
-  }
-  try {
-    const buffer = await response.arrayBuffer();
-    return {
-      responseHeaders,
-      value: new Uint8Array(buffer)
-    };
-  } catch (error) {
-    throw new APICallError4({
-      message: "Failed to read response as array buffer",
-      url,
-      requestBodyValues,
-      statusCode: response.status,
-      responseHeaders,
-      responseBody: void 0,
-      cause: error
-    });
-  }
-};
-var dist_createStatusCodeErrorResponseHandler = () => async ({ response, url, requestBodyValues }) => {
-  const responseHeaders = dist_extractResponseHeaders(response);
-  const responseBody = await readResponseBodyAsText({ response, url });
-  return {
-    responseHeaders,
-    value: new APICallError4({
-      message: response.statusText,
-      url,
-      requestBodyValues,
-      statusCode: response.status,
-      responseHeaders,
-      responseBody
-    })
-  };
-};
-
-// src/streaming-tool-call-tracker.ts
-
-
-// src/streaming-tool-call-argument-state.ts
-function startsWithStructuredValue(value) {
-  if (typeof value !== "string") {
-    return false;
-  }
-  const firstCharacter = value.trimStart()[0];
-  return firstCharacter === "{" || firstCharacter === "[";
-}
-var StreamingToolCallArgumentState = class {
-  constructor(initialValue = "") {
-    this.structure = { kind: "undetermined" };
-    this.append(initialValue);
-  }
-  get hasCompleteStructuredValue() {
-    return this.structure.kind === "structured" && this.structure.complete === true;
-  }
-  append(delta) {
-    let nextStructure = this.structure;
-    for (const character of delta) {
-      if (nextStructure.kind === "undetermined") {
-        if (/\s/.test(character)) {
-          continue;
-        }
-        if (character !== "{" && character !== "[") {
-          nextStructure = { kind: "other" };
-          continue;
-        }
-        nextStructure = {
-          kind: "structured",
-          stack: [character],
-          inString: false,
-          escaped: false,
-          complete: false
-        };
-        continue;
-      }
-      if (nextStructure.kind !== "structured" || nextStructure.complete) {
-        continue;
-      }
-      if (nextStructure.inString) {
-        if (nextStructure.escaped) {
-          nextStructure.escaped = false;
-        } else if (character === "\\") {
-          nextStructure.escaped = true;
-        } else if (character === '"') {
-          nextStructure.inString = false;
-        }
-        continue;
-      }
-      if (character === '"') {
-        nextStructure.inString = true;
-      } else if (character === "{" || character === "[") {
-        nextStructure.stack.push(character);
-      } else if (character === "}" || character === "]") {
-        const expectedOpening = character === "}" ? "{" : "[";
-        if (nextStructure.stack[nextStructure.stack.length - 1] !== expectedOpening) {
-          nextStructure = { kind: "other" };
-          continue;
-        }
-        nextStructure.stack.pop();
-        if (nextStructure.stack.length === 0) {
-          nextStructure.complete = true;
-        }
-      }
-    }
-    this.structure = nextStructure;
-  }
-};
-
-// src/streaming-tool-call-tracker.ts
-var StreamingToolCallTracker = class {
-  constructor(controller, options = {}) {
-    this.toolCalls = [];
-    this.toolCallsById = /* @__PURE__ */ new Map();
-    this.toolCallsByIndex = /* @__PURE__ */ new Map();
-    this.usedToolCallIds = /* @__PURE__ */ new Set();
-    this.nextGeneratedIdSuffixes = /* @__PURE__ */ new Map();
-    var _a2, _b2;
-    this.controller = controller;
-    this._generateId = (_a2 = options.generateId) != null ? _a2 : provider_utils_dist_generateId;
-    this.typeValidation = (_b2 = options.typeValidation) != null ? _b2 : "none";
-    this.extractMetadata = options.extractMetadata;
-    this.buildToolCallProviderMetadata = options.buildToolCallProviderMetadata;
-  }
-  processDelta(toolCallDelta) {
-    var _a2, _b2;
-    const wireName = (_a2 = toolCallDelta.function) == null ? void 0 : _a2.name;
-    const hasBlankName = typeof wireName === "string" && wireName.trim().length === 0;
-    const wireId = this.getNonBlankString(toolCallDelta.id);
-    const name2 = this.getNonBlankString(wireName);
-    const { index } = toolCallDelta;
-    const resolution = this.resolveToolCall({
-      wireId,
-      index,
-      name: name2,
-      hasExplicitCallStart: name2 != null && startsWithStructuredValue((_b2 = toolCallDelta.function) == null ? void 0 : _b2.arguments)
-    });
-    if (resolution.kind === "ambiguous") {
-      return;
-    }
-    let toolCall;
-    if (resolution.kind === "new") {
-      if (hasBlankName) {
-        return;
-      }
-      toolCall = this.processNewToolCall(toolCallDelta, {
-        wireId,
-        index,
-        name: name2
-      });
-    } else {
-      toolCall = resolution.toolCall;
-      if (wireId != null) {
-        this.associateWireId(toolCall, wireId);
-      }
-      this.processExistingToolCall(toolCall, toolCallDelta);
-    }
-    if (index != null) {
-      this.associateIndex(toolCall, index);
-    }
-  }
-  flush() {
-    const toolCalls = this.toolCalls.every((toolCall) => toolCall.index != null) ? [...this.toolCalls].sort(
-      (a, b) => a.index - b.index || a.sequence - b.sequence
-    ) : this.toolCalls;
-    for (const toolCall of toolCalls) {
-      if (!toolCall.hasFinished) {
-        this.finishToolCall(toolCall);
-      }
-    }
-  }
-  resolveToolCall({
-    wireId,
-    index,
-    name: name2,
-    hasExplicitCallStart
-  }) {
-    const indexedToolCalls = index != null ? this.toolCallsByIndex.get(index) : void 0;
-    const matchingIndexedToolCalls = this.filterToolCallsByName(
-      indexedToolCalls,
-      name2
-    );
-    if (wireId != null) {
-      const toolCallsWithId = this.toolCallsById.get(wireId);
-      if (toolCallsWithId != null) {
-        if (index != null) {
-          const matchingToolCalls = matchingIndexedToolCalls.filter(
-            (toolCall) => toolCallsWithId.has(toolCall)
-          );
-          const matchingToolCall = this.resolveMatchingToolCall(
-            matchingToolCalls,
-            hasExplicitCallStart
-          );
-          if (matchingToolCall.kind !== "new") {
-            return matchingToolCall;
-          }
-          if (name2 != null) {
-            return { kind: "new" };
-          }
-          if (indexedToolCalls != null) {
-            return { kind: "ambiguous" };
-          }
-          return this.resolveMatchingToolCall([...toolCallsWithId], false);
-        }
-        if (name2 != null) {
-          const matchingToolCalls = [...toolCallsWithId].filter(
-            (toolCall) => toolCall.function.name === name2
-          );
-          return this.resolveMatchingToolCall(
-            matchingToolCalls,
-            hasExplicitCallStart
-          );
-        }
-        return this.resolveMatchingToolCall([...toolCallsWithId], false);
-      }
-      if (matchingIndexedToolCalls.length > 0) {
-        return hasExplicitCallStart ? { kind: "new" } : this.resolveMatchingToolCall(matchingIndexedToolCalls, false);
-      }
-      return { kind: "new" };
-    }
-    if (indexedToolCalls != null) {
-      return this.resolveMatchingToolCall(
-        matchingIndexedToolCalls,
-        hasExplicitCallStart
-      );
-    }
-    if (name2 != null) {
-      return { kind: "new" };
-    }
-    const unfinishedToolCalls = this.toolCalls.filter(
-      (toolCall) => !toolCall.hasFinished
-    );
-    if (unfinishedToolCalls.length === 1) {
-      return { kind: "existing", toolCall: unfinishedToolCalls[0] };
-    }
-    return unfinishedToolCalls.length > 1 ? { kind: "ambiguous" } : { kind: "new" };
-  }
-  filterToolCallsByName(toolCalls, name2) {
-    if (toolCalls == null) {
-      return [];
-    }
-    return [...toolCalls].filter(
-      (toolCall) => name2 == null || toolCall.function.name === name2
-    );
-  }
-  resolveMatchingToolCall(toolCalls, hasExplicitCallStart) {
-    if (toolCalls.length === 0) {
-      return { kind: "new" };
-    }
-    if (!hasExplicitCallStart) {
-      return toolCalls.length === 1 ? { kind: "existing", toolCall: toolCalls[0] } : { kind: "ambiguous" };
-    }
-    const continuableToolCalls = toolCalls.filter(
-      (toolCall) => !toolCall.argumentState.hasCompleteStructuredValue
-    );
-    if (continuableToolCalls.length === 1) {
-      return { kind: "existing", toolCall: continuableToolCalls[0] };
-    }
-    return continuableToolCalls.length > 1 ? { kind: "ambiguous" } : { kind: "new" };
-  }
-  processNewToolCall(toolCallDelta, {
-    wireId,
-    index,
-    name: name2
-  }) {
-    var _a2, _b2, _c, _d, _e;
-    if (this.typeValidation === "required") {
-      if (toolCallDelta.type !== "function") {
-        throw new InvalidResponseDataError({
-          data: toolCallDelta,
-          message: `Expected 'function' type.`
-        });
-      }
-    } else if (this.typeValidation === "if-present") {
-      if (toolCallDelta.type != null && toolCallDelta.type !== "function") {
-        throw new InvalidResponseDataError({
-          data: toolCallDelta,
-          message: `Expected 'function' type.`
-        });
-      }
-    }
-    if (name2 == null) {
-      throw new InvalidResponseDataError({
-        data: toolCallDelta,
-        message: `Expected 'function.name' to be a string.`
-      });
-    }
-    const id = this.createToolCallId(wireId);
-    this.controller.enqueue({
-      type: "tool-input-start",
-      id,
-      toolName: name2
-    });
-    const toolCall = {
-      id,
-      index: index != null ? index : void 0,
-      sequence: this.toolCalls.length,
-      type: "function",
-      function: {
-        name: name2,
-        arguments: (_b2 = (_a2 = toolCallDelta.function) == null ? void 0 : _a2.arguments) != null ? _b2 : ""
-      },
-      argumentState: new StreamingToolCallArgumentState(
-        (_d = (_c = toolCallDelta.function) == null ? void 0 : _c.arguments) != null ? _d : ""
-      ),
-      hasFinished: false,
-      metadata: (_e = this.extractMetadata) == null ? void 0 : _e.call(this, toolCallDelta)
-    };
-    this.toolCalls.push(toolCall);
-    if (wireId != null) {
-      this.associateWireId(toolCall, wireId);
-    }
-    if (toolCall.function.arguments.length > 0) {
-      this.controller.enqueue({
-        type: "tool-input-delta",
-        id: toolCall.id,
-        delta: toolCall.function.arguments
-      });
-    }
-    return toolCall;
-  }
-  associateWireId(toolCall, wireId) {
-    let toolCallsWithId = this.toolCallsById.get(wireId);
-    if (toolCallsWithId == null) {
-      toolCallsWithId = /* @__PURE__ */ new Set();
-      this.toolCallsById.set(wireId, toolCallsWithId);
-    }
-    toolCallsWithId.add(toolCall);
-  }
-  associateIndex(toolCall, index) {
-    let toolCallsWithIndex = this.toolCallsByIndex.get(index);
-    if (toolCallsWithIndex == null) {
-      toolCallsWithIndex = /* @__PURE__ */ new Set();
-      this.toolCallsByIndex.set(index, toolCallsWithIndex);
-    }
-    toolCallsWithIndex.add(toolCall);
-  }
-  createToolCallId(wireId) {
-    var _a2, _b2;
-    if (wireId != null && !this.usedToolCallIds.has(wireId)) {
-      this.usedToolCallIds.add(wireId);
-      return wireId;
-    }
-    const generatedId = (_a2 = this.getNonBlankString(this._generateId())) != null ? _a2 : "tool-call";
-    if (!this.usedToolCallIds.has(generatedId)) {
-      this.usedToolCallIds.add(generatedId);
-      return generatedId;
-    }
-    const initialSuffix = (_b2 = this.nextGeneratedIdSuffixes.get(generatedId)) != null ? _b2 : 1;
-    const maximumSuffix = initialSuffix + this.usedToolCallIds.size;
-    for (let suffix = initialSuffix; suffix <= maximumSuffix; suffix++) {
-      const suffixedId = `${generatedId}-${suffix}`;
-      if (!this.usedToolCallIds.has(suffixedId)) {
-        this.usedToolCallIds.add(suffixedId);
-        this.nextGeneratedIdSuffixes.set(generatedId, suffix + 1);
-        return suffixedId;
-      }
-    }
-    throw new Error("Failed to create a unique tool call ID.");
-  }
-  getNonBlankString(value) {
-    return value != null && value.trim().length > 0 ? value : void 0;
-  }
-  processExistingToolCall(toolCall, toolCallDelta) {
-    var _a2;
-    if (!toolCall.hasFinished && ((_a2 = toolCallDelta.function) == null ? void 0 : _a2.arguments) != null) {
-      toolCall.argumentState.append(toolCallDelta.function.arguments);
-      toolCall.function.arguments += toolCallDelta.function.arguments;
-      this.controller.enqueue({
-        type: "tool-input-delta",
-        id: toolCall.id,
-        delta: toolCallDelta.function.arguments
-      });
-    }
-  }
-  finishToolCall(toolCall) {
-    var _a2;
-    this.controller.enqueue({
-      type: "tool-input-end",
-      id: toolCall.id
-    });
-    const providerMetadata = (_a2 = this.buildToolCallProviderMetadata) == null ? void 0 : _a2.call(
-      this,
-      toolCall.metadata
-    );
-    this.controller.enqueue({
-      type: "tool-call",
-      toolCallId: toolCall.id,
-      toolName: toolCall.function.name,
-      input: toolCall.function.arguments,
-      ...providerMetadata ? { providerMetadata } : {}
-    });
-    toolCall.hasFinished = true;
-  }
-};
-
-// src/strip-file-extension.ts
-function dist_stripFileExtension(filename) {
-  const firstDotIndex = filename.indexOf(".");
-  return firstDotIndex === -1 ? filename : filename.slice(0, firstDotIndex);
-}
-
-// src/without-trailing-slash.ts
-function dist_withoutTrailingSlash(url) {
-  return url == null ? void 0 : url.replace(/\/$/, "");
-}
-
-// src/is-async-iterable.ts
-function dist_isAsyncIterable(obj) {
-  return obj != null && typeof obj[Symbol.asyncIterator] === "function";
-}
-
-// src/types/execute-tool.ts
-async function* dist_executeTool({
-  execute,
-  input,
-  options
-}) {
-  const result = execute(input, options);
-  if (dist_isAsyncIterable(result)) {
-    let lastOutput;
-    for await (const output of result) {
-      lastOutput = output;
-      yield { type: "preliminary", output };
-    }
-    yield { type: "final", output: lastOutput };
-  } else {
-    yield { type: "final", output: await result };
-  }
-}
-
-// src/index.ts
-
-
-//# sourceMappingURL=index.mjs.map
 ;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+anthropic@3.0.127_zod@4.4.3/node_modules/@ai-sdk/anthropic/dist/index.mjs
 // src/anthropic-provider.ts
 
@@ -135893,8 +133487,8 @@ var anthropic_dist_VERSION =  true ? "3.0.127" : 0;
 // src/anthropic-error.ts
 
 
-var dist_anthropicErrorDataSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_anthropicErrorDataSchema = lazySchema(
+  () => zodSchema(
     object({
       type: literal("error"),
       error: object({
@@ -135904,7 +133498,7 @@ var dist_anthropicErrorDataSchema = dist_lazySchema(
     })
   )
 );
-var dist_anthropicFailedResponseHandler = dist_createJsonErrorResponseHandler({
+var dist_anthropicFailedResponseHandler = createJsonErrorResponseHandler({
   errorSchema: dist_anthropicErrorDataSchema,
   errorToMessage: (data) => data.error.message
 });
@@ -135950,8 +133544,8 @@ var anthropicInputTransformationSchema = object({
   path: schemas_string(),
   reason: schemas_string()
 });
-var dist_anthropicMessagesResponseSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_anthropicMessagesResponseSchema = lazySchema(
+  () => zodSchema(
     object({
       type: literal("message"),
       id: schemas_string().nullish(),
@@ -136290,8 +133884,8 @@ var dist_anthropicMessagesResponseSchema = dist_lazySchema(
     })
   )
 );
-var dist_anthropicMessagesChunkSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_anthropicMessagesChunkSchema = lazySchema(
+  () => zodSchema(
     discriminatedUnion("type", [
       object({
         type: literal("message_start"),
@@ -136712,8 +134306,8 @@ var dist_anthropicMessagesChunkSchema = dist_lazySchema(
     ])
   )
 );
-var dist_anthropicReasoningMetadataSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_anthropicReasoningMetadataSchema = lazySchema(
+  () => zodSchema(
     object({
       signature: schemas_string().optional(),
       redactedData: schemas_string().optional()
@@ -137115,8 +134709,8 @@ var dist_CacheControlValidator = class {
 // src/tool/advisor_20260301.ts
 
 
-var dist_advisor_20260301ArgsSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_advisor_20260301ArgsSchema = lazySchema(
+  () => zodSchema(
     object({
       model: schemas_string(),
       maxUses: schemas_number().optional(),
@@ -137127,8 +134721,8 @@ var dist_advisor_20260301ArgsSchema = dist_lazySchema(
     })
   )
 );
-var dist_advisor_20260301OutputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_advisor_20260301OutputSchema = lazySchema(
+  () => zodSchema(
     discriminatedUnion("type", [
       object({
         type: literal("advisor_result"),
@@ -137145,10 +134739,10 @@ var dist_advisor_20260301OutputSchema = dist_lazySchema(
     ])
   )
 );
-var dist_advisor_20260301InputSchema = dist_lazySchema(
-  () => dist_zodSchema(object({}).strict())
+var dist_advisor_20260301InputSchema = lazySchema(
+  () => zodSchema(object({}).strict())
 );
-var dist_factory = dist_createProviderToolFactoryWithOutputSchema({
+var dist_factory = createProviderToolFactoryWithOutputSchema({
   id: "anthropic.advisor_20260301",
   inputSchema: dist_advisor_20260301InputSchema,
   outputSchema: dist_advisor_20260301OutputSchema,
@@ -137180,8 +134774,8 @@ var computerToolset_20260801Members = [
   "hold_key",
   "wait"
 ];
-var computerToolset_20260801InputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var computerToolset_20260801InputSchema = lazySchema(
+  () => zodSchema(
     object({
       action: schemas_enum(computerToolset_20260801Members),
       coordinate: schemas_tuple([schemas_number().int(), schemas_number().int()]).optional(),
@@ -137200,8 +134794,8 @@ var computerToolset_20260801InputSchema = dist_lazySchema(
     })
   )
 );
-var computerToolset_20260801ArgsSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var computerToolset_20260801ArgsSchema = lazySchema(
+  () => zodSchema(
     object({
       configs: partialRecord(
         schemas_enum(computerToolset_20260801Members),
@@ -137213,7 +134807,7 @@ var computerToolset_20260801ArgsSchema = dist_lazySchema(
     })
   )
 );
-var computerToolset_20260801 = dist_createProviderToolFactory({
+var computerToolset_20260801 = createProviderToolFactory({
   id: "anthropic.computer_toolset_20260801",
   inputSchema: computerToolset_20260801InputSchema
 });
@@ -137221,15 +134815,15 @@ var computerToolset_20260801 = dist_createProviderToolFactory({
 // src/tool/text-editor_20250728.ts
 
 
-var dist_textEditor_20250728ArgsSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_textEditor_20250728ArgsSchema = lazySchema(
+  () => zodSchema(
     object({
       maxCharacters: schemas_number().optional()
     })
   )
 );
-var dist_textEditor_20250728InputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_textEditor_20250728InputSchema = lazySchema(
+  () => zodSchema(
     object({
       command: schemas_enum(["view", "create", "str_replace", "insert"]),
       path: schemas_string(),
@@ -137242,7 +134836,7 @@ var dist_textEditor_20250728InputSchema = dist_lazySchema(
     })
   )
 );
-var dist_factory2 = dist_createProviderToolFactory({
+var dist_factory2 = createProviderToolFactory({
   id: "anthropic.text_editor_20250728",
   inputSchema: dist_textEditor_20250728InputSchema
 });
@@ -137253,8 +134847,8 @@ var dist_textEditor_20250728 = (args = {}) => {
 // src/tool/web-search_20260209.ts
 
 
-var dist_webSearch_20260209ArgsSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_webSearch_20260209ArgsSchema = lazySchema(
+  () => zodSchema(
     object({
       maxUses: schemas_number().optional(),
       allowedDomains: schemas_array(schemas_string()).optional(),
@@ -137269,8 +134863,8 @@ var dist_webSearch_20260209ArgsSchema = dist_lazySchema(
     })
   )
 );
-var dist_webSearch_20260209OutputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_webSearch_20260209OutputSchema = lazySchema(
+  () => zodSchema(
     schemas_array(
       object({
         url: schemas_string(),
@@ -137282,14 +134876,14 @@ var dist_webSearch_20260209OutputSchema = dist_lazySchema(
     )
   )
 );
-var dist_webSearch_20260209InputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_webSearch_20260209InputSchema = lazySchema(
+  () => zodSchema(
     object({
       query: schemas_string()
     })
   )
 );
-var dist_factory3 = dist_createProviderToolFactoryWithOutputSchema({
+var dist_factory3 = createProviderToolFactoryWithOutputSchema({
   id: "anthropic.web_search_20260209",
   inputSchema: dist_webSearch_20260209InputSchema,
   outputSchema: dist_webSearch_20260209OutputSchema,
@@ -137302,8 +134896,8 @@ var dist_webSearch_20260209 = (args = {}) => {
 // src/tool/web-search_20250305.ts
 
 
-var dist_webSearch_20250305ArgsSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_webSearch_20250305ArgsSchema = lazySchema(
+  () => zodSchema(
     object({
       maxUses: schemas_number().optional(),
       allowedDomains: schemas_array(schemas_string()).optional(),
@@ -137318,8 +134912,8 @@ var dist_webSearch_20250305ArgsSchema = dist_lazySchema(
     })
   )
 );
-var dist_webSearch_20250305OutputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_webSearch_20250305OutputSchema = lazySchema(
+  () => zodSchema(
     schemas_array(
       object({
         url: schemas_string(),
@@ -137331,14 +134925,14 @@ var dist_webSearch_20250305OutputSchema = dist_lazySchema(
     )
   )
 );
-var dist_webSearch_20250305InputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_webSearch_20250305InputSchema = lazySchema(
+  () => zodSchema(
     object({
       query: schemas_string()
     })
   )
 );
-var dist_factory4 = dist_createProviderToolFactoryWithOutputSchema({
+var dist_factory4 = createProviderToolFactoryWithOutputSchema({
   id: "anthropic.web_search_20250305",
   inputSchema: dist_webSearch_20250305InputSchema,
   outputSchema: dist_webSearch_20250305OutputSchema,
@@ -137351,8 +134945,8 @@ var dist_webSearch_20250305 = (args = {}) => {
 // src/tool/web-fetch-20260209.ts
 
 
-var dist_webFetch_20260209ArgsSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_webFetch_20260209ArgsSchema = lazySchema(
+  () => zodSchema(
     object({
       maxUses: schemas_number().optional(),
       allowedDomains: schemas_array(schemas_string()).optional(),
@@ -137362,8 +134956,8 @@ var dist_webFetch_20260209ArgsSchema = dist_lazySchema(
     })
   )
 );
-var dist_webFetch_20260209OutputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_webFetch_20260209OutputSchema = lazySchema(
+  () => zodSchema(
     object({
       type: literal("web_fetch_result"),
       url: schemas_string(),
@@ -137388,14 +134982,14 @@ var dist_webFetch_20260209OutputSchema = dist_lazySchema(
     })
   )
 );
-var dist_webFetch_20260209InputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_webFetch_20260209InputSchema = lazySchema(
+  () => zodSchema(
     object({
       url: schemas_string()
     })
   )
 );
-var dist_factory5 = dist_createProviderToolFactoryWithOutputSchema({
+var dist_factory5 = createProviderToolFactoryWithOutputSchema({
   id: "anthropic.web_fetch_20260209",
   inputSchema: dist_webFetch_20260209InputSchema,
   outputSchema: dist_webFetch_20260209OutputSchema,
@@ -137408,8 +135002,8 @@ var dist_webFetch_20260209 = (args = {}) => {
 // src/tool/web-fetch-20250910.ts
 
 
-var dist_webFetch_20250910ArgsSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_webFetch_20250910ArgsSchema = lazySchema(
+  () => zodSchema(
     object({
       maxUses: schemas_number().optional(),
       allowedDomains: schemas_array(schemas_string()).optional(),
@@ -137419,8 +135013,8 @@ var dist_webFetch_20250910ArgsSchema = dist_lazySchema(
     })
   )
 );
-var dist_webFetch_20250910OutputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_webFetch_20250910OutputSchema = lazySchema(
+  () => zodSchema(
     object({
       type: literal("web_fetch_result"),
       url: schemas_string(),
@@ -137445,14 +135039,14 @@ var dist_webFetch_20250910OutputSchema = dist_lazySchema(
     })
   )
 );
-var dist_webFetch_20250910InputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_webFetch_20250910InputSchema = lazySchema(
+  () => zodSchema(
     object({
       url: schemas_string()
     })
   )
 );
-var dist_factory6 = dist_createProviderToolFactoryWithOutputSchema({
+var dist_factory6 = createProviderToolFactoryWithOutputSchema({
   id: "anthropic.web_fetch_20250910",
   inputSchema: dist_webFetch_20250910InputSchema,
   outputSchema: dist_webFetch_20250910OutputSchema,
@@ -137576,7 +135170,7 @@ async function anthropic_dist_prepareTools({
             break;
           }
           case "anthropic.computer_toolset_20260801": {
-            const args = await provider_utils_dist_validateTypes({
+            const args = await dist_validateTypes({
               value: tool.args,
               schema: computerToolset_20260801ArgsSchema
             });
@@ -137640,7 +135234,7 @@ async function anthropic_dist_prepareTools({
             break;
           }
           case "anthropic.text_editor_20250728": {
-            const args = await provider_utils_dist_validateTypes({
+            const args = await dist_validateTypes({
               value: tool.args,
               schema: dist_textEditor_20250728ArgsSchema
             });
@@ -137680,7 +135274,7 @@ async function anthropic_dist_prepareTools({
           }
           case "anthropic.web_fetch_20250910": {
             betas.add("web-fetch-2025-09-10");
-            const args = await provider_utils_dist_validateTypes({
+            const args = await dist_validateTypes({
               value: tool.args,
               schema: dist_webFetch_20250910ArgsSchema
             });
@@ -137698,7 +135292,7 @@ async function anthropic_dist_prepareTools({
           }
           case "anthropic.web_fetch_20260209": {
             betas.add("code-execution-web-tools-2026-02-09");
-            const args = await provider_utils_dist_validateTypes({
+            const args = await dist_validateTypes({
               value: tool.args,
               schema: dist_webFetch_20260209ArgsSchema
             });
@@ -137715,7 +135309,7 @@ async function anthropic_dist_prepareTools({
             break;
           }
           case "anthropic.web_search_20250305": {
-            const args = await provider_utils_dist_validateTypes({
+            const args = await dist_validateTypes({
               value: tool.args,
               schema: dist_webSearch_20250305ArgsSchema
             });
@@ -137732,7 +135326,7 @@ async function anthropic_dist_prepareTools({
           }
           case "anthropic.web_search_20260209": {
             betas.add("code-execution-web-tools-2026-02-09");
-            const args = await provider_utils_dist_validateTypes({
+            const args = await dist_validateTypes({
               value: tool.args,
               schema: dist_webSearch_20260209ArgsSchema
             });
@@ -137763,7 +135357,7 @@ async function anthropic_dist_prepareTools({
           }
           case "anthropic.advisor_20260301": {
             betas.add("advisor-tool-2026-03-01");
-            const args = await provider_utils_dist_validateTypes({
+            const args = await dist_validateTypes({
               value: tool.args,
               schema: dist_advisor_20260301ArgsSchema
             });
@@ -137874,7 +135468,7 @@ async function anthropic_dist_prepareTools({
       };
     default: {
       const _exhaustiveCheck = type;
-      throw new dist_UnsupportedFunctionalityError({
+      throw new UnsupportedFunctionalityError({
         functionality: `tool choice type: ${_exhaustiveCheck}`
       });
     }
@@ -137940,8 +135534,8 @@ function dist_convertAnthropicMessagesUsage({
 // src/tool/code-execution_20250522.ts
 
 
-var dist_codeExecution_20250522OutputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_codeExecution_20250522OutputSchema = lazySchema(
+  () => zodSchema(
     object({
       type: literal("code_execution_result"),
       stdout: schemas_string(),
@@ -137956,14 +135550,14 @@ var dist_codeExecution_20250522OutputSchema = dist_lazySchema(
     })
   )
 );
-var dist_codeExecution_20250522InputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_codeExecution_20250522InputSchema = lazySchema(
+  () => zodSchema(
     object({
       code: schemas_string()
     })
   )
 );
-var dist_factory7 = dist_createProviderToolFactoryWithOutputSchema({
+var dist_factory7 = createProviderToolFactoryWithOutputSchema({
   id: "anthropic.code_execution_20250522",
   inputSchema: dist_codeExecution_20250522InputSchema,
   outputSchema: dist_codeExecution_20250522OutputSchema
@@ -137975,8 +135569,8 @@ var dist_codeExecution_20250522 = (args = {}) => {
 // src/tool/code-execution_20250825.ts
 
 
-var dist_codeExecution_20250825OutputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_codeExecution_20250825OutputSchema = lazySchema(
+  () => zodSchema(
     discriminatedUnion("type", [
       object({
         type: literal("code_execution_result"),
@@ -138033,8 +135627,8 @@ var dist_codeExecution_20250825OutputSchema = dist_lazySchema(
     ])
   )
 );
-var dist_codeExecution_20250825InputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_codeExecution_20250825InputSchema = lazySchema(
+  () => zodSchema(
     discriminatedUnion("type", [
       // Programmatic tool calling format (mapped from { code } by AI SDK)
       object({
@@ -138068,7 +135662,7 @@ var dist_codeExecution_20250825InputSchema = dist_lazySchema(
     ])
   )
 );
-var dist_factory8 = dist_createProviderToolFactoryWithOutputSchema({
+var dist_factory8 = createProviderToolFactoryWithOutputSchema({
   id: "anthropic.code_execution_20250825",
   inputSchema: dist_codeExecution_20250825InputSchema,
   outputSchema: dist_codeExecution_20250825OutputSchema,
@@ -138084,8 +135678,8 @@ var dist_codeExecution_20250825 = (args = {}) => {
 // src/tool/code-execution_20260120.ts
 
 
-var dist_codeExecution_20260120OutputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_codeExecution_20260120OutputSchema = lazySchema(
+  () => zodSchema(
     discriminatedUnion("type", [
       object({
         type: literal("code_execution_result"),
@@ -138154,8 +135748,8 @@ var dist_codeExecution_20260120OutputSchema = dist_lazySchema(
     ])
   )
 );
-var dist_codeExecution_20260120InputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_codeExecution_20260120InputSchema = lazySchema(
+  () => zodSchema(
     discriminatedUnion("type", [
       object({
         type: literal("programmatic-tool-call"),
@@ -138188,7 +135782,7 @@ var dist_codeExecution_20260120InputSchema = dist_lazySchema(
     ])
   )
 );
-var dist_factory9 = dist_createProviderToolFactoryWithOutputSchema({
+var dist_factory9 = createProviderToolFactoryWithOutputSchema({
   id: "anthropic.code_execution_20260120",
   inputSchema: dist_codeExecution_20260120InputSchema,
   outputSchema: dist_codeExecution_20260120OutputSchema,
@@ -138201,8 +135795,8 @@ var dist_codeExecution_20260120 = (args = {}) => {
 // src/tool/tool-search-regex_20251119.ts
 
 
-var dist_toolSearchRegex_20251119OutputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_toolSearchRegex_20251119OutputSchema = lazySchema(
+  () => zodSchema(
     schemas_array(
       object({
         type: literal("tool_reference"),
@@ -138211,8 +135805,8 @@ var dist_toolSearchRegex_20251119OutputSchema = dist_lazySchema(
     )
   )
 );
-var dist_toolSearchRegex_20251119InputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_toolSearchRegex_20251119InputSchema = lazySchema(
+  () => zodSchema(
     object({
       /**
        * A regex pattern to search for tools.
@@ -138232,7 +135826,7 @@ var dist_toolSearchRegex_20251119InputSchema = dist_lazySchema(
     })
   )
 );
-var dist_factory10 = dist_createProviderToolFactoryWithOutputSchema({
+var dist_factory10 = createProviderToolFactoryWithOutputSchema({
   id: "anthropic.tool_search_regex_20251119",
   inputSchema: dist_toolSearchRegex_20251119InputSchema,
   outputSchema: dist_toolSearchRegex_20251119OutputSchema,
@@ -138245,17 +135839,17 @@ var dist_toolSearchRegex_20251119 = (args = {}) => {
 // src/convert-to-anthropic-messages-prompt.ts
 function dist_convertToString(data) {
   if (typeof data === "string") {
-    return new TextDecoder().decode(provider_utils_dist_convertBase64ToUint8Array(data));
+    return new TextDecoder().decode(dist_convertBase64ToUint8Array(data));
   }
   if (data instanceof Uint8Array) {
     return new TextDecoder().decode(data);
   }
   if (data instanceof URL) {
-    throw new dist_UnsupportedFunctionalityError({
+    throw new UnsupportedFunctionalityError({
       functionality: "URL-based text documents are not supported for citations"
     });
   }
-  throw new dist_UnsupportedFunctionalityError({
+  throw new UnsupportedFunctionalityError({
     functionality: `unsupported data type for text documents: ${typeof data}`
   });
 }
@@ -138270,7 +135864,7 @@ function dist_getUrlString(data) {
 }
 async function dist_extractErrorValue(value) {
   if (typeof value === "string") {
-    const result = await provider_utils_dist_safeParseJSON({ text: value });
+    const result = await dist_safeParseJSON({ text: value });
     if (result.success && typeof result.value === "object" && result.value !== null) {
       return result.value;
     }
@@ -138300,7 +135894,7 @@ async function dist_convertToAnthropicMessagesPrompt({
   let lastUserMessageIndex = -1;
   async function shouldEnableCitations(providerMetadata) {
     var _a2, _b2;
-    const anthropicOptions = await provider_utils_dist_parseProviderOptions({
+    const anthropicOptions = await dist_parseProviderOptions({
       provider: "anthropic",
       providerOptions: providerMetadata,
       schema: dist_anthropicFilePartProviderOptions
@@ -138308,7 +135902,7 @@ async function dist_convertToAnthropicMessagesPrompt({
     return (_b2 = (_a2 = anthropicOptions == null ? void 0 : anthropicOptions.citations) == null ? void 0 : _a2.enabled) != null ? _b2 : false;
   }
   async function getDocumentMetadata(providerMetadata) {
-    const anthropicOptions = await provider_utils_dist_parseProviderOptions({
+    const anthropicOptions = await dist_parseProviderOptions({
       provider: "anthropic",
       providerOptions: providerMetadata,
       schema: dist_anthropicFilePartProviderOptions
@@ -138328,7 +135922,7 @@ async function dist_convertToAnthropicMessagesPrompt({
         let toolChangeCount = 0;
         let hasMidConversationOptions = false;
         for (const { content: text, providerOptions } of block.messages) {
-          const systemMessageOptions = await provider_utils_dist_parseProviderOptions({
+          const systemMessageOptions = await dist_parseProviderOptions({
             provider: "anthropic",
             providerOptions,
             schema: anthropicSystemMessageProviderOptions
@@ -138441,7 +136035,7 @@ async function dist_convertToAnthropicMessagesPrompt({
                         } : {
                           type: "base64",
                           media_type: part.mediaType === "image/*" ? "image/jpeg" : part.mediaType,
-                          data: provider_utils_dist_convertToBase64(part.data)
+                          data: dist_convertToBase64(part.data)
                         },
                         cache_control: cacheControl
                       });
@@ -138461,7 +136055,7 @@ async function dist_convertToAnthropicMessagesPrompt({
                         } : {
                           type: "base64",
                           media_type: "application/pdf",
-                          data: provider_utils_dist_convertToBase64(part.data)
+                          data: dist_convertToBase64(part.data)
                         },
                         title: (_c = metadata.title) != null ? _c : part.filename,
                         ...metadata.context && { context: metadata.context },
@@ -138495,7 +136089,7 @@ async function dist_convertToAnthropicMessagesPrompt({
                         cache_control: cacheControl
                       });
                     } else {
-                      throw new dist_UnsupportedFunctionalityError({
+                      throw new UnsupportedFunctionalityError({
                         functionality: `media type: ${part.mediaType}`
                       });
                     }
@@ -138605,7 +136199,7 @@ async function dist_convertToAnthropicMessagesPrompt({
                           return void 0;
                         }
                       }
-                    }).filter(provider_utils_dist_isNonNullable);
+                    }).filter(dist_isNonNullable);
                     break;
                   case "text":
                   case "error-text":
@@ -138690,7 +136284,7 @@ async function dist_convertToAnthropicMessagesPrompt({
               }
               case "reasoning": {
                 if (sendReasoning) {
-                  const reasoningMetadata = await provider_utils_dist_parseProviderOptions({
+                  const reasoningMetadata = await dist_parseProviderOptions({
                     provider: "anthropic",
                     providerOptions: part.providerOptions,
                     schema: dist_anthropicReasoningMetadataSchema
@@ -138888,7 +136482,7 @@ async function dist_convertToAnthropicMessagesPrompt({
                     let errorInfo = {};
                     try {
                       if (typeof output.value === "string") {
-                        errorInfo = dist_secureJsonParse(output.value);
+                        errorInfo = secureJsonParse(output.value);
                       } else if (typeof output.value === "object" && output.value !== null) {
                         errorInfo = output.value;
                       }
@@ -138932,7 +136526,7 @@ async function dist_convertToAnthropicMessagesPrompt({
                     break;
                   }
                   if (output.value.type === "code_execution_result") {
-                    const codeExecutionOutput = await provider_utils_dist_validateTypes({
+                    const codeExecutionOutput = await dist_validateTypes({
                       value: output.value,
                       schema: dist_codeExecution_20250522OutputSchema
                     });
@@ -138949,7 +136543,7 @@ async function dist_convertToAnthropicMessagesPrompt({
                       cache_control: cacheControl
                     });
                   } else if (output.value.type === "encrypted_code_execution_result") {
-                    const codeExecutionOutput = await provider_utils_dist_validateTypes({
+                    const codeExecutionOutput = await dist_validateTypes({
                       value: output.value,
                       schema: dist_codeExecution_20260120OutputSchema
                     });
@@ -138968,7 +136562,7 @@ async function dist_convertToAnthropicMessagesPrompt({
                       });
                     }
                   } else {
-                    const codeExecutionOutput = await provider_utils_dist_validateTypes({
+                    const codeExecutionOutput = await dist_validateTypes({
                       value: output.value,
                       schema: dist_codeExecution_20250825OutputSchema
                     });
@@ -139033,7 +136627,7 @@ async function dist_convertToAnthropicMessagesPrompt({
                     });
                     break;
                   }
-                  const webFetchOutput = await provider_utils_dist_validateTypes({
+                  const webFetchOutput = await dist_validateTypes({
                     value: output.value,
                     schema: dist_webFetch_20250910OutputSchema
                   });
@@ -139082,7 +136676,7 @@ async function dist_convertToAnthropicMessagesPrompt({
                     });
                     break;
                   }
-                  const webSearchOutput = await provider_utils_dist_validateTypes({
+                  const webSearchOutput = await dist_validateTypes({
                     value: output.value,
                     schema: dist_webSearch_20250305OutputSchema
                   });
@@ -139110,7 +136704,7 @@ async function dist_convertToAnthropicMessagesPrompt({
                     });
                     break;
                   }
-                  const toolSearchOutput = await provider_utils_dist_validateTypes({
+                  const toolSearchOutput = await dist_validateTypes({
                     value: output.value,
                     schema: dist_toolSearchRegex_20251119OutputSchema
                   });
@@ -139138,7 +136732,7 @@ async function dist_convertToAnthropicMessagesPrompt({
                     });
                     break;
                   }
-                  const advisorOutput = await provider_utils_dist_validateTypes({
+                  const advisorOutput = await dist_validateTypes({
                     value: output.value,
                     schema: dist_advisor_20260301OutputSchema
                   });
@@ -139578,7 +137172,7 @@ var dist_AnthropicMessagesLanguageModel = class {
     var _a;
     this.modelId = modelId;
     this.config = config;
-    this.generateId = (_a = config.generateId) != null ? _a : provider_utils_dist_generateId;
+    this.generateId = (_a = config.generateId) != null ? _a : dist_generateId;
   }
   supportsUrl(url) {
     return url.protocol === "https:";
@@ -139652,12 +137246,12 @@ var dist_AnthropicMessagesLanguageModel = class {
       }
     }
     const providerOptionsName = this.providerOptionsName;
-    const canonicalOptions = await provider_utils_dist_parseProviderOptions({
+    const canonicalOptions = await dist_parseProviderOptions({
       provider: "anthropic",
       providerOptions,
       schema: dist_anthropicLanguageModelOptions
     });
-    const customProviderOptions = providerOptionsName !== "anthropic" ? await provider_utils_dist_parseProviderOptions({
+    const customProviderOptions = providerOptionsName !== "anthropic" ? await dist_parseProviderOptions({
       provider: providerOptionsName,
       providerOptions,
       schema: dist_anthropicLanguageModelOptions
@@ -139739,7 +137333,7 @@ var dist_AnthropicMessagesLanguageModel = class {
     }
     const contextManagement = anthropicOptions == null ? void 0 : anthropicOptions.contextManagement;
     const cacheControlValidator = new dist_CacheControlValidator();
-    const toolNameMapping = provider_utils_dist_createToolNameMapping({
+    const toolNameMapping = dist_createToolNameMapping({
       tools,
       providerToolNames: {
         "anthropic.code_execution_20250522": "code_execution",
@@ -140129,15 +137723,15 @@ var dist_AnthropicMessagesLanguageModel = class {
     betas,
     headers
   }) {
-    return provider_utils_dist_combineHeaders(
-      await provider_utils_dist_resolve(this.config.headers),
+    return dist_combineHeaders(
+      await dist_resolve(this.config.headers),
       headers,
       betas.size > 0 ? { "anthropic-beta": Array.from(betas).join(",") } : {}
     );
   }
   async getBetasFromHeaders(requestHeaders) {
     var _a, _b;
-    const configHeaders = await provider_utils_dist_resolve(this.config.headers);
+    const configHeaders = await dist_resolve(this.config.headers);
     const configBetaHeader = (_a = configHeaders["anthropic-beta"]) != null ? _a : "";
     const requestBetaHeader = (_b = requestHeaders == null ? void 0 : requestHeaders["anthropic-beta"]) != null ? _b : "";
     return new Set(
@@ -140203,12 +137797,12 @@ var dist_AnthropicMessagesLanguageModel = class {
       responseHeaders,
       value: response,
       rawValue: rawResponse
-    } = await provider_utils_dist_postJsonToApi({
+    } = await dist_postJsonToApi({
       url: this.buildRequestUrl(false),
       headers: await this.getHeaders({ betas, headers: options.headers }),
       body: this.transformRequestBody(args, betas),
       failedResponseHandler: dist_anthropicFailedResponseHandler,
-      successfulResponseHandler: provider_utils_dist_createJsonResponseHandler(
+      successfulResponseHandler: dist_createJsonResponseHandler(
         dist_anthropicMessagesResponseSchema
       ),
       abortSignal: options.abortSignal,
@@ -140723,12 +138317,12 @@ var dist_AnthropicMessagesLanguageModel = class {
       body.tools
     );
     const url = this.buildRequestUrl(true);
-    const { responseHeaders, value: response } = await provider_utils_dist_postJsonToApi({
+    const { responseHeaders, value: response } = await dist_postJsonToApi({
       url,
       headers: await this.getHeaders({ betas, headers: options.headers }),
       body: this.transformRequestBody(body, betas),
       failedResponseHandler: dist_anthropicFailedResponseHandler,
-      successfulResponseHandler: provider_utils_dist_createEventSourceResponseHandler(
+      successfulResponseHandler: dist_createEventSourceResponseHandler(
         dist_anthropicMessagesChunkSchema
       ),
       abortSignal: options.abortSignal,
@@ -141274,7 +138868,7 @@ var dist_AnthropicMessagesLanguageModel = class {
                       if (contentBlock.toolset != null) {
                         let memberInput = {};
                         try {
-                          memberInput = contentBlock.input === "" ? {} : dist_secureJsonParse(contentBlock.input);
+                          memberInput = contentBlock.input === "" ? {} : secureJsonParse(contentBlock.input);
                         } catch (e) {
                           memberInput = void 0;
                         }
@@ -141297,7 +138891,7 @@ var dist_AnthropicMessagesLanguageModel = class {
                       let finalInput = contentBlock.input === "" ? "{}" : contentBlock.input;
                       if (contentBlock.providerToolName === "code_execution") {
                         try {
-                          const parsed = dist_secureJsonParse(finalInput);
+                          const parsed = secureJsonParse(finalInput);
                           if (parsed != null && typeof parsed === "object" && "code" in parsed && !("type" in parsed)) {
                             finalInput = JSON.stringify({
                               type: "programmatic-tool-call",
@@ -141454,7 +139048,7 @@ var dist_AnthropicMessagesLanguageModel = class {
                 hasInvalidMessageSequence = true;
                 controller.enqueue({
                   type: "error",
-                  error: new provider_dist_InvalidResponseDataError({
+                  error: new dist_InvalidResponseDataError({
                     data: value,
                     message: `Received message_start for message ${JSON.stringify(value.message.id)} while message ${JSON.stringify(activeMessageId)} is still open.`
                   })
@@ -141648,7 +139242,7 @@ var dist_AnthropicMessagesLanguageModel = class {
       }
       if (((_b = result.value) == null ? void 0 : _b.type) === "error") {
         const error = result.value.error;
-        throw new provider_dist_APICallError({
+        throw new dist_APICallError({
           message: error.message,
           url,
           requestBodyValues: body,
@@ -141896,15 +139490,15 @@ function dist_mapAnthropicStopDetails(stopDetails) {
 // src/tool/bash_20241022.ts
 
 
-var dist_bash_20241022InputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_bash_20241022InputSchema = lazySchema(
+  () => zodSchema(
     object({
       command: schemas_string(),
       restart: schemas_boolean().optional()
     })
   )
 );
-var dist_bash_20241022 = dist_createProviderToolFactory({
+var dist_bash_20241022 = createProviderToolFactory({
   id: "anthropic.bash_20241022",
   inputSchema: dist_bash_20241022InputSchema
 });
@@ -141912,15 +139506,15 @@ var dist_bash_20241022 = dist_createProviderToolFactory({
 // src/tool/bash_20250124.ts
 
 
-var dist_bash_20250124InputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_bash_20250124InputSchema = lazySchema(
+  () => zodSchema(
     object({
       command: schemas_string(),
       restart: schemas_boolean().optional()
     })
   )
 );
-var dist_bash_20250124 = dist_createProviderToolFactory({
+var dist_bash_20250124 = createProviderToolFactory({
   id: "anthropic.bash_20250124",
   inputSchema: dist_bash_20250124InputSchema
 });
@@ -141928,8 +139522,8 @@ var dist_bash_20250124 = dist_createProviderToolFactory({
 // src/tool/computer_20241022.ts
 
 
-var dist_computer_20241022InputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_computer_20241022InputSchema = lazySchema(
+  () => zodSchema(
     object({
       action: schemas_enum([
         "key",
@@ -141948,7 +139542,7 @@ var dist_computer_20241022InputSchema = dist_lazySchema(
     })
   )
 );
-var dist_computer_20241022 = dist_createProviderToolFactory({
+var dist_computer_20241022 = createProviderToolFactory({
   id: "anthropic.computer_20241022",
   inputSchema: dist_computer_20241022InputSchema
 });
@@ -141956,8 +139550,8 @@ var dist_computer_20241022 = dist_createProviderToolFactory({
 // src/tool/computer_20250124.ts
 
 
-var dist_computer_20250124InputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_computer_20250124InputSchema = lazySchema(
+  () => zodSchema(
     object({
       action: schemas_enum([
         "key",
@@ -141986,7 +139580,7 @@ var dist_computer_20250124InputSchema = dist_lazySchema(
     })
   )
 );
-var dist_computer_20250124 = dist_createProviderToolFactory({
+var dist_computer_20250124 = createProviderToolFactory({
   id: "anthropic.computer_20250124",
   inputSchema: dist_computer_20250124InputSchema
 });
@@ -141994,8 +139588,8 @@ var dist_computer_20250124 = dist_createProviderToolFactory({
 // src/tool/computer_20251124.ts
 
 
-var dist_computer_20251124InputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_computer_20251124InputSchema = lazySchema(
+  () => zodSchema(
     object({
       action: schemas_enum([
         "key",
@@ -142031,7 +139625,7 @@ var dist_computer_20251124InputSchema = dist_lazySchema(
     })
   )
 );
-var dist_computer_20251124 = dist_createProviderToolFactory({
+var dist_computer_20251124 = createProviderToolFactory({
   id: "anthropic.computer_20251124",
   inputSchema: dist_computer_20251124InputSchema
 });
@@ -142039,8 +139633,8 @@ var dist_computer_20251124 = dist_createProviderToolFactory({
 // src/tool/memory_20250818.ts
 
 
-var dist_memory_20250818InputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_memory_20250818InputSchema = lazySchema(
+  () => zodSchema(
     discriminatedUnion("command", [
       object({
         command: literal("view"),
@@ -142076,7 +139670,7 @@ var dist_memory_20250818InputSchema = dist_lazySchema(
     ])
   )
 );
-var dist_memory_20250818 = dist_createProviderToolFactory({
+var dist_memory_20250818 = createProviderToolFactory({
   id: "anthropic.memory_20250818",
   inputSchema: dist_memory_20250818InputSchema
 });
@@ -142084,8 +139678,8 @@ var dist_memory_20250818 = dist_createProviderToolFactory({
 // src/tool/text-editor_20241022.ts
 
 
-var dist_textEditor_20241022InputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_textEditor_20241022InputSchema = lazySchema(
+  () => zodSchema(
     object({
       command: schemas_enum(["view", "create", "str_replace", "insert", "undo_edit"]),
       path: schemas_string(),
@@ -142098,7 +139692,7 @@ var dist_textEditor_20241022InputSchema = dist_lazySchema(
     })
   )
 );
-var dist_textEditor_20241022 = dist_createProviderToolFactory({
+var dist_textEditor_20241022 = createProviderToolFactory({
   id: "anthropic.text_editor_20241022",
   inputSchema: dist_textEditor_20241022InputSchema
 });
@@ -142106,8 +139700,8 @@ var dist_textEditor_20241022 = dist_createProviderToolFactory({
 // src/tool/text-editor_20250124.ts
 
 
-var dist_textEditor_20250124InputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_textEditor_20250124InputSchema = lazySchema(
+  () => zodSchema(
     object({
       command: schemas_enum(["view", "create", "str_replace", "insert", "undo_edit"]),
       path: schemas_string(),
@@ -142120,7 +139714,7 @@ var dist_textEditor_20250124InputSchema = dist_lazySchema(
     })
   )
 );
-var dist_textEditor_20250124 = dist_createProviderToolFactory({
+var dist_textEditor_20250124 = createProviderToolFactory({
   id: "anthropic.text_editor_20250124",
   inputSchema: dist_textEditor_20250124InputSchema
 });
@@ -142128,8 +139722,8 @@ var dist_textEditor_20250124 = dist_createProviderToolFactory({
 // src/tool/text-editor_20250429.ts
 
 
-var dist_textEditor_20250429InputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_textEditor_20250429InputSchema = lazySchema(
+  () => zodSchema(
     object({
       command: schemas_enum(["view", "create", "str_replace", "insert"]),
       path: schemas_string(),
@@ -142142,7 +139736,7 @@ var dist_textEditor_20250429InputSchema = dist_lazySchema(
     })
   )
 );
-var dist_textEditor_20250429 = dist_createProviderToolFactory({
+var dist_textEditor_20250429 = createProviderToolFactory({
   id: "anthropic.text_editor_20250429",
   inputSchema: dist_textEditor_20250429InputSchema
 });
@@ -142150,8 +139744,8 @@ var dist_textEditor_20250429 = dist_createProviderToolFactory({
 // src/tool/tool-search-bm25_20251119.ts
 
 
-var dist_toolSearchBm25_20251119OutputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_toolSearchBm25_20251119OutputSchema = lazySchema(
+  () => zodSchema(
     schemas_array(
       object({
         type: literal("tool_reference"),
@@ -142160,8 +139754,8 @@ var dist_toolSearchBm25_20251119OutputSchema = dist_lazySchema(
     )
   )
 );
-var dist_toolSearchBm25_20251119InputSchema = dist_lazySchema(
-  () => dist_zodSchema(
+var dist_toolSearchBm25_20251119InputSchema = lazySchema(
+  () => zodSchema(
     object({
       /**
        * A natural language query to search for tools.
@@ -142175,7 +139769,7 @@ var dist_toolSearchBm25_20251119InputSchema = dist_lazySchema(
     })
   )
 );
-var dist_factory11 = dist_createProviderToolFactoryWithOutputSchema({
+var dist_factory11 = createProviderToolFactoryWithOutputSchema({
   id: "anthropic.tool_search_bm25_20251119",
   inputSchema: dist_toolSearchBm25_20251119InputSchema,
   outputSchema: dist_toolSearchBm25_20251119OutputSchema,
@@ -142443,33 +140037,33 @@ var dist_anthropicTools = {
 var ANTHROPIC_API_URL = "https://api.anthropic.com";
 var ANTHROPIC_API_VERSIONED_URL = `${ANTHROPIC_API_URL}/v1`;
 function normalizeBaseURL(baseURL) {
-  const baseURLWithoutTrailingSlash = dist_withoutTrailingSlash(baseURL);
+  const baseURLWithoutTrailingSlash = withoutTrailingSlash(baseURL);
   return baseURLWithoutTrailingSlash === ANTHROPIC_API_URL ? ANTHROPIC_API_VERSIONED_URL : baseURLWithoutTrailingSlash;
 }
 function createAnthropic(options = {}) {
   var _a, _b;
   const baseURL = (_a = normalizeBaseURL(
-    dist_loadOptionalSetting({
+    loadOptionalSetting({
       settingValue: options.baseURL,
       environmentVariableName: "ANTHROPIC_BASE_URL"
     })
   )) != null ? _a : ANTHROPIC_API_VERSIONED_URL;
   const providerName = (_b = options.name) != null ? _b : "anthropic.messages";
   if (options.apiKey && options.authToken) {
-    throw new dist_InvalidArgumentError({
+    throw new InvalidArgumentError({
       argument: "apiKey/authToken",
       message: "Both apiKey and authToken were provided. Please use only one authentication method."
     });
   }
   const getHeaders = () => {
     const authHeaders = options.authToken ? { Authorization: `Bearer ${options.authToken}` } : {
-      "x-api-key": dist_loadApiKey({
+      "x-api-key": loadApiKey({
         apiKey: options.apiKey,
         environmentVariableName: "ANTHROPIC_API_KEY",
         description: "Anthropic"
       })
     };
-    return dist_withUserAgentSuffix(
+    return withUserAgentSuffix(
       {
         "anthropic-version": "2023-06-01",
         ...authHeaders,
@@ -142485,7 +140079,7 @@ function createAnthropic(options = {}) {
       baseURL,
       headers: getHeaders,
       fetch: options.fetch,
-      generateId: (_a2 = options.generateId) != null ? _a2 : provider_utils_dist_generateId,
+      generateId: (_a2 = options.generateId) != null ? _a2 : dist_generateId,
       supportedUrls: () => ({
         "image/*": [/^https?:\/\/.*$/],
         "application/pdf": [/^https?:\/\/.*$/]
@@ -142505,11 +140099,11 @@ function createAnthropic(options = {}) {
   provider.chat = createChatModel;
   provider.messages = createChatModel;
   provider.embeddingModel = (modelId) => {
-    throw new dist_NoSuchModelError({ modelId, modelType: "embeddingModel" });
+    throw new NoSuchModelError({ modelId, modelType: "embeddingModel" });
   };
   provider.textEmbeddingModel = provider.embeddingModel;
   provider.imageModel = (modelId) => {
-    throw new dist_NoSuchModelError({ modelId, modelType: "imageModel" });
+    throw new NoSuchModelError({ modelId, modelType: "imageModel" });
   };
   provider.tools = dist_anthropicTools;
   return provider;
@@ -143018,7 +140612,7 @@ async function asGatewayError(error, authMethod) {
       cause: error
     });
   }
-  if (dist_APICallError.isInstance(error)) {
+  if (provider_dist_APICallError.isInstance(error)) {
     if (error.cause && isTimeoutError(error.cause)) {
       return GatewayTimeoutError.createTimeoutError({
         originalMessage: error.message,
@@ -143791,7 +141385,7 @@ var GatewayVideoModel = class {
           requestBodyValues
         }) => {
           if (response.body == null) {
-            throw new dist_APICallError({
+            throw new provider_dist_APICallError({
               message: "SSE response body is empty",
               url,
               requestBodyValues,
@@ -143806,7 +141400,7 @@ var GatewayVideoModel = class {
           const { done, value: parseResult } = await reader.read();
           reader.releaseLock();
           if (done || !parseResult) {
-            throw new dist_APICallError({
+            throw new provider_dist_APICallError({
               message: "SSE stream ended without a data event",
               url,
               requestBodyValues,
@@ -143814,7 +141408,7 @@ var GatewayVideoModel = class {
             });
           }
           if (!parseResult.success) {
-            throw new dist_APICallError({
+            throw new provider_dist_APICallError({
               message: "Failed to parse video SSE event",
               cause: parseResult.error,
               url,
@@ -143824,7 +141418,7 @@ var GatewayVideoModel = class {
           }
           const event = parseResult.value;
           if (event.type === "error") {
-            throw new dist_APICallError({
+            throw new provider_dist_APICallError({
               message: event.message,
               statusCode: event.statusCode,
               url,
@@ -144553,7 +142147,7 @@ var GoogleGenerativeAIEmbeddingModel = class {
       schema: googleEmbeddingModelOptions
     });
     if (values.length > this.maxEmbeddingsPerCall) {
-      throw new TooManyEmbeddingValuesForCallError({
+      throw new dist_TooManyEmbeddingValuesForCallError({
         provider: this.provider,
         modelId: this.modelId,
         maxEmbeddingsPerCall: this.maxEmbeddingsPerCall,
@@ -144961,7 +142555,7 @@ function convertToGoogleGenerativeAIMessages(prompt, options) {
     switch (role) {
       case "system": {
         if (!systemMessagesAllowed) {
-          throw new UnsupportedFunctionalityError({
+          throw new dist_UnsupportedFunctionalityError({
             functionality: "system messages are only supported at the beginning of the conversation"
           });
         }
@@ -145025,7 +142619,7 @@ function convertToGoogleGenerativeAIMessages(prompt, options) {
               }
               case "file": {
                 if (part.data instanceof URL) {
-                  throw new UnsupportedFunctionalityError({
+                  throw new dist_UnsupportedFunctionalityError({
                     functionality: "File data URLs in assistant messages are not supported"
                   });
                 }
@@ -145574,7 +143168,7 @@ function google_dist_prepareTools({
       };
     default: {
       const _exhaustiveCheck = type;
-      throw new UnsupportedFunctionalityError({
+      throw new dist_UnsupportedFunctionalityError({
         functionality: `tool choice type: ${_exhaustiveCheck}`
       });
     }
@@ -147452,7 +145046,7 @@ var GoogleGenerativeAIVideoModel = class {
     });
     const operationName = operation.name;
     if (!operationName) {
-      throw new AISDKError({
+      throw new dist_AISDKError({
         name: "GOOGLE_VIDEO_GENERATION_ERROR",
         message: "No operation name returned from API"
       });
@@ -147464,14 +145058,14 @@ var GoogleGenerativeAIVideoModel = class {
     let responseHeaders;
     while (!finalOperation.done) {
       if (Date.now() - startTime > pollTimeoutMs) {
-        throw new AISDKError({
+        throw new dist_AISDKError({
           name: "GOOGLE_VIDEO_GENERATION_TIMEOUT",
           message: `Video generation timed out after ${pollTimeoutMs}ms`
         });
       }
       await dist_delay(pollIntervalMs);
       if ((_f = options.abortSignal) == null ? void 0 : _f.aborted) {
-        throw new AISDKError({
+        throw new dist_AISDKError({
           name: "GOOGLE_VIDEO_GENERATION_ABORTED",
           message: "Video generation request was aborted"
         });
@@ -147493,14 +145087,14 @@ var GoogleGenerativeAIVideoModel = class {
       responseHeaders = pollHeaders;
     }
     if (finalOperation.error) {
-      throw new AISDKError({
+      throw new dist_AISDKError({
         name: "GOOGLE_VIDEO_GENERATION_FAILED",
         message: `Video generation failed: ${finalOperation.error.message}`
       });
     }
     const response = finalOperation.response;
     if (!((_g = response == null ? void 0 : response.generateVideoResponse) == null ? void 0 : _g.generatedSamples) || response.generateVideoResponse.generatedSamples.length === 0) {
-      throw new AISDKError({
+      throw new dist_AISDKError({
         name: "GOOGLE_VIDEO_GENERATION_ERROR",
         message: `No videos in response. Response: ${JSON.stringify(finalOperation)}`
       });
@@ -147523,7 +145117,7 @@ var GoogleGenerativeAIVideoModel = class {
       }
     }
     if (videos.length === 0) {
-      throw new AISDKError({
+      throw new dist_AISDKError({
         name: "GOOGLE_VIDEO_GENERATION_ERROR",
         message: "No valid videos in response"
       });
@@ -149368,12 +146962,12 @@ function parseGoogleInteractionsOutputs({
 
 // src/interactions/cancel-google-interaction.ts
 
-var google_dist_getOriginalFetch = () => globalThis.fetch;
+var dist_getOriginalFetch = () => globalThis.fetch;
 async function cancelGoogleInteraction({
   baseURL,
   interactionId,
   headers,
-  fetch = google_dist_getOriginalFetch()
+  fetch = dist_getOriginalFetch()
 }) {
   if (interactionId == null || interactionId.length === 0) {
     return;
@@ -150664,7 +148258,7 @@ function convertToOpenAIChatMessages({
                   };
                 } else if (part.mediaType.startsWith("audio/")) {
                   if (part.data instanceof URL) {
-                    throw new UnsupportedFunctionalityError({
+                    throw new dist_UnsupportedFunctionalityError({
                       functionality: "audio file parts with URLs"
                     });
                   }
@@ -150689,14 +148283,14 @@ function convertToOpenAIChatMessages({
                       };
                     }
                     default: {
-                      throw new UnsupportedFunctionalityError({
+                      throw new dist_UnsupportedFunctionalityError({
                         functionality: `audio content parts with media type ${part.mediaType}`
                       });
                     }
                   }
                 } else if (part.mediaType === "application/pdf") {
                   if (part.data instanceof URL) {
-                    throw new UnsupportedFunctionalityError({
+                    throw new dist_UnsupportedFunctionalityError({
                       functionality: "PDF file parts with URLs"
                     });
                   }
@@ -150708,7 +148302,7 @@ function convertToOpenAIChatMessages({
                     }
                   };
                 } else {
-                  throw new UnsupportedFunctionalityError({
+                  throw new dist_UnsupportedFunctionalityError({
                     functionality: `file part media type ${part.mediaType}`
                   });
                 }
@@ -151131,7 +148725,7 @@ function prepareChatTools({
       };
     default: {
       const _exhaustiveCheck = type;
-      throw new UnsupportedFunctionalityError({
+      throw new dist_UnsupportedFunctionalityError({
         functionality: `tool choice type: ${_exhaustiveCheck}`
       });
     }
@@ -151508,19 +149102,19 @@ var OpenAIChatLanguageModel = class {
                 const index = toolCallDelta.index;
                 if (toolCalls[index] == null) {
                   if (toolCallDelta.type != null && toolCallDelta.type !== "function") {
-                    throw new dist_InvalidResponseDataError({
+                    throw new provider_dist_InvalidResponseDataError({
                       data: toolCallDelta,
                       message: `Expected 'function' type.`
                     });
                   }
                   if (toolCallDelta.id == null) {
-                    throw new dist_InvalidResponseDataError({
+                    throw new provider_dist_InvalidResponseDataError({
                       data: toolCallDelta,
                       message: `Expected 'id' to be a string.`
                     });
                   }
                   if (((_f = toolCallDelta.function) == null ? void 0 : _f.name) == null) {
-                    throw new dist_InvalidResponseDataError({
+                    throw new provider_dist_InvalidResponseDataError({
                       data: toolCallDelta,
                       message: `Expected 'function.name' to be a string.`
                     });
@@ -151679,7 +149273,7 @@ function convertToOpenAICompletionPrompt({
   for (const { role, content } of prompt) {
     switch (role) {
       case "system": {
-        throw new InvalidPromptError({
+        throw new dist_InvalidPromptError({
           message: "Unexpected system message in prompt: ${content}",
           prompt
         });
@@ -151705,7 +149299,7 @@ ${userMessage}
               return part.text;
             }
             case "tool-call": {
-              throw new UnsupportedFunctionalityError({
+              throw new dist_UnsupportedFunctionalityError({
                 functionality: "tool-call messages"
               });
             }
@@ -151718,7 +149312,7 @@ ${assistantMessage}
         break;
       }
       case "tool": {
-        throw new UnsupportedFunctionalityError({
+        throw new dist_UnsupportedFunctionalityError({
           functionality: "tool messages"
         });
       }
@@ -152158,7 +149752,7 @@ var OpenAIEmbeddingModel = class {
   }) {
     var _a;
     if (values.length > this.maxEmbeddingsPerCall) {
-      throw new TooManyEmbeddingValuesForCallError({
+      throw new dist_TooManyEmbeddingValuesForCallError({
         provider: this.provider,
         modelId: this.modelId,
         maxEmbeddingsPerCall: this.maxEmbeddingsPerCall,
@@ -153300,7 +150894,7 @@ async function convertToOpenAIResponsesInput({
                   };
                 }
                 if (mediaType !== "application/pdf" && !passThroughUnsupportedFiles) {
-                  throw new UnsupportedFunctionalityError({
+                  throw new dist_UnsupportedFunctionalityError({
                     functionality: `file part media type ${mediaType}`
                   });
                 }
@@ -154994,7 +152588,7 @@ async function prepareResponsesTools({
             namespaceTools.set(namespace.name, namespaceTool);
             openaiTools2.push(namespaceTool);
           } else if (namespaceTool.description !== namespace.description) {
-            throw new UnsupportedFunctionalityError({
+            throw new dist_UnsupportedFunctionalityError({
               functionality: `conflicting descriptions for OpenAI tool namespace "${namespace.name}"`
             });
           }
@@ -155206,7 +152800,7 @@ async function prepareResponsesTools({
     }
     default: {
       const _exhaustiveCheck = type;
-      throw new UnsupportedFunctionalityError({
+      throw new dist_UnsupportedFunctionalityError({
         functionality: `tool choice type: ${_exhaustiveCheck}`
       });
     }
@@ -155579,7 +153173,7 @@ var OpenAIResponsesLanguageModel = class {
       fetch: this.config.fetch
     });
     if (response.error) {
-      throw new dist_APICallError({
+      throw new provider_dist_APICallError({
         message: response.error.message,
         url,
         requestBodyValues: body,
@@ -157571,13 +155165,13 @@ function convertToOpenAICompatibleChatMessages(prompt) {
                 }
                 if (part.mediaType.startsWith("audio/")) {
                   if (part.data instanceof URL) {
-                    throw new UnsupportedFunctionalityError({
+                    throw new dist_UnsupportedFunctionalityError({
                       functionality: "audio file parts with URLs"
                     });
                   }
                   const format = getAudioFormat(part.mediaType);
                   if (format === null) {
-                    throw new UnsupportedFunctionalityError({
+                    throw new dist_UnsupportedFunctionalityError({
                       functionality: `audio media type ${part.mediaType}`
                     });
                   }
@@ -157592,7 +155186,7 @@ function convertToOpenAICompatibleChatMessages(prompt) {
                 }
                 if (part.mediaType === "application/pdf") {
                   if (part.data instanceof URL) {
-                    throw new UnsupportedFunctionalityError({
+                    throw new dist_UnsupportedFunctionalityError({
                       functionality: "PDF file parts with URLs"
                     });
                   }
@@ -157615,7 +155209,7 @@ function convertToOpenAICompatibleChatMessages(prompt) {
                     ...partMetadata
                   };
                 }
-                throw new UnsupportedFunctionalityError({
+                throw new dist_UnsupportedFunctionalityError({
                   functionality: `file part media type ${part.mediaType}`
                 });
               }
@@ -157818,7 +155412,7 @@ function openai_compatible_dist_prepareTools({
       };
     default: {
       const _exhaustiveCheck = type;
-      throw new UnsupportedFunctionalityError({
+      throw new dist_UnsupportedFunctionalityError({
         functionality: `tool choice type: ${_exhaustiveCheck}`
       });
     }
@@ -158181,13 +155775,13 @@ var OpenAICompatibleChatLanguageModel = class {
                 const index = (_c = toolCallDelta.index) != null ? _c : toolCalls.length;
                 if (toolCalls[index] == null) {
                   if (toolCallDelta.id == null) {
-                    throw new dist_InvalidResponseDataError({
+                    throw new provider_dist_InvalidResponseDataError({
                       data: toolCallDelta,
                       message: `Expected 'id' to be a string.`
                     });
                   }
                   if (((_d = toolCallDelta.function) == null ? void 0 : _d.name) == null) {
-                    throw new dist_InvalidResponseDataError({
+                    throw new provider_dist_InvalidResponseDataError({
                       data: toolCallDelta,
                       message: `Expected 'function.name' to be a string.`
                     });
@@ -158468,7 +156062,7 @@ function convertToOpenAICompatibleCompletionPrompt({
   for (const { role, content } of prompt) {
     switch (role) {
       case "system": {
-        throw new InvalidPromptError({
+        throw new dist_InvalidPromptError({
           message: "Unexpected system message in prompt: ${content}",
           prompt
         });
@@ -158494,7 +156088,7 @@ ${userMessage}
               return part.text;
             }
             case "tool-call": {
-              throw new UnsupportedFunctionalityError({
+              throw new dist_UnsupportedFunctionalityError({
                 functionality: "tool-call messages"
               });
             }
@@ -158507,7 +156101,7 @@ ${assistantMessage}
         break;
       }
       case "tool": {
-        throw new UnsupportedFunctionalityError({
+        throw new dist_UnsupportedFunctionalityError({
           functionality: "tool messages"
         });
       }
@@ -158923,7 +156517,7 @@ var OpenAICompatibleEmbeddingModel = class {
       })) != null ? _b : {}
     );
     if (values.length > this.maxEmbeddingsPerCall) {
-      throw new TooManyEmbeddingValuesForCallError({
+      throw new dist_TooManyEmbeddingValuesForCallError({
         provider: this.provider,
         modelId: this.modelId,
         maxEmbeddingsPerCall: this.maxEmbeddingsPerCall,
@@ -159161,7 +156755,7 @@ function createOpenAICompatible(options) {
 
 //# sourceMappingURL=index.mjs.map
 // EXTERNAL MODULE: ../../node_modules/.pnpm/@opentelemetry+api@1.9.1/node_modules/@opentelemetry/api/build/src/index.js
-var src = __nccwpck_require__(2314);
+var src = __nccwpck_require__(9933);
 ;// CONCATENATED MODULE: ../../node_modules/.pnpm/ai@6.0.208_zod@4.4.3/node_modules/ai/dist/index.mjs
 var __defProp = Object.defineProperty;
 var __export = (target, all) => {
@@ -159188,7 +156782,7 @@ var ai_dist_name = "AI_InvalidArgumentError";
 var ai_dist_marker = `vercel.ai.error.${ai_dist_name}`;
 var ai_dist_symbol = Symbol.for(ai_dist_marker);
 var ai_dist_a;
-var ai_dist_InvalidArgumentError = class extends AISDKError {
+var ai_dist_InvalidArgumentError = class extends dist_AISDKError {
   constructor({
     parameter,
     value,
@@ -159203,7 +156797,7 @@ var ai_dist_InvalidArgumentError = class extends AISDKError {
     this.value = value;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, ai_dist_marker);
+    return dist_AISDKError.hasMarker(error, ai_dist_marker);
   }
 };
 ai_dist_a = ai_dist_symbol;
@@ -159214,7 +156808,7 @@ var ai_dist_name2 = "AI_InvalidStreamPartError";
 var ai_dist_marker2 = `vercel.ai.error.${ai_dist_name2}`;
 var ai_dist_symbol2 = Symbol.for(ai_dist_marker2);
 var ai_dist_a2;
-var InvalidStreamPartError = class extends AISDKError {
+var InvalidStreamPartError = class extends dist_AISDKError {
   constructor({
     chunk,
     message
@@ -159224,7 +156818,7 @@ var InvalidStreamPartError = class extends AISDKError {
     this.chunk = chunk;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, ai_dist_marker2);
+    return dist_AISDKError.hasMarker(error, ai_dist_marker2);
   }
 };
 ai_dist_a2 = ai_dist_symbol2;
@@ -159235,7 +156829,7 @@ var ai_dist_name3 = "AI_InvalidToolApprovalError";
 var ai_dist_marker3 = `vercel.ai.error.${ai_dist_name3}`;
 var ai_dist_symbol3 = Symbol.for(ai_dist_marker3);
 var ai_dist_a3;
-var InvalidToolApprovalError = class extends AISDKError {
+var InvalidToolApprovalError = class extends dist_AISDKError {
   constructor({ approvalId }) {
     super({
       name: ai_dist_name3,
@@ -159245,7 +156839,7 @@ var InvalidToolApprovalError = class extends AISDKError {
     this.approvalId = approvalId;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, ai_dist_marker3);
+    return dist_AISDKError.hasMarker(error, ai_dist_marker3);
   }
 };
 ai_dist_a3 = ai_dist_symbol3;
@@ -159256,7 +156850,7 @@ var ai_dist_name4 = "AI_InvalidToolApprovalSignatureError";
 var ai_dist_marker4 = `vercel.ai.error.${ai_dist_name4}`;
 var ai_dist_symbol4 = Symbol.for(ai_dist_marker4);
 var ai_dist_a4;
-var InvalidToolApprovalSignatureError = class extends AISDKError {
+var InvalidToolApprovalSignatureError = class extends dist_AISDKError {
   constructor({
     approvalId,
     toolCallId,
@@ -159271,7 +156865,7 @@ var InvalidToolApprovalSignatureError = class extends AISDKError {
     this.toolCallId = toolCallId;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, ai_dist_marker4);
+    return dist_AISDKError.hasMarker(error, ai_dist_marker4);
   }
 };
 ai_dist_a4 = ai_dist_symbol4;
@@ -159282,12 +156876,12 @@ var ai_dist_name5 = "AI_InvalidToolInputError";
 var ai_dist_marker5 = `vercel.ai.error.${ai_dist_name5}`;
 var ai_dist_symbol5 = Symbol.for(ai_dist_marker5);
 var ai_dist_a5;
-var InvalidToolInputError = class extends AISDKError {
+var InvalidToolInputError = class extends dist_AISDKError {
   constructor({
     toolInput,
     toolName,
     cause,
-    message = `Invalid input for tool ${toolName}: ${getErrorMessage(cause)}`
+    message = `Invalid input for tool ${toolName}: ${provider_dist_getErrorMessage(cause)}`
   }) {
     super({ name: ai_dist_name5, message, cause });
     this[ai_dist_a5] = true;
@@ -159295,7 +156889,7 @@ var InvalidToolInputError = class extends AISDKError {
     this.toolName = toolName;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, ai_dist_marker5);
+    return dist_AISDKError.hasMarker(error, ai_dist_marker5);
   }
 };
 ai_dist_a5 = ai_dist_symbol5;
@@ -159306,7 +156900,7 @@ var ai_dist_name6 = "AI_ToolCallNotFoundForApprovalError";
 var ai_dist_marker6 = `vercel.ai.error.${ai_dist_name6}`;
 var ai_dist_symbol6 = Symbol.for(ai_dist_marker6);
 var ai_dist_a6;
-var ToolCallNotFoundForApprovalError = class extends AISDKError {
+var ToolCallNotFoundForApprovalError = class extends dist_AISDKError {
   constructor({
     toolCallId,
     approvalId
@@ -159320,7 +156914,7 @@ var ToolCallNotFoundForApprovalError = class extends AISDKError {
     this.approvalId = approvalId;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, ai_dist_marker6);
+    return dist_AISDKError.hasMarker(error, ai_dist_marker6);
   }
 };
 ai_dist_a6 = ai_dist_symbol6;
@@ -159331,7 +156925,7 @@ var ai_dist_name7 = "AI_MissingToolResultsError";
 var ai_dist_marker7 = `vercel.ai.error.${ai_dist_name7}`;
 var ai_dist_symbol7 = Symbol.for(ai_dist_marker7);
 var ai_dist_a7;
-var MissingToolResultsError = class extends AISDKError {
+var MissingToolResultsError = class extends dist_AISDKError {
   constructor({ toolCallIds }) {
     super({
       name: ai_dist_name7,
@@ -159343,7 +156937,7 @@ var MissingToolResultsError = class extends AISDKError {
     this.toolCallIds = toolCallIds;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, ai_dist_marker7);
+    return dist_AISDKError.hasMarker(error, ai_dist_marker7);
   }
 };
 ai_dist_a7 = ai_dist_symbol7;
@@ -159354,7 +156948,7 @@ var ai_dist_name8 = "AI_NoImageGeneratedError";
 var ai_dist_marker8 = `vercel.ai.error.${ai_dist_name8}`;
 var ai_dist_symbol8 = Symbol.for(ai_dist_marker8);
 var ai_dist_a8;
-var NoImageGeneratedError = class extends AISDKError {
+var NoImageGeneratedError = class extends dist_AISDKError {
   constructor({
     message = "No image generated.",
     cause,
@@ -159365,7 +156959,7 @@ var NoImageGeneratedError = class extends AISDKError {
     this.responses = responses;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, ai_dist_marker8);
+    return dist_AISDKError.hasMarker(error, ai_dist_marker8);
   }
 };
 ai_dist_a8 = ai_dist_symbol8;
@@ -159376,7 +156970,7 @@ var ai_dist_name9 = "AI_NoObjectGeneratedError";
 var ai_dist_marker9 = `vercel.ai.error.${ai_dist_name9}`;
 var ai_dist_symbol9 = Symbol.for(ai_dist_marker9);
 var ai_dist_a9;
-var NoObjectGeneratedError = class extends AISDKError {
+var NoObjectGeneratedError = class extends dist_AISDKError {
   constructor({
     message = "No object generated.",
     cause,
@@ -159393,7 +156987,7 @@ var NoObjectGeneratedError = class extends AISDKError {
     this.finishReason = finishReason;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, ai_dist_marker9);
+    return dist_AISDKError.hasMarker(error, ai_dist_marker9);
   }
 };
 ai_dist_a9 = ai_dist_symbol9;
@@ -159404,7 +156998,7 @@ var ai_dist_name10 = "AI_NoOutputGeneratedError";
 var ai_dist_marker10 = `vercel.ai.error.${ai_dist_name10}`;
 var ai_dist_symbol10 = Symbol.for(ai_dist_marker10);
 var ai_dist_a10;
-var NoOutputGeneratedError = class extends AISDKError {
+var NoOutputGeneratedError = class extends dist_AISDKError {
   // used in isInstance
   constructor({
     message = "No output generated.",
@@ -159414,7 +157008,7 @@ var NoOutputGeneratedError = class extends AISDKError {
     this[ai_dist_a10] = true;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, ai_dist_marker10);
+    return dist_AISDKError.hasMarker(error, ai_dist_marker10);
   }
 };
 ai_dist_a10 = ai_dist_symbol10;
@@ -159425,7 +157019,7 @@ var ai_dist_name11 = "AI_NoSpeechGeneratedError";
 var ai_dist_marker11 = `vercel.ai.error.${ai_dist_name11}`;
 var ai_dist_symbol11 = Symbol.for(ai_dist_marker11);
 var ai_dist_a11;
-var NoSpeechGeneratedError = class extends AISDKError {
+var NoSpeechGeneratedError = class extends dist_AISDKError {
   constructor(options) {
     super({
       name: ai_dist_name11,
@@ -159435,7 +157029,7 @@ var NoSpeechGeneratedError = class extends AISDKError {
     this.responses = options.responses;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, ai_dist_marker11);
+    return dist_AISDKError.hasMarker(error, ai_dist_marker11);
   }
 };
 ai_dist_a11 = ai_dist_symbol11;
@@ -159446,7 +157040,7 @@ var ai_dist_name12 = "AI_NoTranscriptGeneratedError";
 var ai_dist_marker12 = `vercel.ai.error.${ai_dist_name12}`;
 var ai_dist_symbol12 = Symbol.for(ai_dist_marker12);
 var ai_dist_a12;
-var NoTranscriptGeneratedError = class extends AISDKError {
+var NoTranscriptGeneratedError = class extends dist_AISDKError {
   constructor(options) {
     super({
       name: ai_dist_name12,
@@ -159456,7 +157050,7 @@ var NoTranscriptGeneratedError = class extends AISDKError {
     this.responses = options.responses;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, ai_dist_marker12);
+    return dist_AISDKError.hasMarker(error, ai_dist_marker12);
   }
 };
 ai_dist_a12 = ai_dist_symbol12;
@@ -159467,7 +157061,7 @@ var ai_dist_name13 = "AI_NoVideoGeneratedError";
 var ai_dist_marker13 = `vercel.ai.error.${ai_dist_name13}`;
 var ai_dist_symbol13 = Symbol.for(ai_dist_marker13);
 var ai_dist_a13;
-var NoVideoGeneratedError = class extends AISDKError {
+var NoVideoGeneratedError = class extends dist_AISDKError {
   constructor({
     message = "No video generated.",
     cause,
@@ -159478,7 +157072,7 @@ var NoVideoGeneratedError = class extends AISDKError {
     this.responses = responses;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, ai_dist_marker13);
+    return dist_AISDKError.hasMarker(error, ai_dist_marker13);
   }
   /**
    * @deprecated use `isInstance` instead
@@ -159507,7 +157101,7 @@ var name14 = "AI_NoSuchToolError";
 var ai_dist_marker14 = `vercel.ai.error.${name14}`;
 var ai_dist_symbol14 = Symbol.for(ai_dist_marker14);
 var ai_dist_a14;
-var NoSuchToolError = class extends AISDKError {
+var NoSuchToolError = class extends dist_AISDKError {
   constructor({
     toolName,
     availableTools = void 0,
@@ -159519,7 +157113,7 @@ var NoSuchToolError = class extends AISDKError {
     this.availableTools = availableTools;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, ai_dist_marker14);
+    return dist_AISDKError.hasMarker(error, ai_dist_marker14);
   }
 };
 ai_dist_a14 = ai_dist_symbol14;
@@ -159530,25 +157124,25 @@ var name15 = "AI_ToolCallRepairError";
 var marker15 = `vercel.ai.error.${name15}`;
 var symbol15 = Symbol.for(marker15);
 var _a15;
-var ToolCallRepairError = class extends AISDKError {
+var ToolCallRepairError = class extends dist_AISDKError {
   constructor({
     cause,
     originalError,
-    message = `Error repairing tool call: ${getErrorMessage(cause)}`
+    message = `Error repairing tool call: ${provider_dist_getErrorMessage(cause)}`
   }) {
     super({ name: name15, message, cause });
     this[_a15] = true;
     this.originalError = originalError;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, marker15);
+    return dist_AISDKError.hasMarker(error, marker15);
   }
 };
 _a15 = symbol15;
 
 // src/error/unsupported-model-version-error.ts
 
-var UnsupportedModelVersionError = class extends AISDKError {
+var UnsupportedModelVersionError = class extends dist_AISDKError {
   constructor(options) {
     super({
       name: "AI_UnsupportedModelVersionError",
@@ -159566,7 +157160,7 @@ var name16 = "AI_UIMessageStreamError";
 var marker16 = `vercel.ai.error.${name16}`;
 var symbol16 = Symbol.for(marker16);
 var _a16;
-var UIMessageStreamError = class extends AISDKError {
+var UIMessageStreamError = class extends dist_AISDKError {
   constructor({
     chunkType,
     chunkId,
@@ -159578,7 +157172,7 @@ var UIMessageStreamError = class extends AISDKError {
     this.chunkId = chunkId;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, marker16);
+    return dist_AISDKError.hasMarker(error, marker16);
   }
 };
 _a16 = symbol16;
@@ -159589,7 +157183,7 @@ var name17 = "AI_InvalidDataContentError";
 var marker17 = `vercel.ai.error.${name17}`;
 var symbol17 = Symbol.for(marker17);
 var _a17;
-var InvalidDataContentError = class extends AISDKError {
+var InvalidDataContentError = class extends dist_AISDKError {
   constructor({
     content,
     cause,
@@ -159600,7 +157194,7 @@ var InvalidDataContentError = class extends AISDKError {
     this.content = content;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, marker17);
+    return dist_AISDKError.hasMarker(error, marker17);
   }
 };
 _a17 = symbol17;
@@ -159611,7 +157205,7 @@ var name18 = "AI_InvalidMessageRoleError";
 var marker18 = `vercel.ai.error.${name18}`;
 var symbol18 = Symbol.for(marker18);
 var _a18;
-var InvalidMessageRoleError = class extends AISDKError {
+var InvalidMessageRoleError = class extends dist_AISDKError {
   constructor({
     role,
     message = `Invalid message role: '${role}'. Must be one of: "system", "user", "assistant", "tool".`
@@ -159621,7 +157215,7 @@ var InvalidMessageRoleError = class extends AISDKError {
     this.role = role;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, marker18);
+    return dist_AISDKError.hasMarker(error, marker18);
   }
 };
 _a18 = symbol18;
@@ -159632,7 +157226,7 @@ var name19 = "AI_MessageConversionError";
 var marker19 = `vercel.ai.error.${name19}`;
 var symbol19 = Symbol.for(marker19);
 var _a19;
-var MessageConversionError = class extends AISDKError {
+var MessageConversionError = class extends dist_AISDKError {
   constructor({
     originalMessage,
     message
@@ -159642,7 +157236,7 @@ var MessageConversionError = class extends AISDKError {
     this.originalMessage = originalMessage;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, marker19);
+    return dist_AISDKError.hasMarker(error, marker19);
   }
 };
 _a19 = symbol19;
@@ -159656,7 +157250,7 @@ var name20 = "AI_RetryError";
 var marker20 = `vercel.ai.error.${name20}`;
 var symbol20 = Symbol.for(marker20);
 var _a20;
-var RetryError = class extends AISDKError {
+var RetryError = class extends dist_AISDKError {
   constructor({
     message,
     reason,
@@ -159669,7 +157263,7 @@ var RetryError = class extends AISDKError {
     this.lastError = errors[errors.length - 1];
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, marker20);
+    return dist_AISDKError.hasMarker(error, marker20);
   }
 };
 _a20 = symbol20;
@@ -160405,7 +157999,7 @@ function convertToLanguageModelV3DataContent(content) {
       content.toString()
     );
     if (dataUrlMediaType == null || base64Content == null) {
-      throw new AISDKError({
+      throw new dist_AISDKError({
         name: "InvalidDataContentError",
         message: `Invalid data URL format in content ${content.toString()}`
       });
@@ -160870,7 +158464,7 @@ async function createToolModelOutput({
   errorMode
 }) {
   if (errorMode === "text") {
-    return { type: "error-text", value: getErrorMessage(output) };
+    return { type: "error-text", value: provider_dist_getErrorMessage(output) };
   } else if (errorMode === "json") {
     return { type: "error-json", value: toJSONValue(output) };
   }
@@ -161255,19 +158849,19 @@ async function standardizePrompt({
   messages
 }) {
   if (prompt == null && messages == null) {
-    throw new InvalidPromptError({
+    throw new dist_InvalidPromptError({
       prompt,
       message: "prompt or messages must be defined"
     });
   }
   if (prompt != null && messages != null) {
-    throw new InvalidPromptError({
+    throw new dist_InvalidPromptError({
       prompt,
       message: "prompt and messages cannot be defined at the same time"
     });
   }
   if (typeof system !== "string" && !asArray(system).every((message) => message.role === "system")) {
-    throw new InvalidPromptError({
+    throw new dist_InvalidPromptError({
       prompt,
       message: "system must be a string, SystemModelMessage, or array of SystemModelMessage"
     });
@@ -161277,20 +158871,20 @@ async function standardizePrompt({
   } else if (prompt != null && Array.isArray(prompt)) {
     messages = prompt;
   } else if (messages == null) {
-    throw new InvalidPromptError({
+    throw new dist_InvalidPromptError({
       prompt,
       message: "prompt or messages must be defined"
     });
   }
   if (messages.length === 0) {
-    throw new InvalidPromptError({
+    throw new dist_InvalidPromptError({
       prompt,
       message: "messages must not be empty"
     });
   }
   if (messages.some((message) => message.role === "system")) {
     if (allowSystemInMessages === false) {
-      throw new InvalidPromptError({
+      throw new dist_InvalidPromptError({
         prompt,
         message: "System messages are not allowed in the prompt or messages fields. Use the system option instead."
       });
@@ -161306,7 +158900,7 @@ async function standardizePrompt({
     schema: schemas_array(modelMessageSchema)
   });
   if (!validationResult.success) {
-    throw new InvalidPromptError({
+    throw new dist_InvalidPromptError({
       prompt,
       message: "The messages do not match the ModelMessage[] schema.",
       cause: validationResult.error
@@ -161324,7 +158918,7 @@ function wrapGatewayError(error) {
   const isProductionEnv = (process == null ? void 0 : process.env.NODE_ENV) === "production";
   const moreInfoURL = "https://ai-sdk.dev/unauthenticated-ai-gateway";
   if (isProductionEnv) {
-    return new AISDKError({
+    return new dist_AISDKError({
       name: "GatewayError",
       message: `Unauthenticated. Configure AI_GATEWAY_API_KEY or use a provider module. Learn more: ${moreInfoURL}`
     });
@@ -161770,7 +159364,7 @@ function getRetryDelayInMs({
   error,
   exponentialBackoffDelay
 }) {
-  const headers = dist_APICallError.isInstance(error) ? error.responseHeaders : dist_APICallError.isInstance(error.cause) ? error.cause.responseHeaders : void 0;
+  const headers = provider_dist_APICallError.isInstance(error) ? error.responseHeaders : provider_dist_APICallError.isInstance(error.cause) ? error.cause.responseHeaders : void 0;
   if (!headers)
     return exponentialBackoffDelay;
   let ms;
@@ -161831,7 +159425,7 @@ async function _retryWithExponentialBackoff(f, {
         errors: newErrors
       });
     }
-    if (error instanceof Error && (dist_APICallError.isInstance(error) && error.isRetryable === true || GatewayError.isInstance(error) && error.isRetryable === true) && tryNumber <= maxRetries) {
+    if (error instanceof Error && (provider_dist_APICallError.isInstance(error) && error.isRetryable === true || GatewayError.isInstance(error) && error.isRetryable === true) && tryNumber <= maxRetries) {
       await dist_delay(
         getRetryDelayInMs({
           error,
@@ -162834,7 +160428,7 @@ var dist_array = ({
       if (outerValue == null || typeof outerValue !== "object" || !("elements" in outerValue) || !Array.isArray(outerValue.elements)) {
         throw new NoObjectGeneratedError({
           message: "No object generated: response did not match schema.",
-          cause: new TypeValidationError({
+          cause: new dist_TypeValidationError({
             value: outerValue,
             cause: "response must be an object with an elements array"
           }),
@@ -162942,7 +160536,7 @@ var dist_choice = ({
       if (outerValue == null || typeof outerValue !== "object" || !("result" in outerValue) || typeof outerValue.result !== "string" || !choiceOptions.includes(outerValue.result)) {
         throw new NoObjectGeneratedError({
           message: "No object generated: response did not match schema.",
-          cause: new TypeValidationError({
+          cause: new dist_TypeValidationError({
             value: outerValue,
             cause: "response must be an object that contains a choice value."
           }),
@@ -169222,7 +166816,7 @@ var noSchemaOutputStrategy = {
     } : { success: true, value };
   },
   createElementStream() {
-    throw new UnsupportedFunctionalityError({
+    throw new dist_UnsupportedFunctionalityError({
       functionality: "element streams in no-schema mode"
     });
   }
@@ -171780,7 +169374,7 @@ var name21 = "AI_NoSuchProviderError";
 var marker21 = `vercel.ai.error.${name21}`;
 var symbol21 = Symbol.for(marker21);
 var _a21;
-var NoSuchProviderError = class extends NoSuchModelError {
+var NoSuchProviderError = class extends dist_NoSuchModelError {
   constructor({
     modelId,
     modelType,
@@ -171794,7 +169388,7 @@ var NoSuchProviderError = class extends NoSuchModelError {
     this.availableProviders = availableProviders;
   }
   static isInstance(error) {
-    return AISDKError.hasMarker(error, marker21);
+    return dist_AISDKError.hasMarker(error, marker21);
   }
 };
 _a21 = symbol21;

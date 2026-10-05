@@ -1,6 +1,6 @@
 # 🔍 lupe
 
-> **newcoworker fork.** Tracks [Gigadrive/lupe](https://github.com/Gigadrive/lupe) so the GitHub Action can call Anthropic Claude Sonnet 5.5 (`claude-sonnet-5-5`). This fork pins `@ai-sdk/anthropic` to **3.0.127** (≥3.0.125), which treats Sonnet 5.5 as rejecting forced tool use and falls back from `jsonTool` to native `outputFormat`. Pin `uses: newcoworker/lupe/apps/action@v0.2.2-nc.1` (moving alias `@v0.2.2-nc`) until upstream ships the same provider. Bugbot and Loupe reviewers are not configured on this fork. License remains [MIT](LICENSE) © Gigadrive.
+> **newcoworker fork.** Tracks [Gigadrive/lupe](https://github.com/Gigadrive/lupe) so the GitHub Action can call Anthropic Claude Sonnet 5.5 (`claude-sonnet-5-5`). This fork pins `@ai-sdk/anthropic` to **3.0.127** (≥3.0.125), which treats Sonnet 5.5 as rejecting forced tool use and falls back from `jsonTool` to native `outputFormat`. Pin `uses: newcoworker/lupe/apps/action@v0.2.2-nc.2` (moving alias `@v0.2.2-nc`) until upstream ships the same provider. Bugbot and Loupe reviewers are not configured on this fork. License remains [MIT](LICENSE) © Gigadrive.
 
 > Platform- and provider-agnostic AI code review agent. Bring your own tokens.
 
