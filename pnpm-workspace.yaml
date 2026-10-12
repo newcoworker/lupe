@@ -36,7 +36,7 @@ catalog:
 
   # --- CLI ergonomics + git ---
   '@clack/prompts': 1.6.0
-  simple-git: 3.36.0
+  simple-git: 4.0.1
 
   # --- shared types ---
   '@types/node': 24.7.1
