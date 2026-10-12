@@ -59,4 +59,15 @@ describe('RepoSource against a real git repo', () => {
     const none = await Effect.runPromise(repo.grep('zzz_no_such_symbol_zzz'));
     expect(none).toEqual([]);
   });
+
+  test('acquireDiff accepts a three-dot base...head range', async () => {
+    const git = simpleGit({ baseDir: dir });
+    await git.commit('modify a');
+    const base = (await git.revparse(['HEAD~1'])).trim();
+    const head = (await git.revparse(['HEAD'])).trim();
+    const files = await Effect.runPromise(repo.acquireDiff({ kind: 'local', baseSha: base, headSha: head }));
+    const a = files.find((f) => f.path === 'src/a.ts');
+    expect(a?.status).toBe('modified');
+    expect(a?.additions).toBeGreaterThan(0);
+  });
 });
