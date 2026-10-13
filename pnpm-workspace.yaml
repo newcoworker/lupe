@@ -36,7 +36,8 @@ catalog:
 
   # --- CLI ergonomics + git ---
   '@clack/prompts': 1.6.0
-  simple-git: 4.0.1
+  # 4.0.2 pins @simple-git/argv-parser 2.0.1 (GHSA-v5rq-49vh-5v5c). 4.0.1 pinned 2.0.0 exactly.
+  simple-git: 4.0.2
 
   # --- shared types ---
   '@types/node': 24.7.1

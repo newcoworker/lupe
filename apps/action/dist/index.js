@@ -172067,7 +172067,7 @@ const external_node_child_process_namespaceObject = __WEBPACK_EXTERNAL_createReq
 var debug_src = __nccwpck_require__(9715);
 // EXTERNAL MODULE: ../../node_modules/.pnpm/@kwsites+promise-deferred@1.1.1/node_modules/@kwsites/promise-deferred/dist/index.js
 var promise_deferred_dist = __nccwpck_require__(2203);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@simple-git+argv-parser@2.0.0/node_modules/@simple-git/argv-parser/dist/index.mjs
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@simple-git+argv-parser@2.0.1/node_modules/@simple-git/argv-parser/dist/index.mjs
 
 function* x(e, n) {
   const t = n === "global";
@@ -172523,7 +172523,8 @@ const y = {
   git_ssh_command: "allowUnsafeSshCommand",
   pager: "allowUnsafePager",
   prefix: "allowUnsafeConfigPaths",
-  ssh_askpass: "allowUnsafeAskPass"
+  ssh_askpass: "allowUnsafeAskPass",
+  visual: "allowUnsafeEditor"
 };
 function* Q(e) {
   const n = parseInt(e.git_config_count ?? "0", 10);
@@ -172574,7 +172575,7 @@ function oe(e, n) {
 
 // EXTERNAL MODULE: external "node:events"
 var external_node_events_ = __nccwpck_require__(8474);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/simple-git@4.0.1/node_modules/simple-git/dist/index.mjs
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/simple-git@4.0.2/node_modules/simple-git/dist/index.mjs
 
 
 
