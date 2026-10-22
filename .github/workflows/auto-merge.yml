@@ -1,0 +1,74 @@
+name: Auto-merge
+
+# Squash-merge a non-draft pull request into main once required checks are
+# green and no blocking review is still unresolved. github-actions[bot]
+# (GITHUB_TOKEN) performs the merge. Dependabot PRs are included and use
+# the same gate as every other author.
+#
+# Dependabot handling follows newcoworker/newCoworker: do not trigger on
+# pull_request. That event runs this file from the PR head, and Dependabot's
+# token is read-only. workflow_run, check_run, status, schedule, and
+# workflow_dispatch all load this file from the default branch. The
+# checkout below pins that same branch so the merger script cannot be the
+# copy from the PR under evaluation.
+#
+# A failed or neutral check that GitHub does not require does not block
+# once the required set is green. This repo currently reports no required
+# checks, so until it does the script waits for CI to succeed and for every
+# reported check to finish without failing. Drafts are the hold.
+#
+# Permissions stay on contents: write and pull-requests: write. Check and
+# status reads go through the pull request GraphQL object, not the Checks
+# or Statuses REST APIs. The job cannot dispatch other workflows. A
+# github-actions[bot] merge also does not emit a push event, which means
+# CI and Release on main do not start from the merge itself.
+
+on:
+  workflow_run:
+    workflows: ['CI', 'Dismiss Action-bundle CodeQL alerts']
+    types: [completed]
+  check_run:
+    types: [completed]
+  status:
+  schedule:
+    - cron: '41 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    name: auto-merge
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: >-
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.event == 'pull_request') ||
+      (github.event_name == 'check_run' &&
+       github.event.check_run.conclusion == 'success' &&
+       github.event.check_run.name != 'auto-merge' &&
+       github.event.check_run.check_suite.head_branch != 'main') ||
+      (github.event_name == 'status' &&
+       github.event.state == 'success') ||
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout the merger script from the default branch
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Squash-merge when the gate is clear
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha || github.event.check_run.head_sha || github.event.sha }}
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch || github.event.check_run.check_suite.head_branch }}
+          EXCLUDE_CHECKS: '["auto-merge","label-dependabot","cursor-auto-merge","lupe-bugbot-wake"]'
+          CI_WORKFLOW: CI
+        run: bash .github/scripts/auto-merge.sh
