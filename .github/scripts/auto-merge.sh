@@ -276,7 +276,13 @@ merge_with_retry() {
         echo "PR #$pr is already merged."
         return 0
         ;;
-      *"head sha"* | *"Head SHA"* | *"expected head"* | *"Expected head"*)
+      # A SHA-pinned merge whose head moved is HTTP 409 with
+      # "Head branch was modified. Review and try the merge again."
+      # gh prints that GraphQL error as-is. It also contains
+      # "try the merge again", so it has to match here, before the
+      # generic retry arm, or the stale SHA is retried.
+      *"head sha"* | *"Head SHA"* | *"expected head"* | *"Expected head"* | \
+        *"Head branch was modified"* | *"head branch was modified"*)
         echo "PR #$pr head moved after the gate read ($sha); leaving it for the next sweep."
         return 1
         ;;

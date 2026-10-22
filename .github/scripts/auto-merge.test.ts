@@ -744,6 +744,23 @@ describe('auto-merge.sh', () => {
     expect(readOptional(join(sb.dir, 'merge-attempts')).trim()).toBe('1');
   });
 
+  test('a pinned merge rejected because the head branch was modified is not retried', () => {
+    const sb = makeSandbox();
+    seed(sb, 48);
+    // GitHub's 409 for a SHA-pinned merge whose head moved. The sentence
+    // also contains "try the merge again", which is the generic retry arm.
+    writeFileSync(
+      join(sb.dir, 'merge-error.txt'),
+      'GraphQL: Head branch was modified. Review and try the merge again. (mergePullRequest)\n'
+    );
+    const res = run(sb);
+    expect(res.status).toBe(1);
+    expect(res.out).toMatch(/head moved after the gate read/);
+    expect(res.out).not.toMatch(/Merge attempt 2\/5/);
+    expect(res.merges).toBe('');
+    expect(readOptional(join(sb.dir, 'merge-attempts')).trim()).toBe('1');
+  });
+
   test('does not call the Checks REST API or dispatch another workflow', () => {
     const src = readFileSync(SCRIPT, 'utf8');
     expect(src).not.toContain('/check-runs');
