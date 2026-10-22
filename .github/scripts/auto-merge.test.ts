@@ -34,6 +34,8 @@ interface CheckNode {
   conclusion?: string | null;
   state?: string;
   isRequired: boolean;
+  startedAt?: string;
+  completedAt?: string;
   checkSuite?: { workflowRun: { workflow: { name: string } } | null };
 }
 
@@ -184,11 +186,12 @@ function readOptional(path: string): string {
   }
 }
 
-function expectMerge(res: { status: number | null; out: string; merges: string }, pr: number) {
+function expectMerge(res: { status: number | null; out: string; merges: string }, pr: number, sha = SHA) {
   expect(res.status).toBe(0);
   expect(res.merges).toMatch(new RegExp(`pr merge ${pr} `));
   expect(res.merges).toMatch(/--squash/);
   expect(res.merges).toMatch(/--delete-branch/);
+  expect(res.merges).toContain(`--match-head-commit ${sha}`);
 }
 
 const GH_STUB = `#!/usr/bin/env bash
@@ -612,12 +615,142 @@ describe('auto-merge.sh', () => {
     expect(res.merges).toBe('');
   });
 
+  test('ignores a cancelled run superseded by a newer green run of the same check', () => {
+    const sb = makeSandbox();
+    seed(sb, 41, {
+      checks: [
+        ciCheck('Format · Lint · Knip', { startedAt: '2026-10-22T20:00:00Z', completedAt: '2026-10-22T20:01:00Z' }),
+        ciCheck('Build · Typecheck · Test', {
+          conclusion: 'CANCELLED',
+          startedAt: '2026-10-22T20:00:00Z',
+          completedAt: '2026-10-22T20:01:00Z',
+        }),
+        ciCheck('Build · Typecheck · Test', {
+          conclusion: 'SUCCESS',
+          startedAt: '2026-10-22T20:02:00Z',
+          completedAt: '2026-10-22T20:03:00Z',
+        }),
+      ],
+    });
+    const res = run(sb);
+    expectMerge(res, 41);
+    expect(res.out).not.toMatch(/CANCELLED/);
+  });
+
+  test('ignores a failed run superseded by a newer green run of the same check', () => {
+    const sb = makeSandbox();
+    seed(sb, 42, {
+      checks: [
+        ciCheck('Format · Lint · Knip'),
+        ciCheck('Build · Typecheck · Test', {
+          conclusion: 'FAILURE',
+          startedAt: '2026-10-22T20:00:00Z',
+          completedAt: '2026-10-22T20:01:00Z',
+        }),
+        ciCheck('Build · Typecheck · Test', {
+          conclusion: 'SUCCESS',
+          startedAt: '2026-10-22T20:04:00Z',
+          completedAt: '2026-10-22T20:05:00Z',
+        }),
+      ],
+    });
+    const res = run(sb);
+    expectMerge(res, 42);
+    expect(res.out).not.toMatch(/FAILURE/);
+  });
+
+  test('a newer cancelled run still blocks', () => {
+    const sb = makeSandbox();
+    seed(sb, 43, {
+      checks: [
+        ciCheck('Format · Lint · Knip'),
+        ciCheck('Build · Typecheck · Test', {
+          conclusion: 'SUCCESS',
+          startedAt: '2026-10-22T20:00:00Z',
+          completedAt: '2026-10-22T20:01:00Z',
+        }),
+        ciCheck('Build · Typecheck · Test', {
+          conclusion: 'CANCELLED',
+          startedAt: '2026-10-22T20:06:00Z',
+          completedAt: '2026-10-22T20:07:00Z',
+        }),
+      ],
+    });
+    const res = run(sb);
+    expect(res.status).toBe(0);
+    expect(res.out).toMatch(/CANCELLED/);
+    expect(res.merges).toBe('');
+  });
+
+  test('does not collapse the same check name from a different workflow', () => {
+    const sb = makeSandbox();
+    seed(sb, 44, {
+      checks: [
+        ciCheck('Format · Lint · Knip'),
+        ciCheck('Build · Typecheck · Test', { startedAt: '2026-10-22T20:02:00Z' }),
+        checkRun('Build · Typecheck · Test', {
+          conclusion: 'FAILURE',
+          startedAt: '2026-10-22T20:03:00Z',
+          checkSuite: { workflowRun: { workflow: { name: 'CodeQL' } } },
+        }),
+      ],
+    });
+    const res = run(sb);
+    expect(res.status).toBe(0);
+    expect(res.out).toMatch(/not green/);
+    expect(res.merges).toBe('');
+  });
+
+  test('a superseded cancelled required check does not block', () => {
+    const sb = makeSandbox();
+    seed(sb, 45, {
+      checks: [
+        ciCheck('Build · Typecheck · Test', {
+          isRequired: true,
+          conclusion: 'CANCELLED',
+          startedAt: '2026-10-22T20:00:00Z',
+          completedAt: '2026-10-22T20:01:00Z',
+        }),
+        ciCheck('Build · Typecheck · Test', {
+          isRequired: true,
+          conclusion: 'SUCCESS',
+          startedAt: '2026-10-22T20:02:00Z',
+          completedAt: '2026-10-22T20:03:00Z',
+        }),
+      ],
+    });
+    const res = run(sb);
+    expectMerge(res, 45);
+    expect(res.out).toMatch(/Gate clear \(required\)/);
+  });
+
+  test('pins the merge to the head SHA from the gate read', () => {
+    const verified = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
+    const sb = makeSandbox();
+    seed(sb, 46, { headRefOid: verified });
+    const res = run(sb, { EVENT_NAME: 'schedule', HEAD_SHA: '', HEAD_BRANCH: '' });
+    expectMerge(res, 46, verified);
+    expect(res.out).toMatch(new RegExp(`Squash-merging PR #46 .* at ${verified}`));
+  });
+
+  test('a head SHA mismatch after the gate read is not retried', () => {
+    const sb = makeSandbox();
+    seed(sb, 47);
+    writeFileSync(join(sb.dir, 'merge-error.txt'), 'GraphQL: Expected head sha didn’t match\n');
+    const res = run(sb);
+    expect(res.status).toBe(1);
+    expect(res.out).toMatch(/head moved after the gate read/);
+    expect(res.merges).toBe('');
+    expect(readOptional(join(sb.dir, 'merge-attempts')).trim()).toBe('1');
+  });
+
   test('does not call the Checks REST API or dispatch another workflow', () => {
     const src = readFileSync(SCRIPT, 'utf8');
     expect(src).not.toContain('/check-runs');
     expect(src).not.toContain('workflow run');
     expect(src).toContain('Dependabot PRs are included');
     expect(src).toContain('isRequired(pullRequestNumber: $pr)');
+    expect(src).toContain('--match-head-commit');
   });
 });
 

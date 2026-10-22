@@ -13,6 +13,14 @@
 #     vacuously green. Wait until mergeStateStatus is CLEAN, the CI
 #     workflow has a successful check, and no other reported check is
 #     still running or failing. Neutral and skipped checks do not block.
+#   - statusCheckRollup includes superseded runs. CI cancels in progress,
+#     so a later green run often sits beside an older CANCELLED or failed
+#     run of the same check. Contexts are deduped by name and workflow;
+#     only the latest run is judged. A CANCELLED or failed run superseded
+#     by a newer one is ignored.
+#
+# The squash merge is pinned with --match-head-commit to the headRefOid
+# from the second gate read. A push after that read is not merged.
 #
 # Dependabot PRs are included. They use this same gate (dependabot[bot]
 # and app/dependabot are ordinary authors). There is no major-update
@@ -74,12 +82,15 @@ query($owner:String!, $repo:String!, $pr:Int!) {
                     name
                     status
                     conclusion
+                    startedAt
+                    completedAt
                     isRequired(pullRequestNumber: $pr)
                     checkSuite { workflowRun { workflow { name } } }
                   }
                   ... on StatusContext {
                     context
                     state
+                    createdAt
                     isRequired(pullRequestNumber: $pr)
                   }
                 }
@@ -121,27 +132,40 @@ NORMALIZE_JQ=$(cat <<'EOF'
     ),
     checks: (
       if $roll == null or $roll.contexts == null then []
-      else [
-        ($roll.contexts.nodes // [])[] |
-        if .__typename == "CheckRun" then {
-          kind: "check",
-          name: (.name // ""),
-          status: (.status // ""),
-          conclusion: (.conclusion // ""),
-          isRequired: (.isRequired // false),
-          workflowName: ((((.checkSuite // {}) | (.workflowRun // {}) | (.workflow // {}) | .name) // ""))
-        }
-        elif .__typename == "StatusContext" then {
-          kind: "status",
-          name: (.context // ""),
-          status: (.state // ""),
-          conclusion: "",
-          isRequired: (.isRequired // false),
-          workflowName: ""
-        }
-        else empty
-        end
-      ]
+      else
+        [
+          ($roll.contexts.nodes // [])[] |
+          if .__typename == "CheckRun" then {
+            kind: "check",
+            name: (.name // ""),
+            status: (.status // ""),
+            conclusion: (.conclusion // ""),
+            isRequired: (.isRequired // false),
+            workflowName: ((((.checkSuite // {}) | (.workflowRun // {}) | (.workflow // {}) | .name) // "")),
+            startedAt: (.startedAt // ""),
+            completedAt: (.completedAt // "")
+          }
+          elif .__typename == "StatusContext" then {
+            kind: "status",
+            name: (.context // ""),
+            status: (.state // ""),
+            conclusion: "",
+            isRequired: (.isRequired // false),
+            workflowName: "",
+            startedAt: (.createdAt // ""),
+            completedAt: ""
+          }
+          else empty
+          end
+        ]
+        # CI cancel-in-progress leaves the older CANCELLED or failed run in
+        # the rollup next to the rerun. Keep the latest run of each
+        # name+workflow. startedAt is the primary order; completedAt and
+        # rollup position break ties. A superseded CANCELLED run then drops
+        # out of the gate.
+        | to_entries
+        | group_by([.value.name, .value.workflowName])
+        | map(max_by([.value.startedAt, .value.completedAt, .key]) | .value | del(.startedAt, .completedAt))
       end
     )
   }
@@ -227,13 +251,21 @@ EOF
 
 merge_with_retry() {
   local pr="$1"
+  local sha="$2"
   local attempt=1
   local max=5
   local out state sleep_for
 
+  if [ -z "$sha" ]; then
+    echo "Refusing to merge PR #$pr without the verified head SHA."
+    return 1
+  fi
+
   while [ "$attempt" -le "$max" ]; do
-    if out=$(gh pr merge "$pr" --repo "$REPO" --squash --delete-branch 2>&1); then
-      echo "Merged PR #$pr (attempt $attempt/$max)."
+    # Pin the merge to the commit the gate just accepted. A push after the
+    # second read must not be squash-merged.
+    if out=$(gh pr merge "$pr" --repo "$REPO" --squash --delete-branch --match-head-commit "$sha" 2>&1); then
+      echo "Merged PR #$pr (attempt $attempt/$max) at $sha."
       return 0
     fi
 
@@ -243,6 +275,10 @@ merge_with_retry() {
       *[Aa]lready*merged*)
         echo "PR #$pr is already merged."
         return 0
+        ;;
+      *"head sha"* | *"Head SHA"* | *"expected head"* | *"Expected head"*)
+        echo "PR #$pr head moved after the gate read ($sha); leaving it for the next sweep."
+        return 1
         ;;
       *"Base branch was modified"* | *"try the merge again"* | *"not mergeable"*)
         ;;
@@ -319,7 +355,7 @@ decide() {
 
 evaluate_pr() {
   local pr="$1"
-  local norm decision author
+  local norm decision author sha
 
   echo "Evaluating PR #$pr ..."
   if ! norm=$(fetch_pr "$pr"); then
@@ -379,8 +415,9 @@ evaluate_pr() {
   esac
 
   author=$(printf '%s' "$norm" | jq -r '.author // ""') || author=""
-  echo "Gate clear (${decision#PASS }). Squash-merging PR #$pr (author ${author})."
-  merge_with_retry "$pr"
+  sha=$(printf '%s' "$norm" | jq -r '.headRefOid // ""') || sha=""
+  echo "Gate clear (${decision#PASS }). Squash-merging PR #$pr (author ${author}) at ${sha}."
+  merge_with_retry "$pr" "$sha"
 }
 
 list_prs() {
