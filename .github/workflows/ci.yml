@@ -26,6 +26,8 @@ jobs:
         run: pnpm lint
       - name: Dependency hygiene (knip)
         run: pnpm knip
+      - name: Auto-merge gate
+        run: pnpm exec vitest run .github/scripts/auto-merge.test.ts
 
   build:
     name: Build · Typecheck · Test
