@@ -7,7 +7,7 @@ packages:
 catalog:
   # --- Effect quartet (pin together; pre-1.0, version-locked) ---
   effect: 3.21.4
-  '@effect/platform': 0.96.2
+  '@effect/platform': 0.97.1
   '@effect/platform-node': 0.107.0
   '@effect/cli': 0.75.2
 
