@@ -171577,9 +171577,13 @@ function responseMessages(error) {
 	const messages = error.response?.messages;
 	return Array.isArray(messages) ? messages : void 0;
 }
-function conversation(base, error) {
-	const extra = responseMessages(error);
-	return extra && extra.length > 0 ? [...base, ...extra] : [...base];
+function conversation(base, transcript) {
+	return transcript && transcript.length > 0 ? [...base, ...transcript] : [...base];
+}
+/** Prefer the transcript captured at each step. Fall back to messages on the error when a provider includes them. */
+function transcriptOf(trace, error) {
+	if (trace.messages.length > 0) return trace.messages;
+	return responseMessages(error);
 }
 function repairTurn(validationError, raw) {
 	return `The previous response failed schema validation and was not accepted.\nValidation error: ${validationError}\nRaw response:\n${raw && raw.trim() ? raw.slice(0, 4e3) : "(empty)"}\n\nReturn only a valid findings object. Fix every validation error. Do not call tools.`;
@@ -171597,7 +171601,8 @@ function repairTurn(validationError, raw) {
 async function collectFindings(input) {
 	const trace = {
 		steps: 0,
-		usage: EMPTY_USAGE
+		usage: EMPTY_USAGE,
+		messages: []
 	};
 	const hasTools = Object.keys(input.tools).length > 0;
 	const base = [input.cacheable ? {
@@ -171616,6 +171621,8 @@ async function collectFindings(input) {
 		trace.finishReason = step.finishReason;
 		if (step.text) trace.text = step.text;
 		trace.usage = addUsage(trace.usage, toTokenUsage(step.usage));
+		const messages = step.response?.messages;
+		if (messages && messages.length > 0) trace.messages = [...messages];
 	};
 	const callModel = (messages, mode) => {
 		return generateText({
@@ -171687,7 +171694,7 @@ async function collectFindings(input) {
 	} catch (error) {
 		remember(trace, error);
 		if (!isSchemaError(error)) rethrow(error);
-		const findings = await repair(conversation(base, error), textOf(error) ?? trace.text, error instanceof Error ? error.message : "invalid structured output");
+		const findings = await repair(conversation(base, transcriptOf(trace, error)), textOf(error) ?? trace.text, error instanceof Error ? error.message : "invalid structured output");
 		if (findings) return done(findings);
 		return fail(error);
 	}
@@ -171706,7 +171713,7 @@ async function collectFindings(input) {
 	} catch (error) {
 		remember(trace, error);
 		if (!isSchemaError(error)) rethrow(error);
-		const findings = await repair(conversation(continued, error), textOf(error) ?? trace.text, error instanceof Error ? error.message : "invalid structured output");
+		const findings = await repair(conversation(continued, responseMessages(error)), textOf(error) ?? trace.text, error instanceof Error ? error.message : "invalid structured output");
 		if (findings) return done(findings);
 		return fail(error);
 	}

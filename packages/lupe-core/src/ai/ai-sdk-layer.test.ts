@@ -138,6 +138,25 @@ describe('generateFindings tool loop', () => {
     expect(result.findings[0]?.title).toBe('Off by one');
   });
 
+  test('schema repair re-ask keeps tool results gathered before the invalid answer', async () => {
+    const calls: GenerateOptions[] = [];
+    const model = new MockLanguageModelV3({
+      doGenerate: async (options) => {
+        calls.push(options);
+        const prompt = promptOf(options);
+        if (prompt.includes('failed schema validation')) return textResult(findingsText(), 'stop');
+        if (options.toolChoice?.type === 'none') return textResult('{"elements":[{"title":"nope"}]}', 'stop');
+        return toolCallResult(`call_${calls.length}`);
+      },
+    });
+    const result = await Effect.runPromise(run(model, 3));
+    expect(result.findings).toHaveLength(1);
+    const repairCall = calls.find((call) => promptOf(call).includes('failed schema validation'));
+    if (!repairCall) throw new Error('missing repair call');
+    expect(promptOf(repairCall)).toContain('export const a = 1');
+    expect(repairCall.toolChoice).toEqual({ type: 'none' });
+  });
+
   test('re-asks once with the validation error when local repair cannot fix the schema', async () => {
     const calls: GenerateOptions[] = [];
     const model = new MockLanguageModelV3({

@@ -30,6 +30,13 @@ interface Trace {
   usage: TokenUsage;
   finishReason?: string;
   text?: string;
+  /**
+   * Assistant and tool messages gathered so far. `generateText` throws on a
+   * schema failure before returning, and `NoObjectGeneratedError.response` is
+   * only response metadata — it does not include these messages. The repair
+   * re-ask reads this transcript instead.
+   */
+  messages: ModelMessage[];
 }
 
 /** Thrown when generation and the single repair pass both fail to yield findings. */
@@ -79,9 +86,14 @@ function responseMessages(error: unknown): readonly ModelMessage[] | undefined {
   return Array.isArray(messages) ? (messages as ModelMessage[]) : undefined;
 }
 
-function conversation(base: readonly ModelMessage[], error: unknown): ModelMessage[] {
-  const extra = responseMessages(error);
-  return extra && extra.length > 0 ? [...base, ...extra] : [...base];
+function conversation(base: readonly ModelMessage[], transcript: readonly ModelMessage[] | undefined): ModelMessage[] {
+  return transcript && transcript.length > 0 ? [...base, ...transcript] : [...base];
+}
+
+/** Prefer the transcript captured at each step. Fall back to messages on the error when a provider includes them. */
+function transcriptOf(trace: Trace, error: unknown): readonly ModelMessage[] | undefined {
+  if (trace.messages.length > 0) return trace.messages;
+  return responseMessages(error);
 }
 
 function repairTurn(validationError: string, raw: string | undefined): string {
@@ -116,7 +128,7 @@ export interface CollectFindingsInput {
 export async function collectFindings(
   input: CollectFindingsInput
 ): Promise<{ findings: readonly Finding[]; usage: TokenUsage; steps: number }> {
-  const trace: Trace = { steps: 0, usage: EMPTY_USAGE };
+  const trace: Trace = { steps: 0, usage: EMPTY_USAGE, messages: [] };
   const hasTools = Object.keys(input.tools).length > 0;
   const base: ModelMessage[] = [
     input.cacheable
@@ -125,11 +137,18 @@ export async function collectFindings(
     { role: 'user', content: input.prompt },
   ];
 
-  const onStepFinish = (step: { finishReason: string; text: string; usage: LanguageModelUsage }): void => {
+  const onStepFinish = (step: {
+    finishReason: string;
+    text: string;
+    usage: LanguageModelUsage;
+    response?: { messages?: readonly ModelMessage[] };
+  }): void => {
     trace.steps += 1;
     trace.finishReason = step.finishReason;
     if (step.text) trace.text = step.text;
     trace.usage = addUsage(trace.usage, toTokenUsage(step.usage));
+    const messages = step.response?.messages;
+    if (messages && messages.length > 0) trace.messages = [...messages];
   };
 
   const callModel = (messages: readonly ModelMessage[], mode: 'loop' | 'answer') => {
@@ -210,7 +229,7 @@ export async function collectFindings(
     remember(trace, error);
     if (!isSchemaError(error)) rethrow(error);
     const findings = await repair(
-      conversation(base, error),
+      conversation(base, transcriptOf(trace, error)),
       textOf(error) ?? trace.text,
       error instanceof Error ? error.message : 'invalid structured output'
     );
@@ -231,8 +250,10 @@ export async function collectFindings(
   } catch (error) {
     remember(trace, error);
     if (!isSchemaError(error)) rethrow(error);
+    // `continued` already holds the tool transcript. Do not append `trace.messages`:
+    // the final call's onStepFinish replaces that with only this call's output.
     const findings = await repair(
-      conversation(continued, error),
+      conversation(continued, responseMessages(error)),
       textOf(error) ?? trace.text,
       error instanceof Error ? error.message : 'invalid structured output'
     );
