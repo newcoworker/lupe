@@ -1,3 +1,4 @@
+import type { LanguageModel } from 'ai';
 import { describe, expect, test } from 'vitest';
 
 import { createModelResolver, defaultModelId, resolveTaskModelId } from './provider';
@@ -33,5 +34,15 @@ describe('model routing', () => {
 
   test('openai-compatible without baseURL fails fast', () => {
     expect(() => createModelResolver({ provider: 'openai-compatible', apiKey: 'x' })).toThrow(/baseURL/);
+  });
+
+  test('languageModel override skips provider construction', () => {
+    const model = { specificationVersion: 'v3', provider: 'mock', modelId: 'm' } as LanguageModel;
+    const resolve = createModelResolver({
+      provider: 'openai-compatible',
+      languageModel: model,
+      models: { review: 'custom-model' },
+    });
+    expect(resolve('review')).toEqual({ model, modelId: 'custom-model' });
   });
 });

@@ -196,10 +196,60 @@ describe('runReview cost cap', () => {
   });
 
   test('within-budget runs complete normally', async () => {
+    const service: AiModelService = {
+      generateFindings: () =>
+        Effect.succeed({ findings: [finding()], usage: EMPTY_USAGE, model: 'claude-haiku-4-5', steps: 1 }),
+      verify: () => Effect.succeed({ grounded: true, reason: '', usage: EMPTY_USAGE, model: 'claude-haiku-4-5' }),
+    };
     const result = await Effect.runPromise(
       runReview([FILE], undefined, { maxCostUsd: 1000, estimateModelId: 'claude-opus-4-8' }).pipe(
-        Effect.provide(fakeAi([finding()]))
+        Effect.provide(Layer.succeed(AiModel, service))
       )
+    );
+    expect(result.findings).toHaveLength(1);
+  });
+
+  test('single-chunk actual cost over the cap fails the run', async () => {
+    const usage = { inputTokens: 2_000_000, outputTokens: 0, cacheCreationTokens: 0, cacheReadTokens: 0 };
+    const service: AiModelService = {
+      generateFindings: () => Effect.succeed({ findings: [finding()], usage, model: 'claude-haiku-4-5', steps: 1 }),
+      verify: () => Effect.succeed({ grounded: true, reason: '', usage: EMPTY_USAGE, model: 'claude-haiku-4-5' }),
+    };
+    // No estimateModelId, so pre-flight is skipped. Haiku input is $1/M → $2 > $0.50.
+    const err = await Effect.runPromise(
+      runReview([FILE], undefined, { maxCostUsd: 0.5 }).pipe(
+        Effect.provide(Layer.succeed(AiModel, service)),
+        Effect.flip
+      )
+    );
+    expect(err._tag).toBe('CostLimitError');
+    if (err._tag === 'CostLimitError') expect(err.message).toMatch(/exceeds max-cost-usd/);
+  });
+
+  test('single-chunk unknown model price fails closed', async () => {
+    const service: AiModelService = {
+      generateFindings: () =>
+        Effect.succeed({ findings: [finding()], usage: EMPTY_USAGE, model: 'mystery-model', steps: 1 }),
+      verify: () => Effect.succeed({ grounded: true, reason: '', usage: EMPTY_USAGE, model: 'mystery-model' }),
+    };
+    const err = await Effect.runPromise(
+      runReview([FILE], undefined, { maxCostUsd: 10 }).pipe(
+        Effect.provide(Layer.succeed(AiModel, service)),
+        Effect.flip
+      )
+    );
+    expect(err._tag).toBe('CostLimitError');
+    if (err._tag === 'CostLimitError') expect(err.message).toMatch(/no known price/);
+  });
+
+  test('single-chunk under the cap completes', async () => {
+    const usage = { inputTokens: 100, outputTokens: 10, cacheCreationTokens: 0, cacheReadTokens: 0 };
+    const service: AiModelService = {
+      generateFindings: () => Effect.succeed({ findings: [finding()], usage, model: 'claude-haiku-4-5', steps: 1 }),
+      verify: () => Effect.succeed({ grounded: true, reason: '', usage: EMPTY_USAGE, model: 'claude-haiku-4-5' }),
+    };
+    const result = await Effect.runPromise(
+      runReview([FILE], undefined, { maxCostUsd: 1 }).pipe(Effect.provide(Layer.succeed(AiModel, service)))
     );
     expect(result.findings).toHaveLength(1);
   });

@@ -32,6 +32,11 @@ export interface LupeAiConfig {
    * read the working tree. The prompt should also carry `hasTools: false`.
    */
   readonly disableTools?: boolean;
+  /**
+   * Use this model for every task instead of constructing the provider client.
+   * Tests inject a mock; production leaves it unset.
+   */
+  readonly languageModel?: LanguageModel;
 }
 
 export interface ModelHandle {
@@ -110,6 +115,10 @@ function buildProvider(config: LupeAiConfig): ModelFactory {
 
 /** Build a task→model resolver for the configured provider. */
 export function createModelResolver(config: LupeAiConfig): ModelResolver {
+  if (config.languageModel) {
+    const model = config.languageModel;
+    return (task) => ({ model, modelId: resolveTaskModelId(config, task) });
+  }
   const factory = buildProvider(config);
   return (task) => {
     const modelId = resolveTaskModelId(config, task);

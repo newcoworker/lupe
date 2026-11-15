@@ -35,6 +35,8 @@ describe('buildSystemPrompt — tool-awareness (hasTools)', () => {
   test('default (API path) keeps the tool-based confirm-before-reporting guidance', () => {
     const out = buildSystemPrompt({});
     expect(out).toContain('Use the read-only tools');
+    expect(out).toContain('offset');
+    expect(out).toMatch(/truncat/i);
     expect(out).not.toContain('you have NO tools');
   });
 

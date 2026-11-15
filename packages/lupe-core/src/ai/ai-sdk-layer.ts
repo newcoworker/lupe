@@ -1,10 +1,11 @@
-import { generateText, Output, stepCountIs } from 'ai';
+import { generateText, NoObjectGeneratedError, NoOutputGeneratedError, Output } from 'ai';
 import { Effect, Layer } from 'effect';
 import { z } from 'zod';
 
 import { ProviderError, RateLimitError, RefusalError, ReviewOutputError } from '../errors';
-import { Finding } from '../finding';
 import { RepoSource } from '../ports';
+import { collectFindings, StructuredFindingsFailure } from './collect-findings';
+import { formatFailureDetail } from './failure-detail';
 import {
   AiModel,
   type AiError,
@@ -20,16 +21,54 @@ import { anthropicCacheBreakpoint, toTokenUsage } from './usage';
 
 const DEFAULT_MAX_STEPS = 12;
 
-/** Map an AI SDK / network failure onto a tagged lupe error. */
-function liftError(error: unknown, provider: string): AiError {
+function isStructuredFailure(error: unknown): boolean {
   const name = (error as { name?: string } | null)?.name ?? '';
-  const message = error instanceof Error ? error.message : String(error);
-  if (/NoObjectGenerated|NoOutputGenerated/.test(name)) {
-    return new ReviewOutputError({
-      message: 'model did not produce valid structured findings',
-      cause: error,
-    });
+  return (
+    error instanceof StructuredFindingsFailure ||
+    NoObjectGeneratedError.isInstance(error) ||
+    NoOutputGeneratedError.isInstance(error) ||
+    /NoObjectGenerated|NoOutputGenerated|StructuredFindingsFailure/.test(name)
+  );
+}
+
+function ownMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+/** Public message for a structured-output failure, including the real cause. */
+function structuredMessage(error: unknown): string {
+  const detail = formatFailureDetail(error);
+  const own = ownMessage(error);
+  const parts: string[] = [];
+  if (own && own !== 'model did not produce valid structured findings' && !detail.includes(own)) parts.push(own);
+  if (detail) parts.push(detail);
+  const extra = parts.join('; ');
+  return extra
+    ? `model did not produce valid structured findings (${extra})`
+    : 'model did not produce valid structured findings';
+}
+
+function withDetail(error: unknown): string {
+  const own = ownMessage(error);
+  const detail = formatFailureDetail(error);
+  if (!detail || own.includes(detail)) return own;
+  return `${own} (${detail})`;
+}
+
+/**
+ * Map an AI SDK / network failure onto a tagged lupe error. The message (what
+ * the Action prints) and the log line both include the underlying cause:
+ * finish reason, step count, provider status/body, and a raw-text snippet.
+ */
+function liftError(error: unknown, provider: string): AiError {
+  if (isStructuredFailure(error)) {
+    const message = structuredMessage(error);
+    console.error(`lupe: ${provider}: ${message}`);
+    return new ReviewOutputError({ message, cause: error });
   }
+  const message = withDetail(error);
+  console.error(`lupe: ${provider}: ${message}`);
+  const name = (error as { name?: string } | null)?.name ?? '';
   const status =
     (error as { statusCode?: number; status?: number } | null)?.statusCode ??
     (error as { status?: number } | null)?.status;
@@ -75,24 +114,15 @@ export function AiSdkLive(config: LupeAiConfig): Layer.Layer<AiModel, never, Rep
         Effect.tryPromise({
           try: async () => {
             const { model, modelId } = resolveModel(input.task);
-            const result = await generateText({
+            const collected = await collectFindings({
               model,
-              messages: [systemMessage(input.system), { role: 'user', content: input.prompt }],
+              system: input.system,
+              prompt: input.prompt,
               tools,
-              stopWhen: [stepCountIs(input.maxSteps ?? DEFAULT_MAX_STEPS)],
-              output: Output.array({ element: Finding }),
-              // The system message is our own trusted content; placed in messages so the
-              // Anthropic cache breakpoint can attach to it.
-              allowSystemInMessages: true,
-              maxRetries: 2,
+              maxSteps: input.maxSteps ?? DEFAULT_MAX_STEPS,
+              cacheable,
             });
-            const findings = (result.output ?? []) as readonly Finding[];
-            return {
-              findings,
-              usage: toTokenUsage(result.totalUsage),
-              model: modelId,
-              steps: result.steps.length,
-            };
+            return { ...collected, model: modelId };
           },
           catch: (error) => liftError(error, config.provider),
         });
