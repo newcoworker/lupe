@@ -3,6 +3,7 @@ import { Effect } from 'effect';
 import { z } from 'zod';
 
 import type { RepoSourceService } from '../ports';
+import { READ_FILE_MAX_BYTES, READ_FILE_MAX_LINES, windowFileText } from './read-file-window';
 
 /**
  * Read-only repo tools the review agent may call during generation. Each tool
@@ -12,11 +13,30 @@ import type { RepoSourceService } from '../ports';
 export function buildRepoTools(repo: RepoSourceService): ToolSet {
   return {
     readFile: tool({
-      description: 'Read the full contents of a file in the repository at the head revision.',
-      inputSchema: z.object({ path: z.string().describe('Repository-relative file path') }),
-      execute: ({ path }) =>
+      description:
+        `Read a file at the head revision. Pass a 1-based offset and limit to read a line range. ` +
+        `Each call returns at most ${READ_FILE_MAX_LINES} lines and ${READ_FILE_MAX_BYTES} bytes and says when it truncated.`,
+      inputSchema: z.object({
+        path: z.string().describe('Repository-relative file path'),
+        offset: z
+          .number()
+          .int()
+          .positive()
+          .optional()
+          .describe('1-based line to start at. Omit to start at the first line.'),
+        limit: z
+          .number()
+          .int()
+          .positive()
+          .optional()
+          .describe(`Maximum lines to return (hard cap ${READ_FILE_MAX_LINES}).`),
+      }),
+      execute: ({ path, offset, limit }) =>
         Effect.runPromise(
-          repo.readFile(path).pipe(Effect.catchAll(() => Effect.succeed(`<error: could not read ${path}>`)))
+          repo.readFile(path).pipe(
+            Effect.map((contents) => windowFileText(contents, path, { offset, limit })),
+            Effect.catchAll(() => Effect.succeed(`<error: could not read ${path}>`))
+          )
         ),
     }),
     listDir: tool({

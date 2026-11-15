@@ -28,7 +28,10 @@ export interface RunReviewOptions extends GenerateCandidatesOptions, FilterOptio
   readonly maxChunks?: number;
   /** Bounded concurrency for the fan-out chunk passes. Default 3. */
   readonly reviewConcurrency?: number;
-  /** Hard USD ceiling for the run. Enforced pre-flight and after the priming chunk. */
+  /**
+   * Hard USD ceiling for the run. Enforced pre-flight and after the priming
+   * chunk, including when the diff fits in a single chunk.
+   */
   readonly maxCostUsd?: number;
   /** Per-model price overrides used by the cost cap + cost accounting. */
   readonly modelPrices?: ModelPriceOverrides;
@@ -128,9 +131,10 @@ export function runReview(
       cost.add(first.model, first.usage);
       candidatesAll.push(...first.findings);
 
-      // Post-priming breaker: measure the real cost of the priming chunk and, if the
-      // remaining chunks would push the run over the cap, abort before the fan-out.
-      if (maxCostUsd !== undefined && chunks.length > 1) {
+      // Post-priming breaker. A single chunk has already been spent, so compare
+      // that actual cost. Several chunks project the rest from the priming cost
+      // and abort before the fan-out. Unknown prices fail closed either way.
+      if (maxCostUsd !== undefined) {
         const firstResolved = resolvePrice(first.model, overrides);
         if (!firstResolved.known) {
           return yield* Effect.fail(
@@ -143,9 +147,13 @@ export function runReview(
         const spentUsd = computeCost(first.model, first.usage, overrides);
         const projectedUsd = spentUsd * chunks.length;
         if (projectedUsd > maxCostUsd) {
+          const message =
+            chunks.length === 1
+              ? `review cost ~$${spentUsd.toFixed(2)} exceeds max-cost-usd $${maxCostUsd}`
+              : `projected review cost ~$${projectedUsd.toFixed(2)} across ${chunks.length} chunks exceeds max-cost-usd $${maxCostUsd}`;
           return yield* Effect.fail(
             new CostLimitError({
-              message: `projected review cost ~$${projectedUsd.toFixed(2)} across ${chunks.length} chunks exceeds max-cost-usd $${maxCostUsd}`,
+              message,
               limitUsd: maxCostUsd,
               estimatedUsd: projectedUsd,
               spentUsd,

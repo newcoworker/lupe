@@ -171086,6 +171086,13 @@ function buildProvider(config) {
 }
 /** Build a task→model resolver for the configured provider. */
 function createModelResolver(config) {
+	if (config.languageModel) {
+		const model = config.languageModel;
+		return (task) => ({
+			model,
+			modelId: resolveTaskModelId(config, task)
+		});
+	}
 	const factory = buildProvider(config);
 	return (task) => {
 		const modelId = resolveTaskModelId(config, task);
@@ -171348,6 +171355,65 @@ function toTokenUsage(usage) {
 function anthropicCacheBreakpoint() {
 	return { anthropic: { cacheControl: { type: "ephemeral" } } };
 }
+const READ_FILE_MAX_BYTES = 32768;
+/** Split on `\n`, dropping a trailing empty line from a final newline. `\r` is stripped. */
+function fileLines(contents) {
+	if (contents.length === 0) return [];
+	const lines = contents.replace(/\r\n/g, "\n").replace(/\r/g, "\n").split("\n");
+	if (lines[lines.length - 1] === "") lines.pop();
+	return lines;
+}
+function byteLength(text) {
+	return Buffer.byteLength(text, "utf8");
+}
+/** Cut `text` to at most `maxBytes` UTF-8 bytes without splitting a code point. */
+function truncateUtf8(text, maxBytes) {
+	if (byteLength(text) <= maxBytes) return text;
+	const buf = Buffer.from(text, "utf8");
+	let end = Math.min(maxBytes, buf.length);
+	while (end > 0) {
+		const byte = buf[end];
+		if (byte === void 0 || (byte & 192) !== 128) break;
+		end -= 1;
+	}
+	return buf.subarray(0, end).toString("utf8");
+}
+/**
+* Return a line window of `contents` for the model. The full original text is
+* returned unchanged when it fits. Otherwise the window is followed by a
+* truncation notice that names the next offset.
+*/
+function windowFileText(contents, path, request = {}) {
+	const lines = fileLines(contents);
+	const total = lines.length;
+	const start = Math.max(1, Math.floor(request.offset ?? 1));
+	const lineCap = Math.max(1, Math.min(request.limit ?? 400, 400));
+	if (total === 0) return start > 1 ? `[lupe: ${path} is empty; offset ${start} is past the end.]` : contents;
+	if (start > total) return `[lupe: ${path} has ${total} lines; offset ${start} is past the end.]`;
+	const selected = [];
+	let bytes = 0;
+	let hitByteCap = false;
+	for (let i = start - 1; i < total && selected.length < lineCap; i += 1) {
+		const line = lines[i] ?? "";
+		const lineBytes = byteLength(line) + 1;
+		if (selected.length > 0 && bytes + lineBytes > 32768) {
+			hitByteCap = true;
+			break;
+		}
+		if (selected.length === 0 && byteLength(line) > 32768) {
+			selected.push(truncateUtf8(line, READ_FILE_MAX_BYTES));
+			hitByteCap = true;
+			break;
+		}
+		selected.push(line);
+		bytes += lineBytes;
+	}
+	const end = start + selected.length - 1;
+	if (start === 1 && end === total && !hitByteCap) return contents;
+	const next = end < total ? ` Call readFile with offset=${end + 1} to continue.` : "";
+	const notice = `[lupe: truncated ${path}; showed lines ${start}-${end} of ${total}.${hitByteCap ? ` Byte cap is ${READ_FILE_MAX_BYTES}.` : ""}${next}]`;
+	return `${selected.join("\n")}\n${notice}`;
+}
 //#endregion
 //#region src/ai/tools.ts
 /**
@@ -171358,9 +171424,16 @@ function anthropicCacheBreakpoint() {
 function buildRepoTools(repo) {
 	return {
 		readFile: tool({
-			description: "Read the full contents of a file in the repository at the head revision.",
-			inputSchema: object({ path: schemas_string().describe("Repository-relative file path") }),
-			execute: ({ path }) => Effect_runPromise(repo.readFile(path).pipe(Effect_catchAll(() => Effect_succeed(`<error: could not read ${path}>`))))
+			description: `Read a file at the head revision. Pass a 1-based offset and limit to read a line range. Each call returns at most 400 lines and ${READ_FILE_MAX_BYTES} bytes and says when it truncated.`,
+			inputSchema: object({
+				path: schemas_string().describe("Repository-relative file path"),
+				offset: schemas_number().int().positive().optional().describe("1-based line to start at. Omit to start at the first line."),
+				limit: schemas_number().int().positive().optional().describe(`Maximum lines to return (hard cap 400).`)
+			}),
+			execute: ({ path, offset, limit }) => Effect_runPromise(repo.readFile(path).pipe(Effect_map((contents) => windowFileText(contents, path, {
+				offset,
+				limit
+			})), Effect_catchAll(() => Effect_succeed(`<error: could not read ${path}>`))))
 		}),
 		listDir: tool({
 			description: "List entries of a directory (non-recursive). Directory names end with '/'.",
@@ -171382,16 +171455,412 @@ function buildRepoTools(repo) {
 	};
 }
 //#endregion
+//#region src/ai/salvage-findings.ts
+function stripFences(text) {
+	const trimmed = text.trim().replace(/^\uFEFF/, "");
+	return /^```(?:json)?\s*([\s\S]*?)\s*```$/.exec(trimmed)?.[1]?.trim() ?? trimmed;
+}
+/** Take the outermost JSON object or array, ignoring prose around it. */
+function extractJson(text) {
+	const stripped = stripFences(text);
+	const objectAt = stripped.indexOf("{");
+	const arrayAt = stripped.indexOf("[");
+	const start = objectAt === -1 ? arrayAt : arrayAt === -1 ? objectAt : Math.min(objectAt, arrayAt);
+	if (start < 0) return stripped;
+	const close = stripped[start] === "{" ? "}" : "]";
+	const end = stripped.lastIndexOf(close);
+	if (end <= start) return stripped.slice(start);
+	return stripped.slice(start, end + 1);
+}
+function stripTrailingCommas(json) {
+	return json.replace(/,\s*([}\]])/g, "$1");
+}
+function issueText(error) {
+	return error.issues.slice(0, 8).map((issue) => {
+		const path = issue.path.map((part) => String(part)).join(".");
+		return path ? `${path}: ${issue.message}` : issue.message;
+	}).join("; ");
+}
+function asElementArray(value) {
+	if (Array.isArray(value)) return value;
+	if (!value || typeof value !== "object") return void 0;
+	const record = value;
+	if (Array.isArray(record.elements)) return record.elements;
+	if (Array.isArray(record.findings)) return record.findings;
+}
+/**
+* Recover a findings array from model text the SDK rejected: markdown fences,
+* trailing commas, a raw array, or `{elements|findings: [...]}`.
+* Returns the validation error when the text still does not match `Finding`.
+*/
+function salvageFindings(text) {
+	if (!text || !text.trim()) return {
+		ok: false,
+		error: "model returned no text"
+	};
+	const json = stripTrailingCommas(extractJson(text));
+	let parsed;
+	try {
+		parsed = JSON.parse(json);
+	} catch (error) {
+		return {
+			ok: false,
+			error: `could not parse JSON: ${error instanceof Error ? error.message : String(error)}`
+		};
+	}
+	const elements = asElementArray(parsed);
+	if (elements) {
+		const result = Findings.safeParse(elements);
+		if (result.success) return {
+			ok: true,
+			findings: result.data
+		};
+		return {
+			ok: false,
+			error: issueText(result.error)
+		};
+	}
+	const single = Finding.safeParse(parsed);
+	if (single.success) return {
+		ok: true,
+		findings: [single.data]
+	};
+	return {
+		ok: false,
+		error: issueText(single.error)
+	};
+}
+//#endregion
+//#region src/ai/collect-findings.ts
+/**
+* User turn appended when the tool loop stops without a final answer
+* (`finishReason !== 'stop'`, including step-limit exhaustion).
+*/
+const FINAL_FINDINGS_TURN = "You have finished gathering context. Do not call tools. Emit the structured findings now from the diff and the tool results already in this conversation. If there are no real problems, return an empty list.";
+const findingsOutput = output_exports.array({ element: Finding });
+/** Thrown when generation and the single repair pass both fail to yield findings. */
+var StructuredFindingsFailure = class extends Error {
+	finishReason;
+	steps;
+	text;
+	constructor(message, options) {
+		super(message, options.cause !== void 0 ? { cause: options.cause } : void 0);
+		this.name = "StructuredFindingsFailure";
+		if (options.finishReason !== void 0) this.finishReason = options.finishReason;
+		if (options.steps !== void 0) this.steps = options.steps;
+		if (options.text !== void 0) this.text = options.text;
+	}
+};
+function isSchemaError(error) {
+	return NoObjectGeneratedError.isInstance(error) || NoOutputGeneratedError.isInstance(error);
+}
+function textOf(error) {
+	if (!error || typeof error !== "object") return void 0;
+	const text = error.text;
+	return typeof text === "string" ? text : void 0;
+}
+function remember(trace, error) {
+	if (!error || typeof error !== "object") return;
+	const record = error;
+	if (typeof record.finishReason === "string" && record.finishReason) trace.finishReason = record.finishReason;
+	const text = textOf(error);
+	if (text) trace.text = text;
+	if (record.cause && record.cause !== error) {
+		const cause = record.cause;
+		if (typeof cause.finishReason === "string") trace.finishReason = cause.finishReason;
+		const causeText = textOf(cause);
+		if (causeText) trace.text = causeText;
+	}
+}
+function responseMessages(error) {
+	if (!error || typeof error !== "object") return void 0;
+	const messages = error.response?.messages;
+	return Array.isArray(messages) ? messages : void 0;
+}
+function conversation(base, transcript) {
+	return transcript && transcript.length > 0 ? [...base, ...transcript] : [...base];
+}
+/** Prefer the transcript captured at each step. Fall back to messages on the error when a provider includes them. */
+function transcriptOf(trace, error) {
+	if (trace.messages.length > 0) return trace.messages;
+	return responseMessages(error);
+}
+function repairTurn(validationError, raw) {
+	return `The previous response failed schema validation and was not accepted.\nValidation error: ${validationError}\nRaw response:\n${raw && raw.trim() ? raw.slice(0, 4e3) : "(empty)"}\n\nReturn only a valid findings object. Fix every validation error. Do not call tools.`;
+}
+/**
+* Run the review tool loop, then guarantee a tool-free structured answer.
+*
+* The AI SDK parses `Output.array` only when `finishReason` is `stop`. A loop
+* that spends every step on tools therefore returns no findings and throws
+* `NoOutputGeneratedError` on `.output`. When that happens — or the model
+* stops for any other reason — one more call is made with tools disabled.
+* Invalid JSON gets one repair pass: local parse/fix, then a single re-ask
+* that includes the validation error.
+*/
+async function collectFindings(input) {
+	const trace = {
+		steps: 0,
+		usage: EMPTY_USAGE,
+		messages: []
+	};
+	const hasTools = Object.keys(input.tools).length > 0;
+	const base = [input.cacheable ? {
+		role: "system",
+		content: input.system,
+		providerOptions: anthropicCacheBreakpoint()
+	} : {
+		role: "system",
+		content: input.system
+	}, {
+		role: "user",
+		content: input.prompt
+	}];
+	const onStepFinish = (step) => {
+		trace.steps += 1;
+		trace.finishReason = step.finishReason;
+		if (step.text) trace.text = step.text;
+		trace.usage = addUsage(trace.usage, toTokenUsage(step.usage));
+		const messages = step.response?.messages;
+		if (messages && messages.length > 0) trace.messages = [...messages];
+	};
+	const callModel = (messages, mode) => {
+		return generateText({
+			model: input.model,
+			messages: [...messages],
+			tools: hasTools ? input.tools : void 0,
+			toolChoice: mode === "answer" && hasTools ? "none" : void 0,
+			activeTools: mode === "answer" && hasTools ? [] : void 0,
+			stopWhen: [stepCountIs(mode === "loop" ? input.maxSteps : 1)],
+			prepareStep: mode === "loop" && hasTools ? ({ stepNumber }) => stepNumber >= input.maxSteps - 1 ? {
+				toolChoice: "none",
+				activeTools: []
+			} : void 0 : void 0,
+			output: findingsOutput,
+			allowSystemInMessages: true,
+			maxRetries: 2,
+			onStepFinish
+		});
+	};
+	const done = (findings) => ({
+		findings,
+		usage: trace.usage,
+		steps: trace.steps
+	});
+	const fail = (cause) => {
+		throw new StructuredFindingsFailure("model did not produce valid structured findings", {
+			cause,
+			finishReason: trace.finishReason,
+			steps: trace.steps,
+			text: trace.text
+		});
+	};
+	/** Keep finish reason, step count, and raw text on a provider error so liftError can print them. */
+	const rethrow = (error) => {
+		if (error && typeof error === "object") {
+			const record = error;
+			if (record.finishReason === void 0 && trace.finishReason) record.finishReason = trace.finishReason;
+			if (record.steps === void 0 && trace.steps > 0) record.steps = trace.steps;
+			if (record.text === void 0 && trace.text) record.text = trace.text;
+		}
+		throw error;
+	};
+	/** One repair pass: fix the JSON locally, otherwise re-ask once with the validation error. */
+	const repair = async (messages, raw, validationError) => {
+		const salvaged = salvageFindings(raw);
+		if (salvaged.ok) return salvaged.findings;
+		const errorText = salvaged.error || validationError;
+		try {
+			const repaired = await callModel([...messages, {
+				role: "user",
+				content: repairTurn(errorText, raw)
+			}], "answer");
+			if (repaired.finishReason === "stop") return repaired.output;
+			const again = salvageFindings(repaired.text);
+			if (again.ok) return again.findings;
+			trace.finishReason = repaired.finishReason;
+			if (repaired.text) trace.text = repaired.text;
+			return;
+		} catch (error) {
+			remember(trace, error);
+			if (!isSchemaError(error)) rethrow(error);
+			const again = salvageFindings(textOf(error) ?? trace.text);
+			return again.ok ? again.findings : void 0;
+		}
+	};
+	let loop;
+	try {
+		loop = await callModel(base, "loop");
+	} catch (error) {
+		remember(trace, error);
+		if (!isSchemaError(error)) rethrow(error);
+		const findings = await repair(conversation(base, transcriptOf(trace, error)), textOf(error) ?? trace.text, error instanceof Error ? error.message : "invalid structured output");
+		if (findings) return done(findings);
+		return fail(error);
+	}
+	if (loop.finishReason === "stop") return done(loop.output);
+	const continued = [
+		...base,
+		...loop.response.messages,
+		{
+			role: "user",
+			content: FINAL_FINDINGS_TURN
+		}
+	];
+	let finalTurn;
+	try {
+		finalTurn = await callModel(continued, "answer");
+	} catch (error) {
+		remember(trace, error);
+		if (!isSchemaError(error)) rethrow(error);
+		const findings = await repair(conversation(continued, responseMessages(error)), textOf(error) ?? trace.text, error instanceof Error ? error.message : "invalid structured output");
+		if (findings) return done(findings);
+		return fail(error);
+	}
+	if (finalTurn.finishReason === "stop") return done(finalTurn.output);
+	trace.finishReason = finalTurn.finishReason;
+	if (finalTurn.text) trace.text = finalTurn.text;
+	const findings = await repair(continued, finalTurn.text, `finishReason=${finalTurn.finishReason}`);
+	if (findings) return done(findings);
+	return fail(/* @__PURE__ */ new Error(`final structured call finished with ${finalTurn.finishReason}`));
+}
+//#endregion
+//#region src/ai/failure-detail.ts
+const SNIPPET_CHARS = 400;
+function snippet(text) {
+	if (!text) return void 0;
+	const flat = text.replace(/\s+/g, " ").trim();
+	if (!flat) return void 0;
+	return flat.length > SNIPPET_CHARS ? `${flat.slice(0, SNIPPET_CHARS)}…` : flat;
+}
+function chain(error) {
+	const out = [];
+	let current = error;
+	for (let depth = 0; depth < 4 && current && typeof current === "object" && !out.includes(current); depth += 1) {
+		out.push(current);
+		current = current.cause;
+	}
+	return out;
+}
+function stringField(value, key) {
+	if (!value || typeof value !== "object") return void 0;
+	const field = value[key];
+	return typeof field === "string" && field ? field : void 0;
+}
+function numberField(value, key) {
+	if (!value || typeof value !== "object") return void 0;
+	const field = value[key];
+	return typeof field === "number" && Number.isFinite(field) ? field : void 0;
+}
+function readFinish(error) {
+	for (const item of chain(error)) {
+		if (!item || typeof item !== "object") continue;
+		const finish = item.finishReason;
+		if (typeof finish === "string" && finish) return finish;
+		if (finish && typeof finish === "object") {
+			const unified = finish.unified;
+			if (typeof unified === "string" && unified) return unified;
+		}
+	}
+}
+function readSteps(error) {
+	for (const item of chain(error)) {
+		const steps = numberField(item, "steps") ?? numberField(item, "stepCount");
+		if (steps !== void 0) return steps;
+	}
+}
+function readText(error) {
+	for (const item of chain(error)) {
+		const text = stringField(item, "text");
+		if (text) return text;
+	}
+}
+function readStatus(error) {
+	for (const item of chain(error)) {
+		const status = numberField(item, "statusCode") ?? numberField(item, "status");
+		if (status !== void 0) return status;
+	}
+}
+function readBody(error) {
+	for (const item of chain(error)) {
+		const body = stringField(item, "responseBody");
+		if (body) return body;
+	}
+}
+function readCauseMessage(error) {
+	const cause = error && typeof error === "object" ? error.cause : void 0;
+	if (cause instanceof Error && cause.message) return cause.message;
+	if (typeof cause === "string" && cause) return cause;
+	if (cause && typeof cause === "object") {
+		const message = cause.message;
+		if (typeof message === "string" && message) return message;
+	}
+}
+/**
+* Diagnostic suffix for a model failure: finish reason, step count, provider
+* status/body, the underlying cause, and a short raw-text snippet. The action
+* prints `error.message`, so callers append this there and log it.
+*/
+function formatFailureDetail(error) {
+	const parts = [];
+	const finish = readFinish(error);
+	if (finish) parts.push(`finishReason=${finish}`);
+	const steps = readSteps(error);
+	if (steps !== void 0) parts.push(`steps=${steps}`);
+	const status = readStatus(error);
+	if (status !== void 0) parts.push(`status=${status}`);
+	const own = error instanceof Error ? error.message : void 0;
+	const causeMessage = readCauseMessage(error);
+	if (causeMessage && causeMessage !== own) parts.push(`cause=${causeMessage}`);
+	const text = snippet(readText(error));
+	if (text) parts.push(`text=${JSON.stringify(text)}`);
+	const body = snippet(readBody(error));
+	if (body && body !== text) parts.push(`providerBody=${JSON.stringify(body)}`);
+	return parts.join("; ").slice(0, 1500);
+}
+//#endregion
 //#region src/ai/ai-sdk-layer.ts
 const DEFAULT_MAX_STEPS = 12;
-/** Map an AI SDK / network failure onto a tagged lupe error. */
-function liftError(error, provider) {
+function isStructuredFailure(error) {
 	const name = error?.name ?? "";
-	const message = error instanceof Error ? error.message : String(error);
-	if (/NoObjectGenerated|NoOutputGenerated/.test(name)) return new ReviewOutputError({
-		message: "model did not produce valid structured findings",
-		cause: error
-	});
+	return error instanceof StructuredFindingsFailure || NoObjectGeneratedError.isInstance(error) || NoOutputGeneratedError.isInstance(error) || /NoObjectGenerated|NoOutputGenerated|StructuredFindingsFailure/.test(name);
+}
+function ownMessage(error) {
+	return error instanceof Error ? error.message : String(error);
+}
+/** Public message for a structured-output failure, including the real cause. */
+function dist_structuredMessage(error) {
+	const detail = formatFailureDetail(error);
+	const own = ownMessage(error);
+	const parts = [];
+	if (own && own !== "model did not produce valid structured findings" && !detail.includes(own)) parts.push(own);
+	if (detail) parts.push(detail);
+	const extra = parts.join("; ");
+	return extra ? `model did not produce valid structured findings (${extra})` : "model did not produce valid structured findings";
+}
+function withDetail(error) {
+	const own = ownMessage(error);
+	const detail = formatFailureDetail(error);
+	if (!detail || own.includes(detail)) return own;
+	return `${own} (${detail})`;
+}
+/**
+* Map an AI SDK / network failure onto a tagged lupe error. The message (what
+* the Action prints) and the log line both include the underlying cause:
+* finish reason, step count, provider status/body, and a raw-text snippet.
+*/
+function liftError(error, provider) {
+	if (isStructuredFailure(error)) {
+		const message = dist_structuredMessage(error);
+		console.error(`lupe: ${provider}: ${message}`);
+		return new ReviewOutputError({
+			message,
+			cause: error
+		});
+	}
+	const message = withDetail(error);
+	console.error(`lupe: ${provider}: ${message}`);
+	const name = error?.name ?? "";
 	if ((error?.statusCode ?? error?.status) === 429 || /rate.?limit/i.test(message)) return new RateLimitError({
 		message,
 		provider
@@ -171432,23 +171901,16 @@ function AiSdkLive(config) {
 		const generateFindings = (input) => Effect_tryPromise({
 			try: async () => {
 				const { model, modelId } = resolveModel(input.task);
-				const result = await generateText({
-					model,
-					messages: [systemMessage(input.system), {
-						role: "user",
-						content: input.prompt
-					}],
-					tools,
-					stopWhen: [stepCountIs(input.maxSteps ?? DEFAULT_MAX_STEPS)],
-					output: output_exports.array({ element: Finding }),
-					allowSystemInMessages: true,
-					maxRetries: 2
-				});
 				return {
-					findings: result.output ?? [],
-					usage: toTokenUsage(result.totalUsage),
-					model: modelId,
-					steps: result.steps.length
+					...await collectFindings({
+						model,
+						system: input.system,
+						prompt: input.prompt,
+						tools,
+						maxSteps: input.maxSteps ?? DEFAULT_MAX_STEPS,
+						cacheable
+					}),
+					model: modelId
 				};
 			},
 			catch: (error) => liftError(error, config.provider)
@@ -171488,7 +171950,7 @@ function AiSdkLive(config) {
 //#endregion
 //#region src/review/prompt.ts
 /** Work-method + calibration bullets that differ by whether the backend has repo tools. */
-const WORK_METHOD_TOOLS = `- Use the read-only tools (readFile, listDir, grep) to gather surrounding context and confirm a problem before reporting it. Prefer to verify over to speculate.`;
+const WORK_METHOD_TOOLS = `- Use the read-only tools (readFile, listDir, grep) to gather surrounding context and confirm a problem before reporting it. Prefer to verify over to speculate. readFile takes a 1-based offset and a limit; each call is capped and says when it truncated, so request the next range instead of re-reading the whole file.`;
 const WORK_METHOD_NOTOOLS = `- You are reviewing the diff AS SHOWN; you have NO tools to open other files. Read every changed hunk carefully and report each issue you can ground in the visible code. Do NOT stay silent merely because you cannot open another file to fully confirm something — report it and set confidence to reflect that uncertainty. A separate verification stage filters false positives, so favour surfacing a real risk over withholding it.`;
 const CALIBRATE_TOOLS = `- Calibrate impact to reality: before asserting a runtime consequence (crash, OOM, data loss, overbooking, corruption, or a security breach), establish that the bad path is actually reachable AND that any precondition it depends on actually holds — trace the live caller and the data source / auth/validation boundary; do not assume them. A precondition is the "if" your impact rests on: an input being attacker- or tenant-controllable, a value being null, a branch being taken. If you cannot establish reachability or the precondition from the code, do NOT raise it as a medium-or-higher (or security-category) finding: downgrade to low/info as a hardening note and lower confidence. Conditional phrasing ("if X were controllable …") is NOT a substitute for verifying X — verify it or downgrade. When quantifying impact, reason from realistic/default configured values, not theoretical maximums; cite hard caps as upper bounds, never as the expected cost.`;
 const CALIBRATE_NOTOOLS = `- Calibrate severity to the real consequence, but do NOT suppress: when a finding's impact depends on a precondition you cannot see in the shown diff (an off-file caller, an external contract, an input's controllability, a value being null), still REPORT it — lower its confidence and keep its severity modest (a separate verifier caps or drops over-reach) rather than staying silent or asserting the worst case. When quantifying impact, reason from realistic/default configured values, not theoretical maximums.`;
@@ -172010,19 +172472,22 @@ function runReview(files, target, options = {}) {
 			});
 			cost.add(first.model, first.usage);
 			candidatesAll.push(...first.findings);
-			if (maxCostUsd !== void 0 && chunks.length > 1) {
+			if (maxCostUsd !== void 0) {
 				if (!resolvePrice(first.model, overrides).known) return yield* Effect_fail(new CostLimitError({
 					message: `cannot enforce max-cost-usd $${maxCostUsd}: no known price for model "${first.model}" (set modelPrices)`,
 					limitUsd: maxCostUsd
 				}));
 				const spentUsd = computeCost(first.model, first.usage, overrides);
 				const projectedUsd = spentUsd * chunks.length;
-				if (projectedUsd > maxCostUsd) return yield* Effect_fail(new CostLimitError({
-					message: `projected review cost ~$${projectedUsd.toFixed(2)} across ${chunks.length} chunks exceeds max-cost-usd $${maxCostUsd}`,
-					limitUsd: maxCostUsd,
-					estimatedUsd: projectedUsd,
-					spentUsd
-				}));
+				if (projectedUsd > maxCostUsd) {
+					const message = chunks.length === 1 ? `review cost ~$${spentUsd.toFixed(2)} exceeds max-cost-usd $${maxCostUsd}` : `projected review cost ~$${projectedUsd.toFixed(2)} across ${chunks.length} chunks exceeds max-cost-usd $${maxCostUsd}`;
+					return yield* Effect_fail(new CostLimitError({
+						message,
+						limitUsd: maxCostUsd,
+						estimatedUsd: projectedUsd,
+						spentUsd
+					}));
+				}
 			}
 			if (chunks.length > 1) {
 				const rest = yield* Effect_forEach(chunks.slice(1), (chunk) => generateCandidates(chunk, target, {
