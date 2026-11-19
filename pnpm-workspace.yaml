@@ -6,7 +6,7 @@ packages:
 # Reference with "catalog:" in any package's package.json.
 catalog:
   # --- Effect quartet (pin together; pre-1.0, version-locked) ---
-  effect: 3.21.4
+  effect: 3.22.1
   '@effect/platform': 0.97.1
   '@effect/platform-node': 0.107.0
   '@effect/cli': 0.75.2
