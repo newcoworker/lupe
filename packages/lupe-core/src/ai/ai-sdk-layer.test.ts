@@ -515,60 +515,100 @@ describe('anthropic thinking binding wire format', () => {
 });
 
 describe('toolChoice none wire format', () => {
-  test('the tool-free final call still sends the loop tools with tool_choice none', async () => {
-    const requests: AnthropicRequestBody[] = [];
-    let toolCalls = 0;
-    const fetchMock = async (input: string | URL | Request, init?: RequestInit) => {
-      const request = input instanceof Request ? input : undefined;
-      const rawBody = request ? await request.text() : init?.body;
-      const body = JSON.parse(String(rawBody ?? '{}')) as AnthropicRequestBody;
-      requests.push(body);
-      const text = JSON.stringify(body.messages ?? []);
-      if (text.includes(FINAL_FINDINGS_TURN)) {
-        return anthropicResponse([{ type: 'text', text: findingsText() }], 'end_turn');
-      }
-      if (body.tool_choice?.type === 'none') {
-        return anthropicResponse([{ type: 'text', text: 'partial answer' }], 'max_tokens');
-      }
-      toolCalls += 1;
-      return anthropicResponse(
-        [{ type: 'tool_use', id: `toolu_${toolCalls}`, name: 'readFile', input: { path: 'a.ts' } }],
-        'tool_use'
-      );
-    };
-    const anthropic = createAnthropic({ apiKey: 'test', fetch: fetchMock as typeof fetch });
-    const ai = AiSdkLive({
-      provider: 'anthropic',
-      apiKey: 'test',
-      languageModel: anthropic('claude-opus-4-8'),
-    }).pipe(Layer.provide(repoLayer));
-    const result = await Effect.runPromise(
-      Effect.gen(function* () {
-        const svc = yield* AiModel;
-        return yield* svc.generateFindings({
-          task: 'review',
-          system: 'You are lupe.',
-          prompt: 'diff of a.ts',
-          maxSteps: 3,
+  test.each([
+    {
+      modelId: 'claude-sonnet-5-5',
+      adaptive: true,
+    },
+    {
+      modelId: 'claude-haiku-4-5',
+      adaptive: false,
+    },
+  ])(
+    'the tool-free final call still sends the loop tools with tool_choice none ($modelId)',
+    async ({ modelId, adaptive }) => {
+      const requests: {
+        headers: Record<string, string>;
+        body: AnthropicRequestBody;
+      }[] = [];
+      let toolCalls = 0;
+      const fetchMock = async (input: string | URL | Request, init?: RequestInit) => {
+        const request = input instanceof Request ? input : undefined;
+        const headers = new Headers(request?.headers ?? init?.headers);
+        const headerRecord: Record<string, string> = {};
+        headers.forEach((value, key) => {
+          headerRecord[key] = value;
         });
-      }).pipe(Effect.provide(ai))
-    );
-    expect(result.findings).toHaveLength(1);
-    expect(result.findings[0]?.ruleId).toBe(FINDING.ruleId);
-    expect(requests).toHaveLength(4);
-    const loopBody = requests[0];
-    const finalBody = requests[3];
-    expect(JSON.stringify(finalBody?.messages ?? [])).toContain(FINAL_FINDINGS_TURN);
-    expect(finalBody?.tools).toEqual(loopBody?.tools);
-    expect(finalBody?.tools?.length).toBeGreaterThan(0);
-    expect(finalBody?.tool_choice).toEqual({ type: 'none' });
-  });
+        const rawBody = request ? await request.text() : init?.body;
+        const body = JSON.parse(String(rawBody ?? '{}')) as AnthropicRequestBody;
+        requests.push({ headers: headerRecord, body });
+        const text = JSON.stringify(body.messages ?? []);
+        if (text.includes(FINAL_FINDINGS_TURN)) {
+          return anthropicResponse([{ type: 'text', text: findingsText() }], 'end_turn');
+        }
+        if (body.tool_choice?.type === 'none') {
+          return anthropicResponse([{ type: 'text', text: 'partial answer' }], 'max_tokens');
+        }
+        toolCalls += 1;
+        return anthropicResponse(
+          [{ type: 'tool_use', id: `toolu_${toolCalls}`, name: 'readFile', input: { path: 'a.ts' } }],
+          'tool_use'
+        );
+      };
+      const anthropic = createAnthropic({ apiKey: 'test', fetch: fetchMock as typeof fetch });
+      const ai = AiSdkLive({
+        provider: 'anthropic',
+        apiKey: 'test',
+        languageModel: anthropic(modelId),
+        // The thinking gate reads the model id from the task routing, not
+        // from the languageModel handle, so route the parametrized model id
+        // through models.review (otherwise both cases would use the default
+        // review model, claude-opus-4-8, which is adaptive-capable).
+        models: { review: modelId },
+      }).pipe(Layer.provide(repoLayer));
+      const result = await Effect.runPromise(
+        Effect.gen(function* () {
+          const svc = yield* AiModel;
+          return yield* svc.generateFindings({
+            task: 'review',
+            system: 'You are lupe.',
+            prompt: 'diff of a.ts',
+            maxSteps: 3,
+          });
+        }).pipe(Effect.provide(ai))
+      );
+      expect(result.findings).toHaveLength(1);
+      expect(result.findings[0]?.ruleId).toBe(FINDING.ruleId);
+      expect(requests).toHaveLength(4);
+      const loopBody = requests[0]?.body;
+      const finalBody = requests[3]?.body;
+      const finalHeaders = requests[3]?.headers ?? {};
+      expect(JSON.stringify(finalBody?.messages ?? [])).toContain(FINAL_FINDINGS_TURN);
+      expect(finalBody?.tools).toEqual(loopBody?.tools);
+      expect(finalBody?.tools?.length).toBeGreaterThan(0);
+      expect(finalBody?.tool_choice).toEqual({ type: 'none' });
+      if (adaptive) {
+        expect(finalBody?.thinking?.type).toBe('adaptive');
+        expect(finalBody?.thinking?.block_binding?.prefix_mismatch_behavior).toBe('drop_block');
+        expect(finalHeaders['anthropic-beta'] ?? '').toContain('thinking-binding-controls-2026-08-01');
+      } else {
+        expect(finalBody?.thinking).toBeUndefined();
+        expect(finalHeaders['anthropic-beta'] ?? '').not.toContain(
+          'thinking-binding-controls-2026-08-01'
+        );
+      }
+    }
+  );
 });
 
 type AnthropicRequestBody = {
   messages?: unknown[];
   tools?: { name?: string }[];
   tool_choice?: { type?: string };
+  thinking?: {
+    type?: string;
+    block_binding?: { prefix_mismatch_behavior?: string };
+  };
 };
 
 function anthropicResponse(content: unknown[], stopReason: string): Response {
