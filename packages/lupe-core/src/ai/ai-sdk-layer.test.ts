@@ -593,9 +593,7 @@ describe('toolChoice none wire format', () => {
         expect(finalHeaders['anthropic-beta'] ?? '').toContain('thinking-binding-controls-2026-08-01');
       } else {
         expect(finalBody?.thinking).toBeUndefined();
-        expect(finalHeaders['anthropic-beta'] ?? '').not.toContain(
-          'thinking-binding-controls-2026-08-01'
-        );
+        expect(finalHeaders['anthropic-beta'] ?? '').not.toContain('thinking-binding-controls-2026-08-01');
       }
     }
   );
