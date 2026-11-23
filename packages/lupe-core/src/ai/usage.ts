@@ -17,3 +17,22 @@ export function toTokenUsage(usage: LanguageModelUsage | undefined): TokenUsage 
 export function anthropicCacheBreakpoint(): { anthropic: { cacheControl: { type: 'ephemeral' } } } {
   return { anthropic: { cacheControl: { type: 'ephemeral' } } };
 }
+
+/**
+ * Provider options that tell Anthropic to drop a thinking block whose signature
+ * no longer matches its assistant prefix instead of failing the request with
+ * a 400. The standalone `blockBinding` form leaves the model's default
+ * thinking mode untouched. The Anthropic provider adds the
+ * `thinking-binding-controls-2026-08-01` beta header automatically when this
+ * option is present.
+ *
+ * Needed because the review loop replays assistant messages (including
+ * thinking blocks) into follow-up calls; a replayed block whose prefix no
+ * longer matches otherwise fails the whole review with an invalid thinking
+ * signature error.
+ */
+export function anthropicThinkingBinding(): {
+  anthropic: { thinking: { blockBinding: { prefixMismatchBehavior: 'drop_block' } } };
+} {
+  return { anthropic: { thinking: { blockBinding: { prefixMismatchBehavior: 'drop_block' } } } };
+}

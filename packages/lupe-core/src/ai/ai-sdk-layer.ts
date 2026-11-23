@@ -17,7 +17,7 @@ import {
 } from './model';
 import { createModelResolver, type LupeAiConfig } from './provider';
 import { buildRepoTools } from './tools';
-import { anthropicCacheBreakpoint, toTokenUsage } from './usage';
+import { anthropicCacheBreakpoint, anthropicThinkingBinding, toTokenUsage } from './usage';
 
 const DEFAULT_MAX_STEPS = 12;
 
@@ -134,6 +134,10 @@ export function AiSdkLive(config: LupeAiConfig): Layer.Layer<AiModel, never, Rep
             const candidate = input.candidate;
             const result = await generateText({
               model,
+              // Anthropic only: drop a thinking block whose signature no
+              // longer matches its assistant prefix instead of failing the
+              // request with a 400.
+              providerOptions: cacheable ? anthropicThinkingBinding() : undefined,
               messages: [
                 systemMessage(input.system),
                 {

@@ -71,8 +71,17 @@ const repoLayer = Layer.succeed(RepoSource, {
   grep: () => Effect.succeed([]),
 });
 
-function run(model: MockLanguageModelV3, maxSteps?: number) {
-  const ai = AiSdkLive({ provider: 'anthropic', apiKey: 'test', languageModel: model }).pipe(Layer.provide(repoLayer));
+function run(
+  model: MockLanguageModelV3,
+  maxSteps?: number,
+  config?: { provider: 'openai'; models: { review: string } }
+) {
+  const ai = AiSdkLive({
+    provider: config?.provider ?? 'anthropic',
+    apiKey: 'test',
+    languageModel: model,
+    ...(config?.models ? { models: config.models } : {}),
+  }).pipe(Layer.provide(repoLayer));
   return Effect.gen(function* () {
     const svc = yield* AiModel;
     return yield* svc.generateFindings({
@@ -83,6 +92,10 @@ function run(model: MockLanguageModelV3, maxSteps?: number) {
     });
   }).pipe(Effect.provide(ai));
 }
+
+const THINKING_BINDING = {
+  anthropic: { thinking: { blockBinding: { prefixMismatchBehavior: 'drop_block' } } },
+};
 
 describe('generateFindings tool loop', () => {
   test('a stop with valid findings does not take an extra call', async () => {
@@ -98,6 +111,53 @@ describe('generateFindings tool loop', () => {
     expect(result.findings[0]?.title).toBe('Off by one');
     expect(calls).toHaveLength(1);
     expect(result.steps).toBe(1);
+  });
+
+  test('anthropic calls carry the thinking block-binding option', async () => {
+    const calls: GenerateOptions[] = [];
+    const model = new MockLanguageModelV3({
+      doGenerate: async (options) => {
+        calls.push(options);
+        return textResult(findingsText(), 'stop');
+      },
+    });
+    const result = await Effect.runPromise(run(model, 4));
+    expect(result.findings).toHaveLength(1);
+    expect(calls).toHaveLength(1);
+    expect(calls[0]?.providerOptions).toEqual(THINKING_BINDING);
+  });
+
+  test('every follow-up call carries the thinking block-binding option', async () => {
+    const calls: GenerateOptions[] = [];
+    const model = new MockLanguageModelV3({
+      doGenerate: async (options) => {
+        calls.push(options);
+        const prompt = promptOf(options);
+        if (prompt.includes(FINAL_FINDINGS_TURN)) return textResult(findingsText(), 'stop');
+        if (options.toolChoice?.type === 'none') return textResult('partial answer', 'length');
+        return toolCallResult(`call_${calls.length}`);
+      },
+    });
+    const result = await Effect.runPromise(run(model, 3));
+    expect(result.findings).toHaveLength(1);
+    expect(calls.length).toBeGreaterThan(1);
+    for (const call of calls) {
+      expect(call.providerOptions).toEqual(THINKING_BINDING);
+    }
+  });
+
+  test('non-anthropic providers get no anthropic thinking option', async () => {
+    const calls: GenerateOptions[] = [];
+    const model = new MockLanguageModelV3({
+      doGenerate: async (options) => {
+        calls.push(options);
+        return textResult(findingsText(), 'stop');
+      },
+    });
+    const result = await Effect.runPromise(run(model, 4, { provider: 'openai', models: { review: 'gpt-5' } }));
+    expect(result.findings).toHaveLength(1);
+    expect(calls).toHaveLength(1);
+    expect(calls[0]?.providerOptions).toBeUndefined();
   });
 
   test('step-limit exhaustion still produces findings from a tool-free final call', async () => {
@@ -243,5 +303,34 @@ describe('generateFindings tool loop', () => {
     expect(error.message).toContain('status=503');
     expect(error.message).toContain('upstream timed out');
     expect(error.message).not.toContain('structured findings');
+  });
+});
+
+describe('verify', () => {
+  test('anthropic verify calls carry the thinking block-binding option', async () => {
+    const calls: GenerateOptions[] = [];
+    const model = new MockLanguageModelV3({
+      doGenerate: async (options) => {
+        calls.push(options);
+        return textResult(JSON.stringify({ grounded: true, reason: 'matches the code' }), 'stop');
+      },
+    });
+    const ai = AiSdkLive({ provider: 'anthropic', apiKey: 'test', languageModel: model }).pipe(
+      Layer.provide(repoLayer)
+    );
+    const result = await Effect.runPromise(
+      Effect.gen(function* () {
+        const svc = yield* AiModel;
+        return yield* svc.verify({
+          task: 'verify',
+          system: 'You are lupe.',
+          candidate: FINDING,
+          evidenceContext: 'export const a = 1;',
+        });
+      }).pipe(Effect.provide(ai))
+    );
+    expect(result.grounded).toBe(true);
+    expect(calls).toHaveLength(1);
+    expect(calls[0]?.providerOptions).toEqual(THINKING_BINDING);
   });
 });

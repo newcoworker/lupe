@@ -1,7 +1,7 @@
 import type { LanguageModelUsage } from 'ai';
 import { describe, expect, test } from 'vitest';
 
-import { anthropicCacheBreakpoint, toTokenUsage } from './usage';
+import { anthropicCacheBreakpoint, anthropicThinkingBinding, toTokenUsage } from './usage';
 
 describe('toTokenUsage', () => {
   test('maps input/output and cache details', () => {
@@ -39,5 +39,11 @@ describe('toTokenUsage', () => {
 
   test('anthropic cache breakpoint shape', () => {
     expect(anthropicCacheBreakpoint()).toEqual({ anthropic: { cacheControl: { type: 'ephemeral' } } });
+  });
+
+  test('anthropic thinking binding drops a mismatched block without changing thinking mode', () => {
+    expect(anthropicThinkingBinding()).toEqual({
+      anthropic: { thinking: { blockBinding: { prefixMismatchBehavior: 'drop_block' } } },
+    });
   });
 });
