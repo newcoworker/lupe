@@ -1,3 +1,5 @@
+import { createAnthropic } from '@ai-sdk/anthropic';
+import { generateText } from 'ai';
 import { MockLanguageModelV3 } from 'ai/test';
 import { Effect, Layer } from 'effect';
 import { describe, expect, test } from 'vitest';
@@ -6,6 +8,7 @@ import { RepoSource } from '../ports';
 import { AiSdkLive } from './ai-sdk-layer';
 import { FINAL_FINDINGS_TURN } from './collect-findings';
 import { AiModel } from './model';
+import { anthropicThinkingBinding } from './usage';
 
 type GenerateOptions = Parameters<MockLanguageModelV3['doGenerate']>[0];
 type GenerateResult = Awaited<ReturnType<MockLanguageModelV3['doGenerate']>>;
@@ -71,8 +74,17 @@ const repoLayer = Layer.succeed(RepoSource, {
   grep: () => Effect.succeed([]),
 });
 
-function run(model: MockLanguageModelV3, maxSteps?: number) {
-  const ai = AiSdkLive({ provider: 'anthropic', apiKey: 'test', languageModel: model }).pipe(Layer.provide(repoLayer));
+function run(
+  model: MockLanguageModelV3,
+  maxSteps?: number,
+  config?: { provider?: 'anthropic' | 'openai'; models?: { review?: string; verify?: string } }
+) {
+  const ai = AiSdkLive({
+    provider: config?.provider ?? 'anthropic',
+    apiKey: 'test',
+    languageModel: model,
+    ...(config?.models ? { models: config.models } : {}),
+  }).pipe(Layer.provide(repoLayer));
   return Effect.gen(function* () {
     const svc = yield* AiModel;
     return yield* svc.generateFindings({
@@ -83,6 +95,12 @@ function run(model: MockLanguageModelV3, maxSteps?: number) {
     });
   }).pipe(Effect.provide(ai));
 }
+
+const THINKING_BINDING = {
+  anthropic: {
+    thinking: { type: 'adaptive', blockBinding: { prefixMismatchBehavior: 'drop_block' } },
+  },
+};
 
 describe('generateFindings tool loop', () => {
   test('a stop with valid findings does not take an extra call', async () => {
@@ -98,6 +116,95 @@ describe('generateFindings tool loop', () => {
     expect(result.findings[0]?.title).toBe('Off by one');
     expect(calls).toHaveLength(1);
     expect(result.steps).toBe(1);
+  });
+
+  test('anthropic calls carry the thinking block-binding option', async () => {
+    const calls: GenerateOptions[] = [];
+    const model = new MockLanguageModelV3({
+      doGenerate: async (options) => {
+        calls.push(options);
+        return textResult(findingsText(), 'stop');
+      },
+    });
+    const result = await Effect.runPromise(run(model, 4));
+    expect(result.findings).toHaveLength(1);
+    expect(calls).toHaveLength(1);
+    expect(calls[0]?.providerOptions).toEqual(THINKING_BINDING);
+  });
+
+  test('haiku-4-5 gets no thinking option (adaptive thinking is rejected on 4.5 models)', async () => {
+    const calls: GenerateOptions[] = [];
+    const model = new MockLanguageModelV3({
+      doGenerate: async (options) => {
+        calls.push(options);
+        return textResult(findingsText(), 'stop');
+      },
+    });
+    const result = await Effect.runPromise(run(model, 4, { models: { review: 'claude-haiku-4-5' } }));
+    expect(result.findings).toHaveLength(1);
+    expect(calls).toHaveLength(1);
+    expect(calls[0]?.providerOptions).toBeUndefined();
+  });
+
+  test('sonnet-4-5 gets no thinking option (adaptive thinking is rejected on 4.5 models)', async () => {
+    const calls: GenerateOptions[] = [];
+    const model = new MockLanguageModelV3({
+      doGenerate: async (options) => {
+        calls.push(options);
+        return textResult(findingsText(), 'stop');
+      },
+    });
+    const result = await Effect.runPromise(run(model, 4, { models: { review: 'claude-sonnet-4-5' } }));
+    expect(result.findings).toHaveLength(1);
+    expect(calls).toHaveLength(1);
+    expect(calls[0]?.providerOptions).toBeUndefined();
+  });
+
+  test('an adaptive-capable model (sonnet-5-5) gets the thinking option', async () => {
+    const calls: GenerateOptions[] = [];
+    const model = new MockLanguageModelV3({
+      doGenerate: async (options) => {
+        calls.push(options);
+        return textResult(findingsText(), 'stop');
+      },
+    });
+    const result = await Effect.runPromise(run(model, 4, { models: { review: 'claude-sonnet-5-5' } }));
+    expect(result.findings).toHaveLength(1);
+    expect(calls).toHaveLength(1);
+    expect(calls[0]?.providerOptions).toEqual(THINKING_BINDING);
+  });
+
+  test('every follow-up call carries the thinking block-binding option', async () => {
+    const calls: GenerateOptions[] = [];
+    const model = new MockLanguageModelV3({
+      doGenerate: async (options) => {
+        calls.push(options);
+        const prompt = promptOf(options);
+        if (prompt.includes(FINAL_FINDINGS_TURN)) return textResult(findingsText(), 'stop');
+        if (options.toolChoice?.type === 'none') return textResult('partial answer', 'length');
+        return toolCallResult(`call_${calls.length}`);
+      },
+    });
+    const result = await Effect.runPromise(run(model, 3));
+    expect(result.findings).toHaveLength(1);
+    expect(calls.length).toBeGreaterThan(1);
+    for (const call of calls) {
+      expect(call.providerOptions).toEqual(THINKING_BINDING);
+    }
+  });
+
+  test('non-anthropic providers get no anthropic thinking option', async () => {
+    const calls: GenerateOptions[] = [];
+    const model = new MockLanguageModelV3({
+      doGenerate: async (options) => {
+        calls.push(options);
+        return textResult(findingsText(), 'stop');
+      },
+    });
+    const result = await Effect.runPromise(run(model, 4, { provider: 'openai', models: { review: 'gpt-5' } }));
+    expect(result.findings).toHaveLength(1);
+    expect(calls).toHaveLength(1);
+    expect(calls[0]?.providerOptions).toBeUndefined();
   });
 
   test('step-limit exhaustion still produces findings from a tool-free final call', async () => {
@@ -243,5 +350,123 @@ describe('generateFindings tool loop', () => {
     expect(error.message).toContain('status=503');
     expect(error.message).toContain('upstream timed out');
     expect(error.message).not.toContain('structured findings');
+  });
+});
+
+describe('verify', () => {
+  test('anthropic verify calls carry the thinking block-binding option', async () => {
+    const calls: GenerateOptions[] = [];
+    const model = new MockLanguageModelV3({
+      doGenerate: async (options) => {
+        calls.push(options);
+        return textResult(JSON.stringify({ grounded: true, reason: 'matches the code' }), 'stop');
+      },
+    });
+    const ai = AiSdkLive({ provider: 'anthropic', apiKey: 'test', languageModel: model }).pipe(
+      Layer.provide(repoLayer)
+    );
+    const result = await Effect.runPromise(
+      Effect.gen(function* () {
+        const svc = yield* AiModel;
+        return yield* svc.verify({
+          task: 'verify',
+          system: 'You are lupe.',
+          candidate: FINDING,
+          evidenceContext: 'export const a = 1;',
+        });
+      }).pipe(Effect.provide(ai))
+    );
+    expect(result.grounded).toBe(true);
+    expect(calls).toHaveLength(1);
+    expect(calls[0]?.providerOptions).toEqual(THINKING_BINDING);
+  });
+
+  test('haiku-4-5 verify calls carry no thinking option (adaptive thinking is rejected on 4.5 models)', async () => {
+    const calls: GenerateOptions[] = [];
+    const model = new MockLanguageModelV3({
+      doGenerate: async (options) => {
+        calls.push(options);
+        return textResult(JSON.stringify({ grounded: true, reason: 'matches the code' }), 'stop');
+      },
+    });
+    const ai = AiSdkLive({
+      provider: 'anthropic',
+      apiKey: 'test',
+      languageModel: model,
+      models: { verify: 'claude-haiku-4-5' },
+    }).pipe(Layer.provide(repoLayer));
+    const result = await Effect.runPromise(
+      Effect.gen(function* () {
+        const svc = yield* AiModel;
+        return yield* svc.verify({
+          task: 'verify',
+          system: 'You are lupe.',
+          candidate: FINDING,
+          evidenceContext: 'export const a = 1;',
+        });
+      }).pipe(Effect.provide(ai))
+    );
+    expect(result.grounded).toBe(true);
+    expect(calls).toHaveLength(1);
+    // No thinking option is passed, so the wire request carries no thinking
+    // field and no thinking-binding beta header.
+    expect(calls[0]?.providerOptions).toBeUndefined();
+  });
+});
+
+describe('anthropic thinking binding wire format', () => {
+  async function captureRequest(modelId: string, binding: ReturnType<typeof anthropicThinkingBinding>) {
+    const captured: { url: string; headers: Record<string, string>; body: unknown }[] = [];
+    const fetchMock = async (input: string | URL | Request, init?: RequestInit) => {
+      const request = input instanceof Request ? input : undefined;
+      const headers = new Headers(request?.headers ?? init?.headers);
+      const headerRecord: Record<string, string> = {};
+      headers.forEach((value, key) => {
+        headerRecord[key] = value;
+      });
+      const rawBody = request ? await request.text() : init?.body;
+      captured.push({
+        url: request?.url ?? String(input),
+        headers: headerRecord,
+        body: JSON.parse(String(rawBody ?? '{}')),
+      });
+      return new Response(
+        JSON.stringify({
+          id: 'msg_test',
+          type: 'message',
+          role: 'assistant',
+          content: [{ type: 'text', text: 'review done' }],
+          model: modelId,
+          stop_reason: 'end_turn',
+          usage: { input_tokens: 10, output_tokens: 5 },
+        }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
+    };
+    const anthropic = createAnthropic({ apiKey: 'test', fetch: fetchMock as typeof fetch });
+    const result = await generateText({
+      model: anthropic(modelId),
+      prompt: 'review this diff',
+      providerOptions: binding,
+    });
+    expect(result.text).toBe('review done');
+    expect(captured).toHaveLength(1);
+    return captured[0] as {
+      headers: Record<string, string>;
+      body: { thinking?: { type?: string; block_binding?: { prefix_mismatch_behavior?: string } } };
+    };
+  }
+
+  test('sends adaptive thinking with block_binding drop_block and the binding beta header', async () => {
+    const request = await captureRequest('claude-sonnet-5-5', anthropicThinkingBinding('claude-sonnet-5-5'));
+    expect(request.headers['anthropic-beta']).toContain('thinking-binding-controls-2026-08-01');
+    expect(request.body.thinking?.type).toBe('adaptive');
+    expect(request.body.thinking?.block_binding?.prefix_mismatch_behavior).toBe('drop_block');
+  });
+
+  test('haiku-4-5 sends no thinking field and no thinking-binding beta header', async () => {
+    const request = await captureRequest('claude-haiku-4-5', anthropicThinkingBinding('claude-haiku-4-5'));
+    expect(request.body.thinking).toBeUndefined();
+    expect(request.headers['anthropic-beta'] ?? '').not.toContain('thinking-binding-controls-2026-08-01');
   });
 });
