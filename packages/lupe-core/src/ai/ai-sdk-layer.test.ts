@@ -225,9 +225,52 @@ describe('generateFindings tool loop', () => {
     expect(result.steps).toBe(4);
     const finalCall = calls.find((call) => promptOf(call).includes(FINAL_FINDINGS_TURN));
     expect(finalCall?.toolChoice).toEqual({ type: 'none' });
-    expect(finalCall?.tools).toEqual([]);
+    expect(finalCall?.tools).toEqual(calls[0]?.tools);
+    expect(finalCall?.tools?.length).toBeGreaterThan(0);
     expect(calls.some((call) => call.toolChoice?.type !== 'none')).toBe(true);
     expect(result.usage.inputTokens).toBe(40);
+  });
+
+  test('final answer and repair re-ask keep the same tools as the loop calls', async () => {
+    const calls: GenerateOptions[] = [];
+    const model = new MockLanguageModelV3({
+      doGenerate: async (options) => {
+        calls.push(options);
+        const prompt = promptOf(options);
+        if (prompt.includes('failed schema validation')) return textResult(findingsText(), 'stop');
+        if (prompt.includes(FINAL_FINDINGS_TURN)) return textResult('{"elements":[{"title":"nope"}]}', 'stop');
+        if (calls.length === 1) return toolCallResult('call_1');
+        return textResult('partial answer', 'length');
+      },
+    });
+
+    const result = await Effect.runPromise(run(model, 4));
+    expect(result.findings).toHaveLength(1);
+    expect(result.findings[0]?.ruleId).toBe(FINDING.ruleId);
+    expect(calls).toHaveLength(4);
+
+    // The tool set never changes mid-conversation: every model call sees the
+    // same tools. `activeTools` is consumed by the AI SDK before the model
+    // call (it filters `tools`), so identical `tools` on every call is the
+    // observable proof that no call narrowed the tool set, and no model call
+    // receives an `activeTools` value at all.
+    const loopTools = calls[0]?.tools;
+    expect(loopTools?.length).toBeGreaterThan(0);
+    for (const call of calls) {
+      expect(call.tools).toEqual(loopTools);
+      expect((call as { activeTools?: unknown }).activeTools).toBeUndefined();
+    }
+
+    // Only `toolChoice: 'none'` makes a call tool-free. The loop calls keep
+    // the SDK default (`auto`); the final answer and the repair re-ask set
+    // it to none.
+    const loopCalls = calls.filter((call) => !promptOf(call).includes(FINAL_FINDINGS_TURN));
+    for (const call of loopCalls) expect(call.toolChoice).toEqual({ type: 'auto' });
+    const finalCall = calls.find((call) => promptOf(call).includes(FINAL_FINDINGS_TURN));
+    expect(finalCall?.toolChoice).toEqual({ type: 'none' });
+    const repairCall = calls.find((call) => promptOf(call).includes('failed schema validation'));
+    expect(repairCall?.toolChoice).toEqual({ type: 'none' });
+    expect(repairCall?.tools).toEqual(loopTools);
   });
 
   test('repairs fenced JSON with a trailing comma without a second model call', async () => {
@@ -470,3 +513,113 @@ describe('anthropic thinking binding wire format', () => {
     expect(request.headers['anthropic-beta'] ?? '').not.toContain('thinking-binding-controls-2026-08-01');
   });
 });
+
+describe('toolChoice none wire format', () => {
+  test.each([
+    {
+      modelId: 'claude-sonnet-5-5',
+      adaptive: true,
+    },
+    {
+      modelId: 'claude-haiku-4-5',
+      adaptive: false,
+    },
+  ])(
+    'the tool-free final call still sends the loop tools with tool_choice none ($modelId)',
+    async ({ modelId, adaptive }) => {
+      const requests: {
+        headers: Record<string, string>;
+        body: AnthropicRequestBody;
+      }[] = [];
+      let toolCalls = 0;
+      const fetchMock = async (input: string | URL | Request, init?: RequestInit) => {
+        const request = input instanceof Request ? input : undefined;
+        const headers = new Headers(request?.headers ?? init?.headers);
+        const headerRecord: Record<string, string> = {};
+        headers.forEach((value, key) => {
+          headerRecord[key] = value;
+        });
+        const rawBody = request ? await request.text() : init?.body;
+        const body = JSON.parse(String(rawBody ?? '{}')) as AnthropicRequestBody;
+        requests.push({ headers: headerRecord, body });
+        const text = JSON.stringify(body.messages ?? []);
+        if (text.includes(FINAL_FINDINGS_TURN)) {
+          return anthropicResponse([{ type: 'text', text: findingsText() }], 'end_turn');
+        }
+        if (body.tool_choice?.type === 'none') {
+          return anthropicResponse([{ type: 'text', text: 'partial answer' }], 'max_tokens');
+        }
+        toolCalls += 1;
+        return anthropicResponse(
+          [{ type: 'tool_use', id: `toolu_${toolCalls}`, name: 'readFile', input: { path: 'a.ts' } }],
+          'tool_use'
+        );
+      };
+      const anthropic = createAnthropic({ apiKey: 'test', fetch: fetchMock as typeof fetch });
+      const ai = AiSdkLive({
+        provider: 'anthropic',
+        apiKey: 'test',
+        languageModel: anthropic(modelId),
+        // The thinking gate reads the model id from the task routing, not
+        // from the languageModel handle, so route the parametrized model id
+        // through models.review (otherwise both cases would use the default
+        // review model, claude-opus-4-8, which is adaptive-capable).
+        models: { review: modelId },
+      }).pipe(Layer.provide(repoLayer));
+      const result = await Effect.runPromise(
+        Effect.gen(function* () {
+          const svc = yield* AiModel;
+          return yield* svc.generateFindings({
+            task: 'review',
+            system: 'You are lupe.',
+            prompt: 'diff of a.ts',
+            maxSteps: 3,
+          });
+        }).pipe(Effect.provide(ai))
+      );
+      expect(result.findings).toHaveLength(1);
+      expect(result.findings[0]?.ruleId).toBe(FINDING.ruleId);
+      expect(requests).toHaveLength(4);
+      const loopBody = requests[0]?.body;
+      const finalBody = requests[3]?.body;
+      const finalHeaders = requests[3]?.headers ?? {};
+      expect(JSON.stringify(finalBody?.messages ?? [])).toContain(FINAL_FINDINGS_TURN);
+      expect(finalBody?.tools).toEqual(loopBody?.tools);
+      expect(finalBody?.tools?.length).toBeGreaterThan(0);
+      expect(finalBody?.tool_choice).toEqual({ type: 'none' });
+      if (adaptive) {
+        expect(finalBody?.thinking?.type).toBe('adaptive');
+        expect(finalBody?.thinking?.block_binding?.prefix_mismatch_behavior).toBe('drop_block');
+        expect(finalHeaders['anthropic-beta'] ?? '').toContain('thinking-binding-controls-2026-08-01');
+      } else {
+        expect(finalBody?.thinking).toBeUndefined();
+        expect(finalHeaders['anthropic-beta'] ?? '').not.toContain('thinking-binding-controls-2026-08-01');
+      }
+    }
+  );
+});
+
+type AnthropicRequestBody = {
+  messages?: unknown[];
+  tools?: { name?: string }[];
+  tool_choice?: { type?: string };
+  thinking?: {
+    type?: string;
+    block_binding?: { prefix_mismatch_behavior?: string };
+  };
+};
+
+function anthropicResponse(content: unknown[], stopReason: string): Response {
+  return new Response(
+    JSON.stringify({
+      id: 'msg_test',
+      type: 'message',
+      role: 'assistant',
+      content,
+      model: 'claude-opus-4-8',
+      stop_reason: stopReason,
+      usage: { input_tokens: 10, output_tokens: 5 },
+    }),
+    { status: 200, headers: { 'Content-Type': 'application/json' } }
+  );
+}

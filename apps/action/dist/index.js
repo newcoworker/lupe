@@ -116572,7 +116572,7 @@ const Data_TaggedError = tag => {
   return O.BaseEffectError;
 };
 //# sourceMappingURL=Data.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+provider@3.0.18/node_modules/@ai-sdk/provider/dist/index.mjs
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+provider@3.0.19/node_modules/@ai-sdk/provider/dist/index.mjs
 // src/errors/ai-sdk-error.ts
 var marker = "vercel.ai.error";
 var dist_symbol = Symbol.for(marker);
@@ -121371,7 +121371,7 @@ class EventSourceParserStream extends TransformStream {
 
 //# sourceMappingURL=stream.js.map
 
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+provider-utils@4.0.57_zod@4.4.3/node_modules/@ai-sdk/provider-utils/dist/index.mjs
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+provider-utils@4.0.67_zod@4.4.3/node_modules/@ai-sdk/provider-utils/dist/index.mjs
 // src/combine-headers.ts
 function dist_combineHeaders(...headers) {
   return headers.reduce(
@@ -121539,9 +121539,21 @@ var { btoa: dist_btoa, atob: dist_atob } = globalThis;
 function dist_convertBase64ToUint8Array(base64String) {
   const base64Url = base64String.replace(/-/g, "+").replace(/_/g, "/");
   const latin1string = dist_atob(base64Url);
-  return Uint8Array.from(latin1string, (byte) => byte.codePointAt(0));
+  const bytes = new Uint8Array(latin1string.length);
+  for (let i = 0; i < latin1string.length; i++) {
+    bytes[i] = latin1string.charCodeAt(i);
+  }
+  return bytes;
 }
 function convertUint8ArrayToBase64(array) {
+  var _a2;
+  if (typeof ((_a2 = globalThis.Buffer) == null ? void 0 : _a2.from) === "function") {
+    return globalThis.Buffer.from(
+      array.buffer,
+      array.byteOffset,
+      array.byteLength
+    ).toString("base64");
+  }
   const chunks = [];
   const chunkSize = 4096;
   for (let i = 0; i < array.length; i += chunkSize) {
@@ -121549,8 +121561,30 @@ function convertUint8ArrayToBase64(array) {
   }
   return dist_btoa(chunks.join(""));
 }
+var typedArrayTag = Object.getOwnPropertyDescriptor(
+  Object.getPrototypeOf(Uint8Array.prototype),
+  Symbol.toStringTag
+).get;
+var arrayBufferByteLength = Object.getOwnPropertyDescriptor(
+  ArrayBuffer.prototype,
+  "byteLength"
+).get;
+function dist_isUint8Array(value) {
+  return ArrayBuffer.isView(value) && typedArrayTag.call(value) === "Uint8Array";
+}
+function isArrayBuffer(value) {
+  if (typeof value !== "object" || value === null || !("byteLength" in value)) {
+    return false;
+  }
+  try {
+    arrayBufferByteLength.call(value);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
 function dist_convertToBase64(value) {
-  return value instanceof Uint8Array ? convertUint8ArrayToBase64(value) : value;
+  return dist_isUint8Array(value) ? convertUint8ArrayToBase64(value) : value;
 }
 
 // src/convert-image-model-file-to-data-uri.ts
@@ -121658,7 +121692,7 @@ function validateDownloadUrl(url) {
       message: `URL must have a hostname`
     });
   }
-  if (hostname === "localhost" || hostname.endsWith(".local") || hostname.endsWith(".localhost")) {
+  if (hostname === "localhost" || hostname.endsWith(".local") || hostname.endsWith(".localhost") || hostname.endsWith(".internal")) {
     throw new DownloadError({
       url,
       message: `URL with hostname ${hostname} is not allowed`
@@ -121873,8 +121907,45 @@ function getCurrentModulePath() {
   }
 }
 
+// src/sanitize-request-headers.ts
+var BLOCKED_REQUEST_HEADERS = [
+  // Hop-by-hop / transport (RFC 7230 §6.1)
+  "connection",
+  "keep-alive",
+  "te",
+  "trailer",
+  "transfer-encoding",
+  "upgrade",
+  // Host / virtual-host routing
+  "host",
+  // Proxy / origin spoofing
+  "forwarded",
+  "proxy-authorization",
+  "via",
+  "x-forwarded-for",
+  "x-forwarded-host",
+  "x-forwarded-proto",
+  "x-real-ip",
+  // Cloud metadata (GCP, AWS IMDSv1/v2, Azure, Alibaba, DigitalOcean)
+  "metadata",
+  "metadata-flavor",
+  "x-aws-ec2-metadata-token",
+  "x-metadata-token",
+  // Session / cookie
+  "cookie",
+  "set-cookie"
+];
+function sanitizeRequestHeaders(input) {
+  const headers = new Headers(input);
+  for (const name2 of BLOCKED_REQUEST_HEADERS) {
+    headers.delete(name2);
+  }
+  return headers;
+}
+
 // src/fetch-with-validated-redirects.ts
 var MAX_DOWNLOAD_REDIRECTS = 10;
+var REDIRECT_STATUS_CODES = /* @__PURE__ */ new Set([301, 302, 303, 307, 308]);
 async function getValidatedFetch(customFetch) {
   return customFetch == null || customFetch === globalThis.fetch ? await getDefaultDownloadFetch() : customFetch;
 }
@@ -121883,12 +121954,20 @@ async function fetchWithValidatedEndpoint({
   init,
   fetch: customFetch,
   trustedOrigin,
-  redirect = "error"
+  redirect = "error",
+  requireDnsValidation = false
 }) {
   const urlText = url.toString();
   const isTrusted = trustedOrigin !== void 0 && isSameOrigin(urlText, trustedOrigin);
   if (!isTrusted) {
     validateDownloadUrl(urlText);
+    if (requireDnsValidation && (customFetch == null || customFetch === globalThis.fetch) && !isNodeRuntime() && // A window alias alone does not distinguish older Deno from a browser.
+    !(isBrowserRuntime() && typeof document !== "undefined")) {
+      throw new DownloadError({
+        url: urlText,
+        message: "This server runtime requires a custom fetch with connect-time DNS validation for untrusted URLs"
+      });
+    }
   }
   const fetch = isTrusted && customFetch != null ? customFetch : isTrusted ? globalThis.fetch : await getValidatedFetch(customFetch);
   return await fetch(url, {
@@ -121905,10 +121984,14 @@ async function fetchWithValidatedRedirects({
   trustedOrigin
 }) {
   var _a2;
-  const baseInit = { signal: abortSignal };
-  if (headers !== void 0) {
-    baseInit.headers = headers;
-  }
+  let currentHeaders = headers === void 0 ? void 0 : sanitizeRequestHeaders(headers);
+  const perHopInit = (redirect) => {
+    const init = { signal: abortSignal, redirect };
+    if (currentHeaders !== void 0) {
+      init.headers = new Headers(currentHeaders);
+    }
+    return init;
+  };
   let currentUrl = url;
   for (let redirectCount = 0; redirectCount <= maxRedirects; redirectCount++) {
     const isTrustedHop = trustedOrigin !== void 0 && isSameOrigin(currentUrl, trustedOrigin);
@@ -121916,10 +121999,7 @@ async function fetchWithValidatedRedirects({
       validateDownloadUrl(currentUrl);
     }
     const fetch = isTrustedHop && customFetch != null ? customFetch : isTrustedHop ? globalThis.fetch : await getValidatedFetch(customFetch);
-    const response = await fetch(currentUrl, {
-      ...baseInit,
-      redirect: "manual"
-    });
+    const response = await fetch(currentUrl, perHopInit("manual"));
     if (response.type === "opaqueredirect") {
       if (!isBrowserRuntime()) {
         throw new DownloadError({
@@ -121927,12 +122007,25 @@ async function fetchWithValidatedRedirects({
           message: `Redirect from ${currentUrl} could not be validated and was blocked`
         });
       }
-      return await fetch(currentUrl, { ...baseInit, redirect: "follow" });
+      return await fetch(currentUrl, perHopInit("follow"));
     }
     const location = (_a2 = response.headers) == null ? void 0 : _a2.get("location");
-    if (response.status >= 300 && response.status < 400 && location) {
-      await cancelResponseBody(response);
-      currentUrl = new URL(location, currentUrl).toString();
+    if (REDIRECT_STATUS_CODES.has(response.status) && location) {
+      void cancelResponseBody(response);
+      const nextUrl = new URL(location, currentUrl).toString();
+      if (new URL(currentUrl).protocol === "https:" && new URL(nextUrl).protocol === "http:") {
+        throw new DownloadError({
+          url,
+          message: "Redirect from HTTPS to HTTP was blocked"
+        });
+      }
+      if (currentHeaders !== void 0 && !isSameOrigin(nextUrl, currentUrl)) {
+        const userAgent = currentHeaders.get("user-agent");
+        currentHeaders = new Headers(
+          userAgent == null ? void 0 : { "user-agent": userAgent }
+        );
+      }
+      currentUrl = nextUrl;
       continue;
     }
     return response;
@@ -122067,6 +122160,12 @@ var createIdGenerator = ({
   return () => `${prefix}${separator}${generator()}`;
 };
 var dist_generateId = createIdGenerator();
+
+// src/encode-path-segment.ts
+function encodePathSegment(value) {
+  const encodedValue = encodeURIComponent(value);
+  return encodedValue === "." ? "%252E" : encodedValue === ".." ? "%252E%252E" : encodedValue;
+}
 
 // src/get-error-message.ts
 function dist_getErrorMessage(error) {
@@ -122222,7 +122321,7 @@ function withUserAgentSuffix(headers, ...userAgentSuffixParts) {
 }
 
 // src/version.ts
-var dist_VERSION =  true ? "4.0.57" : 0;
+var dist_VERSION =  true ? "4.0.67" : 0;
 
 // src/get-from-api.ts
 var getOriginalFetch = () => globalThis.fetch;
@@ -122232,16 +122331,28 @@ var getFromApi = async ({
   successfulResponseHandler,
   failedResponseHandler,
   abortSignal,
-  fetch = getOriginalFetch()
+  fetch,
+  validateUrl,
+  credentialedOrigin,
+  trustedOrigin
 }) => {
   try {
-    const response = await fetch(url, {
+    const requestFetch = fetch != null ? fetch : getOriginalFetch();
+    const outgoingHeaders = credentialedOrigin !== void 0 && !isSameOrigin(url, credentialedOrigin) ? {} : headers;
+    const requestHeaders = withUserAgentSuffix(
+      outgoingHeaders,
+      `ai-sdk/provider-utils/${dist_VERSION}`,
+      getRuntimeEnvironmentUserAgent()
+    );
+    const response = validateUrl ? await fetchWithValidatedRedirects({
+      url,
+      headers: requestHeaders,
+      abortSignal,
+      fetch,
+      trustedOrigin
+    }) : await requestFetch(url, {
       method: "GET",
-      headers: withUserAgentSuffix(
-        headers,
-        `ai-sdk/provider-utils/${dist_VERSION}`,
-        getRuntimeEnvironmentUserAgent()
-      ),
+      headers: requestHeaders,
       signal: abortSignal
     });
     const responseHeaders = extractResponseHeaders(response);
@@ -122344,7 +122455,6 @@ function isUrlSupported({
   url,
   supportedUrls
 }) {
-  url = url.toLowerCase();
   mediaType = mediaType.toLowerCase();
   return Object.entries(supportedUrls).map(([key, value]) => {
     const mediaType2 = key.toLowerCase();
@@ -123783,7 +123893,7 @@ function standardSchema(standardSchema2) {
     {
       validate: async (value) => {
         const result = await standardSchema2["~standard"].validate(value);
-        return "value" in result ? { success: true, value: result.value } : {
+        return result.issues === void 0 && "value" in result ? { success: true, value: result.value } : {
           success: false,
           error: new TypeValidationError({
             value,
@@ -124856,6 +124966,27 @@ async function* executeTool({
 
 // src/index.ts
 
+
+// src/stringify-with-bigint-and-cycles.ts
+function stringifyWithBigIntAndCycles(value) {
+  const ancestors = [];
+  return JSON.stringify(value, function(_key, value2) {
+    if (typeof value2 === "bigint") {
+      return value2.toString();
+    }
+    if (typeof value2 !== "object" || value2 === null) {
+      return value2;
+    }
+    while (ancestors.length > 0 && ancestors.at(-1) !== this) {
+      ancestors.pop();
+    }
+    if (ancestors.includes(value2)) {
+      return "[Circular]";
+    }
+    ancestors.push(value2);
+    return value2;
+  });
+}
 
 //# sourceMappingURL=index.mjs.map
 ;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+provider@3.0.10/node_modules/@ai-sdk/provider/dist/index.mjs
@@ -133604,13 +133735,13 @@ Original error: ${errorMessage}`
 var bedrock = createAmazonBedrock();
 
 //# sourceMappingURL=index.mjs.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+anthropic@3.0.127_zod@4.4.3/node_modules/@ai-sdk/anthropic/dist/index.mjs
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+anthropic@3.0.143_zod@4.4.3/node_modules/@ai-sdk/anthropic/dist/index.mjs
 // src/anthropic-provider.ts
 
 
 
 // src/version.ts
-var anthropic_dist_VERSION =  true ? "3.0.127" : 0;
+var anthropic_dist_VERSION =  true ? "3.0.143" : 0;
 
 // src/anthropic-messages-language-model.ts
 
@@ -133638,13 +133769,13 @@ var dist_anthropicFailedResponseHandler = createJsonErrorResponseHandler({
 // src/anthropic-messages-api.ts
 
 
-var dist_anthropicStopDetailsSchema = object({
+var dist_anthropicStopDetailsSchema = () => object({
   type: schemas_string(),
   category: schemas_string().nullish(),
   explanation: schemas_string().nullish(),
   recommended_model: schemas_string().nullish()
 });
-var anthropicSafeguardResultSchema = object({
+var anthropicSafeguardResultSchema = () => object({
   type: schemas_string(),
   status: object({
     type: schemas_string(),
@@ -133658,7 +133789,7 @@ var anthropicSafeguardResultSchema = object({
     ).nullish()
   })
 });
-var anthropicToolCallCallerSchema = schemas_union([
+var anthropicToolCallCallerSchema = () => schemas_union([
   object({
     type: literal("code_execution_20250825"),
     tool_id: schemas_string()
@@ -133671,7 +133802,7 @@ var anthropicToolCallCallerSchema = schemas_union([
     type: literal("direct")
   })
 ]);
-var anthropicInputTransformationSchema = object({
+var anthropicInputTransformationSchema = () => object({
   type: schemas_string(),
   path: schemas_string(),
   reason: schemas_string()
@@ -133734,7 +133865,7 @@ var dist_anthropicMessagesResponseSchema = lazySchema(
             name: schemas_string(),
             input: unknown(),
             // Programmatic tool calling: caller info when triggered from code execution
-            caller: anthropicToolCallCallerSchema.optional(),
+            caller: anthropicToolCallCallerSchema().optional(),
             // Toolsets (e.g. computer toolset): name of the toolset this member call belongs to
             toolset_name: schemas_string().nullish()
           }),
@@ -133743,7 +133874,7 @@ var dist_anthropicMessagesResponseSchema = lazySchema(
             id: schemas_string(),
             name: schemas_string(),
             input: record(schemas_string(), unknown()).nullish(),
-            caller: anthropicToolCallCallerSchema.optional()
+            caller: anthropicToolCallCallerSchema().optional()
           }),
           object({
             type: literal("mcp_tool_use"),
@@ -133766,7 +133897,7 @@ var dist_anthropicMessagesResponseSchema = lazySchema(
           object({
             type: literal("web_fetch_tool_result"),
             tool_use_id: schemas_string(),
-            caller: anthropicToolCallCallerSchema.optional(),
+            caller: anthropicToolCallCallerSchema().optional(),
             content: schemas_union([
               object({
                 type: literal("web_fetch_result"),
@@ -133799,7 +133930,7 @@ var dist_anthropicMessagesResponseSchema = lazySchema(
           object({
             type: literal("web_search_tool_result"),
             tool_use_id: schemas_string(),
-            caller: anthropicToolCallCallerSchema.optional(),
+            caller: anthropicToolCallCallerSchema().optional(),
             content: schemas_union([
               schemas_array(
                 object({
@@ -133956,9 +134087,9 @@ var dist_anthropicMessagesResponseSchema = lazySchema(
       ),
       stop_reason: schemas_string().nullish(),
       stop_sequence: schemas_string().nullish(),
-      stop_details: dist_anthropicStopDetailsSchema.nullish(),
-      input_transformations: schemas_array(anthropicInputTransformationSchema).nullish(),
-      safeguard_results: schemas_array(anthropicSafeguardResultSchema).nullish(),
+      stop_details: dist_anthropicStopDetailsSchema().nullish(),
+      input_transformations: schemas_array(anthropicInputTransformationSchema()).nullish(),
+      safeguard_results: schemas_array(anthropicSafeguardResultSchema()).nullish(),
       usage: looseObject({
         input_tokens: schemas_number(),
         output_tokens: schemas_number(),
@@ -134038,13 +134169,13 @@ var dist_anthropicMessagesChunkSchema = lazySchema(
                 id: schemas_string(),
                 name: schemas_string(),
                 input: unknown(),
-                caller: anthropicToolCallCallerSchema.optional(),
+                caller: anthropicToolCallCallerSchema().optional(),
                 toolset_name: schemas_string().nullish()
               })
             ])
           ).nullish(),
           stop_reason: schemas_string().nullish(),
-          input_transformations: schemas_array(anthropicInputTransformationSchema).nullish(),
+          input_transformations: schemas_array(anthropicInputTransformationSchema()).nullish(),
           container: object({
             expires_at: schemas_string(),
             id: schemas_string()
@@ -134070,7 +134201,7 @@ var dist_anthropicMessagesChunkSchema = lazySchema(
             // Programmatic tool calling: input may be present directly for deferred tool calls
             input: record(schemas_string(), unknown()).optional(),
             // Programmatic tool calling: caller info when triggered from code execution
-            caller: anthropicToolCallCallerSchema.optional(),
+            caller: anthropicToolCallCallerSchema().optional(),
             // Toolsets (e.g. computer toolset): name of the toolset this member call belongs to
             toolset_name: schemas_string().nullish()
           }),
@@ -134087,7 +134218,7 @@ var dist_anthropicMessagesChunkSchema = lazySchema(
             id: schemas_string(),
             name: schemas_string(),
             input: record(schemas_string(), unknown()).nullish(),
-            caller: anthropicToolCallCallerSchema.optional()
+            caller: anthropicToolCallCallerSchema().optional()
           }),
           object({
             type: literal("mcp_tool_use"),
@@ -134110,7 +134241,7 @@ var dist_anthropicMessagesChunkSchema = lazySchema(
           object({
             type: literal("web_fetch_tool_result"),
             tool_use_id: schemas_string(),
-            caller: anthropicToolCallCallerSchema.optional(),
+            caller: anthropicToolCallCallerSchema().optional(),
             content: schemas_union([
               object({
                 type: literal("web_fetch_result"),
@@ -134143,7 +134274,7 @@ var dist_anthropicMessagesChunkSchema = lazySchema(
           object({
             type: literal("web_search_tool_result"),
             tool_use_id: schemas_string(),
-            caller: anthropicToolCallCallerSchema.optional(),
+            caller: anthropicToolCallCallerSchema().optional(),
             content: schemas_union([
               schemas_array(
                 object({
@@ -134367,8 +134498,8 @@ var dist_anthropicMessagesChunkSchema = lazySchema(
         delta: object({
           stop_reason: schemas_string().nullish(),
           stop_sequence: schemas_string().nullish(),
-          stop_details: dist_anthropicStopDetailsSchema.nullish(),
-          safeguard_results: schemas_array(anthropicSafeguardResultSchema).nullish(),
+          stop_details: dist_anthropicStopDetailsSchema().nullish(),
+          safeguard_results: schemas_array(anthropicSafeguardResultSchema()).nullish(),
           container: object({
             expires_at: schemas_string(),
             id: schemas_string(),
@@ -134408,7 +134539,7 @@ var dist_anthropicMessagesChunkSchema = lazySchema(
             })
           ).nullish()
         }),
-        input_transformations: schemas_array(anthropicInputTransformationSchema).nullish(),
+        input_transformations: schemas_array(anthropicInputTransformationSchema()).nullish(),
         context_management: object({
           applied_edits: schemas_array(
             schemas_union([
@@ -134449,348 +134580,395 @@ var dist_anthropicReasoningMetadataSchema = lazySchema(
 
 // src/anthropic-messages-options.ts
 
-var dist_anthropicFilePartProviderOptions = object({
-  /**
-   * Citation configuration for this document.
-   * When enabled, this document will generate citations in the response.
-   */
-  citations: object({
-    /**
-     * Enable citations for this document
-     */
-    enabled: schemas_boolean()
-  }).optional(),
-  /**
-   * Custom title for the document.
-   * If not provided, the filename will be used.
-   */
-  title: schemas_string().optional(),
-  /**
-   * Context about the document that will be passed to the model
-   * but not used towards cited content.
-   * Useful for storing document metadata as text or stringified JSON.
-   */
-  context: schemas_string().optional()
-});
-var anthropicSystemMessageProviderOptions = object({
-  /**
-   * Clears this mid-conversation system message after the current turn.
-   *
-   * Requires the `mid-conversation-system-clear-at-2026-08-21` beta,
-   * which is added automatically.
-   */
-  clearAt: literal("next_user_message").optional(),
-  /**
-   * Sets the model effort from the next user turn until a later message
-   * changes it. An effort-only system message with empty content can appear
-   * first. The required `mid-conversation-output-config-2026-07-01` beta is
-   * added automatically.
-   */
-  effort: schemas_enum(["low", "medium", "high", "xhigh", "max"]).optional(),
-  /**
-   * Mid-conversation tool changes. Adds or removes tools from the
-   * conversation's tool set between turns without invalidating the prompt
-   * cache.
-   *
-   * Only supported on system messages that appear mid-conversation (not the
-   * initial system prompt). A system message carrying tool changes must come
-   * right before an assistant message or at the end of the messages.
-   *
-   * Tools referenced by a `tool_addition` must be declared in the `tools`
-   * option (typically with `deferLoading: true` so they are not loaded until
-   * the addition surfaces them). The required
-   * `mid-conversation-tool-changes-2026-07-01` beta is added automatically.
-   */
-  toolChanges: schemas_array(
-    discriminatedUnion("type", [
-      object({
-        type: literal("tool_addition"),
-        toolName: schemas_string()
-      }),
-      object({
-        type: literal("tool_removal"),
-        toolName: schemas_string()
-      })
-    ])
-  ).optional()
-});
-var anthropicThinkingBlockBinding = object({
-  prefixMismatchBehavior: schemas_enum(["error", "drop_block"])
-});
-var dist_anthropicLanguageModelOptions = object({
-  /**
-   * Whether to send reasoning to the model.
-   *
-   * This allows you to deactivate reasoning inputs for models that do not support them.
-   */
-  sendReasoning: schemas_boolean().optional(),
-  /**
-   * Determines how structured outputs are generated.
-   *
-   * - `outputFormat`: Use the `output_config.format` parameter to specify the structured output format.
-   * - `jsonTool`: Use a special 'json' tool to specify the structured output format.
-   * - `auto`: Use 'outputFormat' when supported, otherwise use 'jsonTool' (default).
-   */
-  structuredOutputMode: schemas_enum(["outputFormat", "jsonTool", "auto"]).optional(),
-  /**
-   * Configuration for enabling Claude's extended thinking.
-   *
-   * When enabled, responses include thinking content blocks showing Claude's thinking process before the final answer.
-   * Requires a minimum budget of 1,024 tokens and counts towards the `max_tokens` limit.
-   *
-   * Models that always use adaptive thinking (e.g. `claude-opus-5-5`,
-   * `claude-fable-5-1`) reject `enabled` and `disabled`. For those models the
-   * provider drops the unsupported setting, emits a warning, and sends an
-   * adaptive thinking request. Use `effort` to control how much they think.
-   *
-   * `claude-sonnet-5-5` supports `between_tools`, its lowest thinking setting,
-   * and the provider uses it in place of `disabled` for that model.
-   */
-  thinking: schemas_union([
-    discriminatedUnion("type", [
-      object({
-        /** for Sonnet 4.6, Opus 4.6, and newer models */
-        type: literal("adaptive"),
-        /**
-         * Controls whether thinking content is included in the response.
-         * - `"omitted"`: Thinking blocks are present but text is empty (default for Opus 4.7+).
-         * - `"summarized"`: Thinking content is returned. Required to see reasoning output.
-         * - `"updates"`: Thinking updates are returned between tool calls.
-         */
-        display: schemas_enum(["omitted", "summarized", "updates"]).optional(),
-        /**
-         * Controls how thinking blocks are bound to an assistant prefix.
-         *
-         * Requires the `thinking-binding-controls-2026-08-01` beta,
-         * which is added automatically.
-         */
-        blockBinding: anthropicThinkingBlockBinding.optional()
-      }),
-      object({
-        /** for models before Opus 4.6, except Sonnet 4.6 still supports it */
-        type: literal("enabled"),
-        budgetTokens: schemas_number().optional()
-      }),
-      object({
-        type: literal("disabled")
-      }),
-      object({
-        /**
-         * for `claude-sonnet-5-5`: no upfront thinking, but progress notes
-         * between tool calls are returned as summarized thinking blocks.
-         * Only supported at `low`, `medium`, and `high` effort.
-         */
-        type: literal("between_tools")
-      })
-    ]),
-    /**
-     * Configures prefix mismatch recovery without changing the model's
-     * default thinking mode.
-     */
+
+var dist_anthropicFilePartProviderOptions = lazySchema(
+  () => zodSchema(
     object({
-      blockBinding: anthropicThinkingBlockBinding
+      /**
+       * Citation configuration for this document.
+       * When enabled, this document will generate citations in the response.
+       */
+      citations: object({
+        /**
+         * Enable citations for this document
+         */
+        enabled: schemas_boolean()
+      }).optional(),
+      /**
+       * Custom title for the document.
+       * If not provided, the filename will be used.
+       */
+      title: schemas_string().optional(),
+      /**
+       * Context about the document that will be passed to the model
+       * but not used towards cited content.
+       * Useful for storing document metadata as text or stringified JSON.
+       */
+      context: schemas_string().optional()
     })
-  ]).optional(),
-  /**
-   * Whether to disable parallel function calling during tool use. Default is false.
-   * When set to true, Claude will use at most one tool per response.
-   */
-  disableParallelToolUse: schemas_boolean().optional(),
-  /**
-   * Cache control settings for this message.
-   * See https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching
-   */
-  cacheControl: object({
-    type: literal("ephemeral"),
-    ttl: schemas_union([literal("5m"), literal("1h")]).optional()
-  }).optional(),
-  /**
-   * Metadata to include with the request.
-   *
-   * See https://platform.claude.com/docs/en/api/messages/create for details.
-   */
-  metadata: object({
-    /**
-     * An external identifier for the user associated with the request.
-     *
-     * Should be a UUID, hash value, or other opaque identifier.
-     * Must not contain PII (name, email, phone number, etc.).
-     */
-    userId: schemas_string().optional()
-  }).optional(),
-  /**
-   * MCP servers to be utilized in this request.
-   */
-  mcpServers: schemas_array(
+  )
+);
+var anthropicSystemMessageProviderOptions = lazySchema(
+  () => zodSchema(
     object({
-      type: literal("url"),
-      name: schemas_string(),
-      url: schemas_string(),
-      authorizationToken: schemas_string().nullish(),
-      toolConfiguration: object({
-        enabled: schemas_boolean().nullish(),
-        allowedTools: schemas_array(schemas_string()).nullish()
-      }).nullish()
+      /**
+       * Clears this mid-conversation system message after the current turn.
+       *
+       * Requires the `mid-conversation-system-clear-at-2026-08-21` beta,
+       * which is added automatically.
+       */
+      clearAt: literal("next_user_message").optional(),
+      /**
+       * Sets the model effort from the next user turn until a later message
+       * changes it. An effort-only system message with empty content can appear
+       * first. The required `mid-conversation-output-config-2026-07-01` beta is
+       * added automatically.
+       */
+      effort: schemas_enum(["low", "medium", "high", "xhigh", "max"]).optional(),
+      /**
+       * Mid-conversation tool changes. Adds or removes tools from the
+       * conversation's tool set between turns without invalidating the prompt
+       * cache.
+       *
+       * Only supported on system messages that appear mid-conversation (not the
+       * initial system prompt). A system message carrying tool changes must come
+       * right before an assistant message or at the end of the messages.
+       *
+       * A `tool_addition` either references a tool by `toolName` or defines it
+       * by value with `tool`:
+       * - By reference: the tool must be declared in the `tools` option
+       *   (typically with `deferLoading: true` so it is not loaded until the
+       *   addition surfaces it). The required
+       *   `mid-conversation-tool-changes-2026-07-01` beta is added
+       *   automatically.
+       * - By value: `tool` is a function or provider tool, in the same shape as
+       *   an entry of the `tools` option. The tool does not need to be declared
+       *   in `tools`, and defining a tool under an existing name replaces it
+       *   from that point on. The required `inline-tools-2026-09-15` beta is
+       *   added automatically. Requires the request-level
+       *   `allowInlineToolDefinitions` option to be true.
+       *
+       * A `tool_removal` always references the tool by `toolName`.
+       */
+      toolChanges: schemas_array(
+        schemas_union([
+          object({
+            type: literal("tool_addition"),
+            toolName: schemas_string()
+          }),
+          object({
+            type: literal("tool_addition"),
+            tool: schemas_union([
+              looseObject({
+                type: literal("function"),
+                name: schemas_string(),
+                inputSchema: record(schemas_string(), unknown())
+              }),
+              looseObject({
+                type: literal("provider"),
+                id: schemas_string(),
+                name: schemas_string(),
+                args: record(schemas_string(), unknown())
+              })
+            ])
+          }),
+          object({
+            type: literal("tool_removal"),
+            toolName: schemas_string()
+          })
+        ])
+      ).optional()
     })
-  ).optional(),
-  /**
-   * Agent Skills configuration. Skills enable Claude to perform specialized tasks
-   * like document processing (PPTX, DOCX, PDF, XLSX) and data analysis.
-   * Requires code execution tool to be enabled.
-   */
-  container: object({
-    id: schemas_string().optional(),
-    skills: schemas_array(
-      object({
-        type: schemas_union([literal("anthropic"), literal("custom")]),
-        skillId: schemas_string(),
-        version: schemas_string().optional()
-      })
-    ).optional()
-  }).optional(),
-  /**
-   * Whether to enable fine-grained (eager) streaming of tool call inputs
-   * and structured outputs for every function tool in the request. When
-   * true (the default), each function tool receives a default of
-   * `eager_input_streaming: true` unless it explicitly sets
-   * `providerOptions.anthropic.eagerInputStreaming`.
-   *
-   * @default true
-   */
-  toolStreaming: schemas_boolean().optional(),
-  /**
-   * Controls how much effort the model spends on thinking, text responses,
-   * and tool calls. On models that always use adaptive thinking
-   * (e.g. `claude-opus-5-5`), effort is the main lever for latency and cost.
-   *
-   * The API default is `high` for most models and `medium` for `claude-opus-5-5`.
-   */
-  effort: schemas_enum(["low", "medium", "high", "xhigh", "max"]).optional(),
-  /**
-   * Task budget for agentic turns. Informs the model of the total token budget
-   * available for the current task, allowing it to prioritize work and wind down
-   * gracefully as the budget is consumed.
-   *
-   * Advisory only — does not enforce a hard token limit.
-   */
-  taskBudget: object({
-    type: literal("tokens"),
-    total: schemas_number().int().min(2e4),
-    remaining: schemas_number().int().min(0).optional()
-  }).optional(),
-  /**
-   * Enable fast mode for faster inference (2.5x faster output token speeds).
-   * Only supported with claude-opus-4-6.
-   */
-  speed: schemas_enum(["fast", "standard"]).optional(),
-  /**
-   * Controls where model inference runs for this request.
-   *
-   * - `"global"`: Inference may run in any available geography (default).
-   * - `"us"`: Inference runs only in US-based infrastructure.
-   *
-   * See https://platform.claude.com/docs/en/build-with-claude/data-residency
-   */
-  inferenceGeo: schemas_enum(["us", "global"]).optional(),
-  /**
-   * Server-side fallback configuration.
-   *
-   * When the primary model's safety classifiers block a turn, the API
-   * automatically retries it server-side on a fallback model. A
-   * `content-filter` finish reason means the fallback(s) refused as well.
-   *
-   * - `'default'` (recommended): the API routes the retry to Anthropic's
-   *   recommended fallback model based on the refusal category. Requires the
-   *   `server-side-fallback-2026-07-01` beta, which is added automatically.
-   * - Array form: an explicit fallback chain. Each entry is merged into the
-   *   request as a direct request to that entry's model, so it must be
-   *   formatted accordingly: `model` is required, and an entry may
-   *   additionally override `max_tokens`, `thinking`, `output_config`, and
-   *   `speed` for that attempt only (`speed` additionally requires the speed
-   *   beta). The value is passed through to the API as-is, and the
-   *   `server-side-fallback-2026-06-01` beta is added automatically.
-   */
-  fallbacks: schemas_union([
-    literal("default"),
-    schemas_array(
-      object({
-        model: schemas_string(),
-        max_tokens: schemas_number().int().optional(),
-        thinking: record(schemas_string(), unknown()).optional(),
-        output_config: record(schemas_string(), unknown()).optional(),
-        speed: schemas_enum(["fast", "standard"]).optional()
-      })
-    )
-  ]).optional(),
-  /**
-   * A set of beta features to enable.
-   * Allow a provider to receive the full `betas` set if it needs it.
-   */
-  anthropicBeta: schemas_array(schemas_string()).optional(),
-  /**
-   * Server-side safeguards to run as part of the request.
-   *
-   * `dangerous_tool_use` asks the API to classify every `tool_use` block in
-   * the response for dangerous actions (the check Claude Code's auto mode
-   * relies on). The per-call verdicts are returned in
-   * `providerMetadata.anthropic.safeguardResults`, keyed by tool call id.
-   * `classifierContext` is passed through to the API as `classifier_context`.
-   * The `dangerous-tool-use-2026-09-03` beta is added automatically.
-   */
-  safeguards: schemas_array(
+  )
+);
+var dist_anthropicLanguageModelOptions = lazySchema(() => {
+  const anthropicThinkingBlockBinding = object({
+    prefixMismatchBehavior: schemas_enum(["error", "drop_block"])
+  });
+  return zodSchema(
     object({
-      type: literal("dangerous_tool_use"),
-      classifierContext: record(schemas_string(), unknown()).optional()
-    })
-  ).optional(),
-  contextManagement: object({
-    edits: schemas_array(
-      discriminatedUnion("type", [
+      /**
+       * Whether to send reasoning to the model.
+       *
+       * This allows you to deactivate reasoning inputs for models that do not support them.
+       */
+      sendReasoning: schemas_boolean().optional(),
+      /**
+       * Allow tool definitions supplied by value in system-message tool changes.
+       * Defaults to false. Enable only for server-controlled messages: inline
+       * definitions can add tools or replace their configured restrictions.
+       * This request-level option cannot be enabled through message metadata.
+       */
+      allowInlineToolDefinitions: schemas_boolean().optional(),
+      /**
+       * Determines how structured outputs are generated.
+       *
+       * - `outputFormat`: Use the `output_config.format` parameter to specify the structured output format.
+       * - `jsonTool`: Use a special 'json' tool to specify the structured output format.
+       * - `auto`: Use 'outputFormat' when supported, otherwise use 'jsonTool' (default).
+       */
+      structuredOutputMode: schemas_enum(["outputFormat", "jsonTool", "auto"]).optional(),
+      /**
+       * Configuration for enabling Claude's extended thinking.
+       *
+       * When enabled, responses include thinking content blocks showing Claude's thinking process before the final answer.
+       * Requires a minimum budget of 1,024 tokens and counts towards the `max_tokens` limit.
+       *
+       * Models that always use adaptive thinking (e.g. `claude-opus-5-5`,
+       * `claude-fable-5-1`, `claude-fable-5-2`) reject `enabled` and `disabled`. For those models the
+       * provider drops the unsupported setting, emits a warning, and sends an
+       * adaptive thinking request. Use `effort` to control how much they think.
+       *
+       * `claude-sonnet-5-5` supports `between_tools`, its lowest thinking setting,
+       * and the provider uses it in place of `disabled` for that model.
+       */
+      thinking: schemas_union([
+        discriminatedUnion("type", [
+          object({
+            /** for Sonnet 4.6, Opus 4.6, and newer models */
+            type: literal("adaptive"),
+            /**
+             * Controls whether thinking content is included in the response.
+             * - `"omitted"`: Thinking blocks are present but text is empty (default for Opus 4.7+).
+             * - `"summarized"`: Thinking content is returned. Required to see reasoning output.
+             * - `"updates"`: Thinking updates are returned between tool calls.
+             */
+            display: schemas_enum(["omitted", "summarized", "updates"]).optional(),
+            /**
+             * Controls how thinking blocks are bound to an assistant prefix.
+             *
+             * Requires the `thinking-binding-controls-2026-08-01` beta,
+             * which is added automatically.
+             */
+            blockBinding: anthropicThinkingBlockBinding.optional()
+          }),
+          object({
+            /** for models before Opus 4.6, except Sonnet 4.6 still supports it */
+            type: literal("enabled"),
+            budgetTokens: schemas_number().optional()
+          }),
+          object({
+            type: literal("disabled")
+          }),
+          object({
+            /**
+             * for `claude-sonnet-5-5`: no upfront thinking, but progress notes
+             * between tool calls are returned as summarized thinking blocks.
+             * Only supported at `low`, `medium`, and `high` effort.
+             */
+            type: literal("between_tools")
+          })
+        ]),
+        /**
+         * Configures prefix mismatch recovery without changing the model's
+         * default thinking mode.
+         */
         object({
-          type: literal("clear_tool_uses_20250919"),
-          trigger: discriminatedUnion("type", [
+          blockBinding: anthropicThinkingBlockBinding
+        })
+      ]).optional(),
+      /**
+       * Whether to disable parallel function calling during tool use. Default is false.
+       * When set to true, Claude will use at most one tool per response.
+       */
+      disableParallelToolUse: schemas_boolean().optional(),
+      /**
+       * Cache control settings for this message.
+       * See https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching
+       */
+      cacheControl: object({
+        type: literal("ephemeral"),
+        ttl: schemas_union([literal("5m"), literal("1h")]).optional()
+      }).optional(),
+      /**
+       * Metadata to include with the request.
+       *
+       * See https://platform.claude.com/docs/en/api/messages/create for details.
+       */
+      metadata: object({
+        /**
+         * An external identifier for the user associated with the request.
+         *
+         * Should be a UUID, hash value, or other opaque identifier.
+         * Must not contain PII (name, email, phone number, etc.).
+         */
+        userId: schemas_string().optional()
+      }).optional(),
+      /**
+       * MCP servers to be utilized in this request.
+       */
+      mcpServers: schemas_array(
+        object({
+          type: literal("url"),
+          name: schemas_string(),
+          url: schemas_string(),
+          authorizationToken: schemas_string().nullish(),
+          toolConfiguration: object({
+            enabled: schemas_boolean().nullish(),
+            allowedTools: schemas_array(schemas_string()).nullish()
+          }).nullish()
+        })
+      ).optional(),
+      /**
+       * Agent Skills configuration. Skills enable Claude to perform specialized tasks
+       * like document processing (PPTX, DOCX, PDF, XLSX) and data analysis.
+       * Requires code execution tool to be enabled.
+       */
+      container: object({
+        id: schemas_string().optional(),
+        skills: schemas_array(
+          object({
+            type: schemas_union([literal("anthropic"), literal("custom")]),
+            skillId: schemas_string(),
+            version: schemas_string().optional()
+          })
+        ).optional()
+      }).optional(),
+      /**
+       * Whether to enable fine-grained (eager) streaming of tool call inputs
+       * and structured outputs for every function tool in the request. When
+       * true (the default), each function tool receives a default of
+       * `eager_input_streaming: true` unless it explicitly sets
+       * `providerOptions.anthropic.eagerInputStreaming`.
+       *
+       * @default true
+       */
+      toolStreaming: schemas_boolean().optional(),
+      /**
+       * Controls how much effort the model spends on thinking, text responses,
+       * and tool calls. On models that always use adaptive thinking
+       * (e.g. `claude-opus-5-5`), effort is the main lever for latency and cost.
+       *
+       * The API default is `high` for most models and `medium` for `claude-opus-5-5`.
+       */
+      effort: schemas_enum(["low", "medium", "high", "xhigh", "max"]).optional(),
+      /**
+       * Task budget for agentic turns. Informs the model of the total token budget
+       * available for the current task, allowing it to prioritize work and wind down
+       * gracefully as the budget is consumed.
+       *
+       * Advisory only — does not enforce a hard token limit.
+       */
+      taskBudget: object({
+        type: literal("tokens"),
+        total: schemas_number().int().min(2e4),
+        remaining: schemas_number().int().min(0).optional()
+      }).optional(),
+      /**
+       * Enable fast mode for faster inference (2.5x faster output token speeds).
+       * Only supported with claude-opus-4-6.
+       */
+      speed: schemas_enum(["fast", "standard"]).optional(),
+      /**
+       * Controls where model inference runs for this request.
+       *
+       * - `"global"`: Inference may run in any available geography (default).
+       * - `"us"`: Inference runs only in US-based infrastructure.
+       *
+       * See https://platform.claude.com/docs/en/build-with-claude/data-residency
+       */
+      inferenceGeo: schemas_enum(["us", "global"]).optional(),
+      /**
+       * Server-side fallback configuration.
+       *
+       * When the primary model's safety classifiers block a turn, the API
+       * automatically retries it server-side on a fallback model. A
+       * `content-filter` finish reason means the fallback(s) refused as well.
+       *
+       * - `'default'` (recommended): the API routes the retry to Anthropic's
+       *   recommended fallback model based on the refusal category. Requires the
+       *   `server-side-fallback-2026-07-01` beta, which is added automatically.
+       * - Array form: an explicit fallback chain. Each entry is merged into the
+       *   request as a direct request to that entry's model, so it must be
+       *   formatted accordingly: `model` is required, and an entry may
+       *   additionally override `max_tokens`, `thinking`, `output_config`, and
+       *   `speed` for that attempt only (`speed` additionally requires the speed
+       *   beta). The value is passed through to the API as-is, and the
+       *   `server-side-fallback-2026-06-01` beta is added automatically.
+       */
+      fallbacks: schemas_union([
+        literal("default"),
+        schemas_array(
+          object({
+            model: schemas_string(),
+            max_tokens: schemas_number().int().optional(),
+            thinking: record(schemas_string(), unknown()).optional(),
+            output_config: record(schemas_string(), unknown()).optional(),
+            speed: schemas_enum(["fast", "standard"]).optional()
+          })
+        )
+      ]).optional(),
+      /**
+       * A set of beta features to enable.
+       * Allow a provider to receive the full `betas` set if it needs it.
+       */
+      anthropicBeta: schemas_array(schemas_string()).optional(),
+      /**
+       * Server-side safeguards to run as part of the request.
+       *
+       * `dangerous_tool_use` asks the API to classify every `tool_use` block in
+       * the response for dangerous actions (the check Claude Code's auto mode
+       * relies on). The per-call verdicts are returned in
+       * `providerMetadata.anthropic.safeguardResults`, keyed by tool call id.
+       * `classifierContext` is passed through to the API as `classifier_context`.
+       * The `dangerous-tool-use-2026-09-03` beta is added automatically.
+       */
+      safeguards: schemas_array(
+        object({
+          type: literal("dangerous_tool_use"),
+          classifierContext: record(schemas_string(), unknown()).optional()
+        })
+      ).optional(),
+      contextManagement: object({
+        edits: schemas_array(
+          discriminatedUnion("type", [
             object({
-              type: literal("input_tokens"),
-              value: schemas_number()
+              type: literal("clear_tool_uses_20250919"),
+              trigger: discriminatedUnion("type", [
+                object({
+                  type: literal("input_tokens"),
+                  value: schemas_number()
+                }),
+                object({
+                  type: literal("tool_uses"),
+                  value: schemas_number()
+                })
+              ]).optional(),
+              keep: object({
+                type: literal("tool_uses"),
+                value: schemas_number()
+              }).optional(),
+              clearAtLeast: object({
+                type: literal("input_tokens"),
+                value: schemas_number()
+              }).optional(),
+              clearToolInputs: schemas_boolean().optional(),
+              excludeTools: schemas_array(schemas_string()).optional()
             }),
             object({
-              type: literal("tool_uses"),
-              value: schemas_number()
-            })
-          ]).optional(),
-          keep: object({
-            type: literal("tool_uses"),
-            value: schemas_number()
-          }).optional(),
-          clearAtLeast: object({
-            type: literal("input_tokens"),
-            value: schemas_number()
-          }).optional(),
-          clearToolInputs: schemas_boolean().optional(),
-          excludeTools: schemas_array(schemas_string()).optional()
-        }),
-        object({
-          type: literal("clear_thinking_20251015"),
-          keep: schemas_union([
-            literal("all"),
+              type: literal("clear_thinking_20251015"),
+              keep: schemas_union([
+                literal("all"),
+                object({
+                  type: literal("thinking_turns"),
+                  value: schemas_number()
+                })
+              ]).optional()
+            }),
             object({
-              type: literal("thinking_turns"),
-              value: schemas_number()
+              type: literal("compact_20260112"),
+              trigger: object({
+                type: literal("input_tokens"),
+                value: schemas_number()
+              }).optional(),
+              pauseAfterCompaction: schemas_boolean().optional(),
+              instructions: schemas_string().optional()
             })
-          ]).optional()
-        }),
-        object({
-          type: literal("compact_20260112"),
-          trigger: object({
-            type: literal("input_tokens"),
-            value: schemas_number()
-          }).optional(),
-          pauseAfterCompaction: schemas_boolean().optional(),
-          instructions: schemas_string().optional()
-        })
-      ])
-    )
-  }).optional()
+          ])
+        )
+      }).optional()
+    })
+  );
 });
 
 // src/anthropic-prepare-tools.ts
@@ -134798,19 +134976,24 @@ var dist_anthropicLanguageModelOptions = object({
 
 // src/get-cache-control.ts
 var dist_MAX_CACHE_BREAKPOINTS = 4;
-function dist_getCacheControl(providerMetadata) {
-  var _a;
+function dist_getCacheControl(providerMetadata, providerOptionsName) {
+  var _a, _b, _c;
+  const custom = providerMetadata == null ? void 0 : providerMetadata[providerOptionsName];
   const anthropic2 = providerMetadata == null ? void 0 : providerMetadata.anthropic;
-  const cacheControlValue = (_a = anthropic2 == null ? void 0 : anthropic2.cacheControl) != null ? _a : anthropic2 == null ? void 0 : anthropic2.cache_control;
+  const cacheControlValue = (_c = (_b = (_a = custom == null ? void 0 : custom.cacheControl) != null ? _a : custom == null ? void 0 : custom.cache_control) != null ? _b : anthropic2 == null ? void 0 : anthropic2.cacheControl) != null ? _c : anthropic2 == null ? void 0 : anthropic2.cache_control;
   return cacheControlValue;
 }
 var dist_CacheControlValidator = class {
-  constructor() {
+  constructor(providerOptionsName = "anthropic") {
+    this.providerOptionsName = providerOptionsName;
     this.breakpointCount = 0;
     this.warnings = [];
   }
   getCacheControl(providerMetadata, context) {
-    const cacheControlValue = dist_getCacheControl(providerMetadata);
+    const cacheControlValue = dist_getCacheControl(
+      providerMetadata,
+      this.providerOptionsName
+    );
     if (!cacheControlValue) {
       return void 0;
     }
@@ -134906,10 +135089,17 @@ var computerToolset_20260801Members = [
   "hold_key",
   "wait"
 ];
-var computerToolset_20260801InputSchema = lazySchema(
+var computerToolset_20260801InputSchema = (configs) => lazySchema(
   () => zodSchema(
     object({
-      action: schemas_enum(computerToolset_20260801Members),
+      action: schemas_enum(
+        computerToolset_20260801Members.filter(
+          (member) => {
+            var _a;
+            return ((_a = configs == null ? void 0 : configs[member]) == null ? void 0 : _a.enabled) !== false;
+          }
+        )
+      ),
       coordinate: schemas_tuple([schemas_number().int(), schemas_number().int()]).optional(),
       duration: schemas_number().optional(),
       region: schemas_tuple([
@@ -134939,9 +135129,13 @@ var computerToolset_20260801ArgsSchema = lazySchema(
     })
   )
 );
-var computerToolset_20260801 = createProviderToolFactory({
+var dist_factory2 = createProviderToolFactory({
   id: "anthropic.computer_toolset_20260801",
-  inputSchema: computerToolset_20260801InputSchema
+  inputSchema: computerToolset_20260801InputSchema()
+});
+var computerToolset_20260801 = (args) => ({
+  ...dist_factory2(args),
+  inputSchema: computerToolset_20260801InputSchema(args.configs)
 });
 
 // src/tool/text-editor_20250728.ts
@@ -134968,12 +135162,12 @@ var dist_textEditor_20250728InputSchema = lazySchema(
     })
   )
 );
-var dist_factory2 = createProviderToolFactory({
+var dist_factory3 = createProviderToolFactory({
   id: "anthropic.text_editor_20250728",
   inputSchema: dist_textEditor_20250728InputSchema
 });
 var dist_textEditor_20250728 = (args = {}) => {
-  return dist_factory2(args);
+  return dist_factory3(args);
 };
 
 // src/tool/web-search_20260209.ts
@@ -135015,14 +135209,14 @@ var dist_webSearch_20260209InputSchema = lazySchema(
     })
   )
 );
-var dist_factory3 = createProviderToolFactoryWithOutputSchema({
+var dist_factory4 = createProviderToolFactoryWithOutputSchema({
   id: "anthropic.web_search_20260209",
   inputSchema: dist_webSearch_20260209InputSchema,
   outputSchema: dist_webSearch_20260209OutputSchema,
   supportsDeferredResults: true
 });
 var dist_webSearch_20260209 = (args = {}) => {
-  return dist_factory3(args);
+  return dist_factory4(args);
 };
 
 // src/tool/web-search_20250305.ts
@@ -135064,14 +135258,14 @@ var dist_webSearch_20250305InputSchema = lazySchema(
     })
   )
 );
-var dist_factory4 = createProviderToolFactoryWithOutputSchema({
+var dist_factory5 = createProviderToolFactoryWithOutputSchema({
   id: "anthropic.web_search_20250305",
   inputSchema: dist_webSearch_20250305InputSchema,
   outputSchema: dist_webSearch_20250305OutputSchema,
   supportsDeferredResults: true
 });
 var dist_webSearch_20250305 = (args = {}) => {
-  return dist_factory4(args);
+  return dist_factory5(args);
 };
 
 // src/tool/web-fetch-20260209.ts
@@ -135121,14 +135315,14 @@ var dist_webFetch_20260209InputSchema = lazySchema(
     })
   )
 );
-var dist_factory5 = createProviderToolFactoryWithOutputSchema({
+var dist_factory6 = createProviderToolFactoryWithOutputSchema({
   id: "anthropic.web_fetch_20260209",
   inputSchema: dist_webFetch_20260209InputSchema,
   outputSchema: dist_webFetch_20260209OutputSchema,
   supportsDeferredResults: true
 });
 var dist_webFetch_20260209 = (args = {}) => {
-  return dist_factory5(args);
+  return dist_factory6(args);
 };
 
 // src/tool/web-fetch-20250910.ts
@@ -135178,14 +135372,14 @@ var dist_webFetch_20250910InputSchema = lazySchema(
     })
   )
 );
-var dist_factory6 = createProviderToolFactoryWithOutputSchema({
+var dist_factory7 = createProviderToolFactoryWithOutputSchema({
   id: "anthropic.web_fetch_20250910",
   inputSchema: dist_webFetch_20250910InputSchema,
   outputSchema: dist_webFetch_20250910OutputSchema,
   supportsDeferredResults: true
 });
 var dist_webFetch_20250910 = (args = {}) => {
-  return dist_factory6(args);
+  return dist_factory7(args);
 };
 
 // src/anthropic-prepare-tools.ts
@@ -135193,6 +135387,7 @@ var dist_webFetch_20250910 = (args = {}) => {
 async function anthropic_dist_prepareTools({
   tools,
   toolChoice,
+  hasInlineTools = false,
   disableParallelToolUse,
   cacheControlValidator,
   supportsStructuredOutput,
@@ -135205,11 +135400,11 @@ async function anthropic_dist_prepareTools({
   const toolWarnings = [];
   const betas = /* @__PURE__ */ new Set();
   const validator = cacheControlValidator || new dist_CacheControlValidator();
-  if (tools == null) {
+  if (tools == null && !hasInlineTools) {
     return { tools: void 0, toolChoice: void 0, toolWarnings, betas };
   }
   const anthropicTools2 = [];
-  for (const tool of tools) {
+  for (const tool of tools != null ? tools : []) {
     switch (tool.type) {
       case "function": {
         const cacheControl = validator.getCacheControl(tool.providerOptions, {
@@ -135521,9 +135716,10 @@ async function anthropic_dist_prepareTools({
       }
     }
   }
+  const declaredTools = tools == null ? void 0 : anthropicTools2;
   if (toolChoice == null) {
     return {
-      tools: anthropicTools2,
+      tools: declaredTools,
       toolChoice: disableParallelToolUse ? { type: "auto", disable_parallel_tool_use: disableParallelToolUse } : void 0,
       toolWarnings,
       betas
@@ -135533,7 +135729,7 @@ async function anthropic_dist_prepareTools({
   switch (type) {
     case "auto":
       return {
-        tools: anthropicTools2,
+        tools: declaredTools,
         toolChoice: {
           type: "auto",
           disable_parallel_tool_use: disableParallelToolUse
@@ -135546,10 +135742,10 @@ async function anthropic_dist_prepareTools({
         toolWarnings.push({
           type: "unsupported",
           feature: "toolChoice",
-          details: `toolChoice 'required' is not supported by this model because it rejects forced tool use. Using 'auto' instead. Instruct the model to use a tool in the prompt and verify that a tool call was made.`
+          details: `toolChoice 'required' is not supported with this model or thinking configuration. Using 'auto' instead. Instruct the model to use a tool in the prompt and verify that a tool call was made.`
         });
         return {
-          tools: anthropicTools2,
+          tools: declaredTools,
           toolChoice: {
             type: "auto",
             disable_parallel_tool_use: disableParallelToolUse
@@ -135559,7 +135755,7 @@ async function anthropic_dist_prepareTools({
         };
       }
       return {
-        tools: anthropicTools2,
+        tools: declaredTools,
         toolChoice: {
           type: "any",
           disable_parallel_tool_use: disableParallelToolUse
@@ -135568,16 +135764,21 @@ async function anthropic_dist_prepareTools({
         betas
       };
     case "none":
-      return { tools: void 0, toolChoice: void 0, toolWarnings, betas };
+      return {
+        tools: declaredTools,
+        toolChoice: { type: "none" },
+        toolWarnings,
+        betas
+      };
     case "tool":
       if (rejectsForcedToolUse) {
         toolWarnings.push({
           type: "unsupported",
           feature: "toolChoice",
-          details: `toolChoice 'tool' is not supported by this model because it rejects forced tool use. Only the '${toolChoice.toolName}' tool is sent with 'auto' tool choice. Instruct the model to use the tool in the prompt and verify that a tool call was made.`
+          details: `toolChoice 'tool' is not supported with this model or thinking configuration. Only the '${toolChoice.toolName}' tool is sent with 'auto' tool choice. Instruct the model to use the tool in the prompt and verify that a tool call was made.`
         });
         return {
-          tools: anthropicTools2.filter(
+          tools: declaredTools == null ? void 0 : declaredTools.filter(
             (tool) => "name" in tool && tool.name === toolChoice.toolName
           ),
           toolChoice: {
@@ -135589,7 +135790,7 @@ async function anthropic_dist_prepareTools({
         };
       }
       return {
-        tools: anthropicTools2,
+        tools: declaredTools,
         toolChoice: {
           type: "tool",
           name: toolChoice.toolName,
@@ -135689,13 +135890,13 @@ var dist_codeExecution_20250522InputSchema = lazySchema(
     })
   )
 );
-var dist_factory7 = createProviderToolFactoryWithOutputSchema({
+var dist_factory8 = createProviderToolFactoryWithOutputSchema({
   id: "anthropic.code_execution_20250522",
   inputSchema: dist_codeExecution_20250522InputSchema,
   outputSchema: dist_codeExecution_20250522OutputSchema
 });
 var dist_codeExecution_20250522 = (args = {}) => {
-  return dist_factory7(args);
+  return dist_factory8(args);
 };
 
 // src/tool/code-execution_20250825.ts
@@ -135794,7 +135995,7 @@ var dist_codeExecution_20250825InputSchema = lazySchema(
     ])
   )
 );
-var dist_factory8 = createProviderToolFactoryWithOutputSchema({
+var dist_factory9 = createProviderToolFactoryWithOutputSchema({
   id: "anthropic.code_execution_20250825",
   inputSchema: dist_codeExecution_20250825InputSchema,
   outputSchema: dist_codeExecution_20250825OutputSchema,
@@ -135804,7 +136005,7 @@ var dist_factory8 = createProviderToolFactoryWithOutputSchema({
   supportsDeferredResults: true
 });
 var dist_codeExecution_20250825 = (args = {}) => {
-  return dist_factory8(args);
+  return dist_factory9(args);
 };
 
 // src/tool/code-execution_20260120.ts
@@ -135914,14 +136115,14 @@ var dist_codeExecution_20260120InputSchema = lazySchema(
     ])
   )
 );
-var dist_factory9 = createProviderToolFactoryWithOutputSchema({
+var dist_factory10 = createProviderToolFactoryWithOutputSchema({
   id: "anthropic.code_execution_20260120",
   inputSchema: dist_codeExecution_20260120InputSchema,
   outputSchema: dist_codeExecution_20260120OutputSchema,
   supportsDeferredResults: true
 });
 var dist_codeExecution_20260120 = (args = {}) => {
-  return dist_factory9(args);
+  return dist_factory10(args);
 };
 
 // src/tool/tool-search-regex_20251119.ts
@@ -135958,14 +136159,14 @@ var dist_toolSearchRegex_20251119InputSchema = lazySchema(
     })
   )
 );
-var dist_factory10 = createProviderToolFactoryWithOutputSchema({
+var dist_factory11 = createProviderToolFactoryWithOutputSchema({
   id: "anthropic.tool_search_regex_20251119",
   inputSchema: dist_toolSearchRegex_20251119InputSchema,
   outputSchema: dist_toolSearchRegex_20251119OutputSchema,
   supportsDeferredResults: true
 });
 var dist_toolSearchRegex_20251119 = (args = {}) => {
-  return dist_factory10(args);
+  return dist_factory11(args);
 };
 
 // src/convert-to-anthropic-messages-prompt.ts
@@ -136009,15 +136210,43 @@ async function dist_extractErrorValue(value) {
   }
   return {};
 }
+function isComputerTool(tool) {
+  return tool.type === "provider" && tool.id.startsWith("anthropic.computer_");
+}
+async function getInlineToolsFromPrompt(prompt) {
+  var _a;
+  const inlineTools = [];
+  for (const message of prompt) {
+    if (message.role !== "system" || message.providerOptions == null) {
+      continue;
+    }
+    const options = await dist_parseProviderOptions({
+      provider: "anthropic",
+      providerOptions: message.providerOptions,
+      schema: anthropicSystemMessageProviderOptions
+    });
+    for (const toolChange of (_a = options == null ? void 0 : options.toolChanges) != null ? _a : []) {
+      if ("tool" in toolChange) {
+        const tool = toolChange.tool;
+        if (!isComputerTool(tool)) {
+          inlineTools.push(tool);
+        }
+      }
+    }
+  }
+  return inlineTools;
+}
 async function dist_convertToAnthropicMessagesPrompt({
   prompt,
   sendReasoning,
   warnings,
   cacheControlValidator,
   toolNameMapping,
-  toolsetNames = {}
+  toolsetNames = {},
+  convertMediaPart,
+  convertInlineTool
 }) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u;
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u, _v;
   const betas = /* @__PURE__ */ new Set();
   const blocks = anthropic_dist_groupIntoBlocks(prompt);
   const validator = cacheControlValidator || new dist_CacheControlValidator();
@@ -136052,6 +136281,7 @@ async function dist_convertToAnthropicMessagesPrompt({
       case "system": {
         const systemMessages = [];
         let toolChangeCount = 0;
+        let hasInlineToolDefinition = false;
         let hasMidConversationOptions = false;
         for (const { content: text, providerOptions } of block.messages) {
           const systemMessageOptions = await dist_parseProviderOptions({
@@ -136074,6 +136304,40 @@ async function dist_convertToAnthropicMessagesPrompt({
             });
           }
           for (const toolChange of toolChanges) {
+            if ("tool" in toolChange) {
+              if (convertInlineTool == null) {
+                throw new UnsupportedFunctionalityError({
+                  functionality: "tool additions by value in mid-conversation tool changes"
+                });
+              }
+              const tool = toolChange.tool;
+              if (isComputerTool(tool)) {
+                warnings.push({
+                  type: "other",
+                  message: `The tool '${tool.name}' cannot be added by value in a tool change. Declare it in the tools option and add it by reference with toolName. The tool change has been ignored.`
+                });
+                continue;
+              }
+              const {
+                definition,
+                warnings: toolWarnings,
+                betas: toolBetas
+              } = await convertInlineTool(tool);
+              warnings.push(...toolWarnings);
+              for (const beta of toolBetas) {
+                betas.add(beta);
+              }
+              if (definition == null) {
+                continue;
+              }
+              content.push({
+                type: "tool_addition",
+                tool: { type: "tool_definition", definition }
+              });
+              toolChangeCount++;
+              hasInlineToolDefinition = true;
+              continue;
+            }
             toolChangeCount++;
             content.push({
               type: toolChange.type,
@@ -136082,6 +136346,9 @@ async function dist_convertToAnthropicMessagesPrompt({
                 name: toolNameMapping.toProviderToolName(toolChange.toolName)
               }
             });
+          }
+          if (content.length === 0 && clearAt == null && effort == null) {
+            continue;
           }
           hasMidConversationOptions || (hasMidConversationOptions = clearAt != null || effort != null);
           systemMessages.push({
@@ -136117,7 +136384,9 @@ async function dist_convertToAnthropicMessagesPrompt({
         } else {
           messages.push(...systemMessages);
           betas.add("mid-conversation-system-2026-04-07");
-          if (toolChangeCount > 0) {
+          if (hasInlineToolDefinition) {
+            betas.add("inline-tools-2026-09-15");
+          } else if (toolChangeCount > 0) {
             betas.add("mid-conversation-tool-changes-2026-07-01");
           }
           if (systemMessages.some((message) => message.clear_at != null)) {
@@ -136158,6 +136427,14 @@ async function dist_convertToAnthropicMessagesPrompt({
                     break;
                   }
                   case "file": {
+                    const customContent = await (convertMediaPart == null ? void 0 : convertMediaPart(part));
+                    if (customContent != null) {
+                      anthropicContent.push({
+                        ...customContent,
+                        cache_control: cacheControl
+                      });
+                      break;
+                    }
                     if (part.mediaType.startsWith("image/")) {
                       anthropicContent.push({
                         type: "image",
@@ -136343,7 +136620,7 @@ async function dist_convertToAnthropicMessagesPrompt({
                   case "json":
                   case "error-json":
                   default:
-                    contentValue = JSON.stringify(output.value);
+                    contentValue = stringifyWithBigIntAndCycles(output.value);
                     break;
                 }
                 const toolsetName = getAnthropicToolsetName({
@@ -136581,7 +136858,7 @@ async function dist_convertToAnthropicMessagesPrompt({
                   type: "tool_use",
                   id: part.toolCallId,
                   name: part.toolName,
-                  input: part.input,
+                  input: parseToolCallInput(part.input),
                   ...caller && { caller },
                   cache_control: cacheControl
                 });
@@ -136829,6 +137106,18 @@ async function dist_convertToAnthropicMessagesPrompt({
                 }
                 if (providerToolName === "tool_search_tool_regex" || providerToolName === "tool_search_tool_bm25") {
                   const output = part.output;
+                  if (output.type === "error-json" || output.type === "json" && output.value != null && typeof output.value === "object" && !Array.isArray(output.value) && "type" in output.value && output.value.type === "tool_search_tool_result_error") {
+                    anthropicContent.push({
+                      type: "tool_search_tool_result",
+                      tool_use_id: part.toolCallId,
+                      content: {
+                        type: "tool_search_tool_result_error",
+                        error_code: (_v = (await dist_extractErrorValue(output.value)).errorCode) != null ? _v : "unavailable"
+                      },
+                      cache_control: cacheControl
+                    });
+                    break;
+                  }
                   if (output.type !== "json") {
                     warnings.push({
                       type: "other",
@@ -137054,6 +137343,18 @@ function getAnthropicCaller(providerOptions) {
   }
   return (caller == null ? void 0 : caller.type) === "direct" ? { type: "direct" } : void 0;
 }
+function parseToolCallInput(input) {
+  if (typeof input === "string") {
+    try {
+      const parsed = secureJsonParse(input);
+      if (typeof parsed === "object" && parsed !== null && !Array.isArray(parsed)) {
+        return parsed;
+      }
+    } catch (e) {
+    }
+  }
+  return input;
+}
 
 // src/map-anthropic-stop-reason.ts
 function dist_mapAnthropicStopReason({
@@ -137119,9 +137420,8 @@ function dist_sanitizeDefinition(definition) {
 }
 function dist_sanitizeSchema(schema) {
   const result = {};
-  const schemaWithDefs = schema;
   if (schema.$ref != null) {
-    return { $ref: schema.$ref };
+    return { $ref: schema.$ref, ...sanitizeSchemaDefinitions(schema) };
   }
   if (schema.$schema != null) {
     result.$schema = schema.$schema;
@@ -137155,23 +137455,7 @@ function dist_sanitizeSchema(schema) {
   if (schema.allOf != null) {
     result.allOf = schema.allOf.map(dist_sanitizeDefinition);
   }
-  if (schema.definitions != null) {
-    result.definitions = Object.fromEntries(
-      Object.entries(schema.definitions).map(([name, definition]) => [
-        name,
-        dist_sanitizeDefinition(definition)
-      ])
-    );
-  }
-  if (schemaWithDefs.$defs != null) {
-    const resultWithDefs = result;
-    resultWithDefs.$defs = Object.fromEntries(
-      Object.entries(schemaWithDefs.$defs).map(([name, definition]) => [
-        name,
-        dist_sanitizeDefinition(definition)
-      ])
-    );
-  }
+  Object.assign(result, sanitizeSchemaDefinitions(schema));
   if (schema.type === "object" || schema.properties != null) {
     if (schema.properties != null) {
       result.properties = Object.fromEntries(
@@ -137199,6 +137483,21 @@ ${constraintDescription}`;
   }
   return result;
 }
+function sanitizeSchemaDefinitions(schema) {
+  const { $defs } = schema;
+  const sanitizeAll = (definitions) => Object.fromEntries(
+    Object.entries(definitions).map(([name, definition]) => [
+      name,
+      dist_sanitizeDefinition(definition)
+    ])
+  );
+  return {
+    ...schema.definitions != null && {
+      definitions: sanitizeAll(schema.definitions)
+    },
+    ...$defs != null && { $defs: sanitizeAll($defs) }
+  };
+}
 function dist_getConstraintDescription(schema) {
   const descriptions = dist_DESCRIPTION_CONSTRAINT_KEYS.flatMap((key) => {
     const value = schema[key];
@@ -137225,7 +137524,204 @@ function dist_isPlainObject(value) {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+// src/has-circular-schema-reference.ts
+var SCHEMA_MAP_KEYWORDS = /* @__PURE__ */ new Set([
+  "dependentSchemas",
+  "patternProperties",
+  "properties"
+]);
+var DATA_KEYWORDS = /* @__PURE__ */ new Set(["const", "default", "enum", "examples"]);
+function hasCircularSchemaReference(schema) {
+  const visiting = /* @__PURE__ */ new Set();
+  const visited = /* @__PURE__ */ new Set();
+  const visit = (pointer) => {
+    if (visiting.has(pointer)) {
+      return true;
+    }
+    if (visited.has(pointer)) {
+      return false;
+    }
+    const target = resolveSchemaPointer(schema, pointer);
+    if (target === void 0) {
+      return false;
+    }
+    visiting.add(pointer);
+    const isCircular = collectLocalRefs(target).some(visit);
+    visiting.delete(pointer);
+    visited.add(pointer);
+    return isCircular;
+  };
+  return visit("#");
+}
+function collectLocalRefs(node, refs = []) {
+  if (Array.isArray(node)) {
+    for (const item of node) {
+      collectLocalRefs(item, refs);
+    }
+    return refs;
+  }
+  if (!dist_isRecord(node)) {
+    return refs;
+  }
+  for (const [key, value] of Object.entries(node)) {
+    if (key === "$ref") {
+      if (typeof value === "string" && value.startsWith("#")) {
+        refs.push(value);
+      }
+    } else if (SCHEMA_MAP_KEYWORDS.has(key) && dist_isRecord(value)) {
+      for (const subschema of Object.values(value)) {
+        collectLocalRefs(subschema, refs);
+      }
+    } else if (
+      // definitions are only reached through a `$ref`:
+      key !== "$defs" && key !== "definitions" && !DATA_KEYWORDS.has(key)
+    ) {
+      collectLocalRefs(value, refs);
+    }
+  }
+  return refs;
+}
+function resolveSchemaPointer(schema, pointer) {
+  if (pointer === "#") {
+    return schema;
+  }
+  if (!pointer.startsWith("#/")) {
+    return void 0;
+  }
+  let decodedPointer;
+  try {
+    decodedPointer = decodeURIComponent(pointer.slice(2));
+  } catch (e) {
+    return void 0;
+  }
+  let current = schema;
+  for (const rawSegment of decodedPointer.split("/")) {
+    const segment = rawSegment.replace(/~1/g, "/").replace(/~0/g, "~");
+    if (Array.isArray(current)) {
+      current = current[Number(segment)];
+    } else if (dist_isRecord(current)) {
+      current = current[segment];
+    } else {
+      return void 0;
+    }
+  }
+  return current;
+}
+function dist_isRecord(value) {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+// src/supports-native-structured-output-schema.ts
+var MAX_OPTIONAL_PROPERTIES = 10;
+var SUBSCHEMA_KEYWORDS = [
+  "additionalProperties",
+  "contains",
+  "else",
+  "if",
+  "items",
+  "not",
+  "then"
+];
+var SUBSCHEMA_LIST_KEYWORDS = ["allOf", "anyOf", "oneOf", "prefixItems"];
+var SUBSCHEMA_MAP_KEYWORDS = [
+  "dependentSchemas",
+  "patternProperties",
+  "properties"
+];
+function supportsNativeStructuredOutputSchema(schema) {
+  if (hasCircularSchemaReference(schema)) {
+    return false;
+  }
+  const { optionalProperties, hasOpenObject } = getSchemaStats(
+    schema,
+    schema,
+    /* @__PURE__ */ new Map()
+  );
+  return !hasOpenObject && optionalProperties <= MAX_OPTIONAL_PROPERTIES;
+}
+function getSchemaStats(node, root, refStats) {
+  const stats = { optionalProperties: 0, hasOpenObject: false };
+  if (!dist_isRecord(node)) {
+    return stats;
+  }
+  const add = (child) => {
+    const childStats = getSchemaStats(child, root, refStats);
+    stats.optionalProperties += childStats.optionalProperties;
+    stats.hasOpenObject || (stats.hasOpenObject = childStats.hasOpenObject);
+  };
+  if (typeof node.$ref === "string" && node.$ref.startsWith("#")) {
+    let resolved = refStats.get(node.$ref);
+    if (resolved == null) {
+      resolved = getSchemaStats(
+        resolveSchemaPointer(root, node.$ref),
+        root,
+        refStats
+      );
+      refStats.set(node.$ref, resolved);
+    }
+    stats.optionalProperties += resolved.optionalProperties;
+    stats.hasOpenObject || (stats.hasOpenObject = resolved.hasOpenObject);
+  }
+  if (isOpenObject(node)) {
+    stats.hasOpenObject = true;
+  }
+  if (dist_isRecord(node.properties)) {
+    const required = new Set(Array.isArray(node.required) ? node.required : []);
+    stats.optionalProperties += Object.keys(node.properties).filter(
+      (name) => !required.has(name)
+    ).length;
+  }
+  for (const keyword of SUBSCHEMA_KEYWORDS) {
+    const value = node[keyword];
+    if (Array.isArray(value)) {
+      value.forEach(add);
+    } else {
+      add(value);
+    }
+  }
+  for (const keyword of SUBSCHEMA_LIST_KEYWORDS) {
+    const value = node[keyword];
+    if (Array.isArray(value)) {
+      value.forEach(add);
+    }
+  }
+  for (const keyword of SUBSCHEMA_MAP_KEYWORDS) {
+    const value = node[keyword];
+    if (dist_isRecord(value)) {
+      Object.values(value).forEach(add);
+    }
+  }
+  return stats;
+}
+function isOpenObject(node) {
+  const { additionalProperties, patternProperties, properties, type } = node;
+  if (additionalProperties === true || dist_isRecord(additionalProperties)) {
+    return true;
+  }
+  if (dist_isRecord(patternProperties) && Object.keys(patternProperties).length > 0) {
+    return true;
+  }
+  const isObjectType = type === "object" || Array.isArray(type) && type.includes("object");
+  return isObjectType && properties == null && additionalProperties !== false;
+}
+
 // src/anthropic-messages-language-model.ts
+function validateToolsetMember({
+  toolsetName,
+  memberName,
+  tools
+}) {
+  var _a, _b;
+  const toolset = tools == null ? void 0 : tools.find(
+    (tool) => "type" in tool && tool.type === "computer_toolset_20260801"
+  );
+  if (toolsetName !== "computer" || toolset == null || !computerToolset_20260801Members.some((member) => member === memberName) || ((_b = (_a = toolset.configs) == null ? void 0 : _a[memberName]) == null ? void 0 : _b.enabled) === false) {
+    throw new dist_InvalidResponseDataError({
+      data: { toolsetName, memberName },
+      message: `Received an unavailable toolset member: ${toolsetName}.${memberName}.`
+    });
+  }
+}
 function dist_createCitationSource(citation, citationDocuments, generateId3) {
   var _a;
   if (citation.type === "web_search_result_location") {
@@ -137293,10 +137789,41 @@ function toToolsetMemberInput({
   memberName,
   input
 }) {
+  if (typeof input !== "object" || input === null || Array.isArray(input)) {
+    throw new dist_InvalidResponseDataError({
+      data: input,
+      message: "Invalid toolset member input: expected an object."
+    });
+  }
   return {
-    action: memberName,
-    ...typeof input === "object" && input !== null && !Array.isArray(input) ? input : {}
+    ...input,
+    action: memberName
   };
+}
+var TEXT_OR_THINKING_BLOCK_TYPES = /* @__PURE__ */ new Set([
+  "redacted_thinking",
+  "text",
+  "thinking"
+]);
+function isContinuationStopReason(stopReason) {
+  return stopReason === "pause_turn" || stopReason === "tool_use";
+}
+function getJsonResponseToolFallbackText(content, stopReason) {
+  const text = /* @__PURE__ */ new Set();
+  if (isContinuationStopReason(stopReason)) {
+    return text;
+  }
+  for (const part of content) {
+    if (part.type === "tool_use" && part.name === "json") {
+      return /* @__PURE__ */ new Set();
+    }
+    if (part.type === "text") {
+      text.add(part);
+    } else if (!TEXT_OR_THINKING_BLOCK_TYPES.has(part.type)) {
+      text.clear();
+    }
+  }
+  return text;
 }
 var dist_AnthropicMessagesLanguageModel = class {
   constructor(modelId, config) {
@@ -137342,7 +137869,7 @@ var dist_AnthropicMessagesLanguageModel = class {
     providerOptions,
     stream
   }) {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
     const warnings = [];
     if (frequencyPenalty != null) {
       warnings.push({ type: "unsupported", feature: "frequencyPenalty" });
@@ -137353,18 +137880,20 @@ var dist_AnthropicMessagesLanguageModel = class {
     if (seed != null) {
       warnings.push({ type: "unsupported", feature: "seed" });
     }
-    if (temperature != null && temperature > 1) {
+    const maxTemperature = (_a = this.config.maxTemperature) != null ? _a : 1;
+    const temperatureProvider = this.config.maxTemperature == null ? "anthropic" : this.providerOptionsName;
+    if (temperature != null && temperature > maxTemperature) {
       warnings.push({
         type: "unsupported",
         feature: "temperature",
-        details: `${temperature} exceeds anthropic maximum of 1.0. clamped to 1.0`
+        details: `${temperature} exceeds ${temperatureProvider} maximum of ${maxTemperature.toFixed(1)}. clamped to ${maxTemperature.toFixed(1)}`
       });
-      temperature = 1;
+      temperature = maxTemperature;
     } else if (temperature != null && temperature < 0) {
       warnings.push({
         type: "unsupported",
         feature: "temperature",
-        details: `${temperature} is below anthropic minimum of 0. clamped to 0`
+        details: `${temperature} is below ${temperatureProvider} minimum of 0. clamped to 0`
       });
       temperature = 0;
     }
@@ -137400,6 +137929,7 @@ var dist_AnthropicMessagesLanguageModel = class {
       rejectsSamplingParameters,
       rejectsThinkingDisabledAboveHighEffort,
       rejectsThinkingDisabled,
+      rejectsBudgetThinking,
       rejectsForcedToolUse,
       supportsBetweenToolsThinking,
       isKnownModel
@@ -137438,11 +137968,12 @@ var dist_AnthropicMessagesLanguageModel = class {
       }
     }
     const isAnthropicModel = isKnownModel || this.modelId.includes("claude-");
-    const supportsStructuredOutput = ((_a = this.config.supportsNativeStructuredOutput) != null ? _a : true) && modelSupportsStructuredOutput;
-    const supportsStrictTools = ((_b = this.config.supportsStrictTools) != null ? _b : true) && modelSupportsStructuredOutput;
-    const structureOutputMode = (_c = anthropicOptions == null ? void 0 : anthropicOptions.structuredOutputMode) != null ? _c : "auto";
-    let useStructuredOutput = structureOutputMode === "outputFormat" || structureOutputMode === "auto" && supportsStructuredOutput;
-    if (!useStructuredOutput && rejectsForcedToolUse && supportsStructuredOutput && (responseFormat == null ? void 0 : responseFormat.type) === "json" && responseFormat.schema != null) {
+    const supportsStructuredOutput = ((_b = this.config.supportsNativeStructuredOutput) != null ? _b : true) && modelSupportsStructuredOutput;
+    const supportsResponseSchema = (responseFormat == null ? void 0 : responseFormat.type) !== "json" || responseFormat.schema == null || supportsNativeStructuredOutputSchema(responseFormat.schema);
+    const supportsStrictTools = ((_c = this.config.supportsStrictTools) != null ? _c : true) && modelSupportsStructuredOutput;
+    const structureOutputMode = (_d = anthropicOptions == null ? void 0 : anthropicOptions.structuredOutputMode) != null ? _d : "auto";
+    let useStructuredOutput = structureOutputMode === "outputFormat" || structureOutputMode === "auto" && supportsStructuredOutput && supportsResponseSchema;
+    if (!useStructuredOutput && rejectsForcedToolUse && modelSupportsStructuredOutput && (responseFormat == null ? void 0 : responseFormat.type) === "json" && responseFormat.schema != null && supportsNativeStructuredOutputSchema(responseFormat.schema)) {
       warnings.push({
         type: "unsupported",
         feature: "providerOptions.anthropic.structuredOutputMode",
@@ -137464,9 +137995,25 @@ var dist_AnthropicMessagesLanguageModel = class {
       });
     }
     const contextManagement = anthropicOptions == null ? void 0 : anthropicOptions.contextManagement;
-    const cacheControlValidator = new dist_CacheControlValidator();
+    const cacheControlValidator = new dist_CacheControlValidator(
+      this.config.cacheControlProviderOptionsName
+    );
+    const defaultEagerInputStreaming = stream && ((_e = anthropicOptions == null ? void 0 : anthropicOptions.toolStreaming) != null ? _e : true);
+    const inlineTools = await getInlineToolsFromPrompt(prompt);
+    const declaredFunctionToolNames = new Set(
+      (tools != null ? tools : []).flatMap(
+        (tool) => tool.type === "function" ? [tool.name] : []
+      )
+    );
     const toolNameMapping = dist_createToolNameMapping({
-      tools,
+      // later entries win when provider tool names collide, so the declared
+      // tools go last and an inline tool cannot take over their mapping:
+      tools: [
+        ...inlineTools.filter(
+          (tool) => !(tool.type === "provider" && declaredFunctionToolNames.has(tool.name))
+        ),
+        ...tools != null ? tools : []
+      ],
       providerToolNames: {
         "anthropic.code_execution_20250522": "code_execution",
         "anthropic.code_execution_20250825": "code_execution",
@@ -137492,14 +138039,57 @@ var dist_AnthropicMessagesLanguageModel = class {
       }
     });
     const toolsetNames = getAnthropicToolsetNames(tools);
+    const inlineToolDefinitions = [];
     const { prompt: messagesPrompt, betas } = await dist_convertToAnthropicMessagesPrompt({
       prompt,
-      sendReasoning: (_d = anthropicOptions == null ? void 0 : anthropicOptions.sendReasoning) != null ? _d : true,
+      sendReasoning: (_f = anthropicOptions == null ? void 0 : anthropicOptions.sendReasoning) != null ? _f : true,
       warnings,
       cacheControlValidator,
       toolNameMapping,
-      toolsetNames
+      toolsetNames,
+      convertMediaPart: this.config.convertMediaPart,
+      convertInlineTool: async (tool) => {
+        const {
+          tools: definitions,
+          toolWarnings: toolWarnings2,
+          betas: betas2
+        } = await anthropic_dist_prepareTools({
+          tools: [tool],
+          toolChoice: void 0,
+          cacheControlValidator,
+          supportsStructuredOutput,
+          supportsStrictTools
+          // no stream-dependent defaults (eager input streaming): the
+          // definition is replayed on every request and has to stay
+          // identical between streaming and non-streaming calls to keep
+          // the cache.
+        });
+        if ((definitions == null ? void 0 : definitions[0]) != null) {
+          inlineToolDefinitions.push({
+            sdkName: tool.name,
+            definition: definitions[0]
+          });
+        }
+        return {
+          definition: definitions == null ? void 0 : definitions[0],
+          warnings: toolWarnings2,
+          betas: betas2
+        };
+      }
     });
+    const emittedInlineDefinitions = new Set(
+      messagesPrompt.messages.flatMap(
+        (message) => message.role === "system" ? message.content.flatMap(
+          (part) => part.type === "tool_addition" && part.tool.type === "tool_definition" ? [part.tool.definition] : []
+        ) : []
+      )
+    );
+    if (emittedInlineDefinitions.size > 0 && (anthropicOptions == null ? void 0 : anthropicOptions.allowInlineToolDefinitions) !== true) {
+      throw new InvalidArgumentError({
+        argument: "providerOptions.anthropic.allowInlineToolDefinitions",
+        message: "Inline tool definitions require providerOptions.anthropic.allowInlineToolDefinitions to be true. Enable this option only for server-controlled messages, or declare tools in the tools option and add them by reference with toolName."
+      });
+    }
     if (rejectsThinkingDisabled && (anthropicOptions == null ? void 0 : anthropicOptions.thinking) != null) {
       const requestedThinking = anthropicOptions.thinking;
       const requestedType = "type" in requestedThinking ? requestedThinking.type : void 0;
@@ -137517,14 +138107,15 @@ var dist_AnthropicMessagesLanguageModel = class {
           details: `thinking cannot be disabled for ${this.modelId}; it always uses adaptive thinking. The thinking setting has been removed. Lower 'effort' to reduce thinking.`
         });
         anthropicOptions.thinking = void 0;
-      } else if (requestedType === "enabled") {
-        warnings.push({
-          type: "unsupported",
-          feature: "providerOptions.anthropic.thinking",
-          details: `budget-based thinking is not supported by ${this.modelId}; it always uses adaptive thinking. Using adaptive thinking instead. Use 'effort' to control how much the model thinks.`
-        });
-        anthropicOptions.thinking = { type: "adaptive" };
       }
+    }
+    if (rejectsBudgetThinking && (anthropicOptions == null ? void 0 : anthropicOptions.thinking) != null && "type" in anthropicOptions.thinking && anthropicOptions.thinking.type === "enabled") {
+      warnings.push({
+        type: "unsupported",
+        feature: "providerOptions.anthropic.thinking",
+        details: rejectsThinkingDisabled ? `budget-based thinking is not supported by ${this.modelId}; it always uses adaptive thinking. Using adaptive thinking instead. Use 'effort' to control how much the model thinks.` : `budget-based thinking is not supported by ${this.modelId}. Using adaptive thinking instead. Use 'effort' to control how much the model thinks.`
+      });
+      anthropicOptions.thinking = { type: "adaptive" };
     }
     const thinking = anthropicOptions == null ? void 0 : anthropicOptions.thinking;
     const thinkingType = thinking != null && "type" in thinking ? thinking.type : void 0;
@@ -137607,7 +138198,7 @@ var dist_AnthropicMessagesLanguageModel = class {
       ...(anthropicOptions == null ? void 0 : anthropicOptions.cacheControl) && {
         cache_control: anthropicOptions.cacheControl
       },
-      ...((_e = anthropicOptions == null ? void 0 : anthropicOptions.metadata) == null ? void 0 : _e.userId) != null && {
+      ...((_g = anthropicOptions == null ? void 0 : anthropicOptions.metadata) == null ? void 0 : _g.userId) != null && {
         metadata: { user_id: anthropicOptions.metadata.userId }
       },
       // mcp servers:
@@ -137715,7 +138306,7 @@ var dist_AnthropicMessagesLanguageModel = class {
         };
         thinkingBudget = 1024;
       }
-      if (baseArgs.temperature != null) {
+      if (baseArgs.temperature != null && !this.config.supportsTemperatureAndTopPWithThinking) {
         baseArgs.temperature = void 0;
         warnings.push({
           type: "unsupported",
@@ -137731,7 +138322,7 @@ var dist_AnthropicMessagesLanguageModel = class {
           details: "topK is not supported when thinking is enabled"
         });
       }
-      if (topP != null) {
+      if (topP != null && !this.config.supportsTemperatureAndTopPWithThinking) {
         baseArgs.top_p = void 0;
         warnings.push({
           type: "unsupported",
@@ -137802,7 +138393,6 @@ var dist_AnthropicMessagesLanguageModel = class {
     } else if ((anthropicOptions == null ? void 0 : anthropicOptions.fallbacks) && anthropicOptions.fallbacks.length > 0) {
       betas.add("server-side-fallback-2026-06-01");
     }
-    const defaultEagerInputStreaming = stream && ((_f = anthropicOptions == null ? void 0 : anthropicOptions.toolStreaming) != null ? _f : true);
     const {
       tools: anthropicTools2,
       toolChoice: anthropicToolChoice,
@@ -137810,25 +138400,57 @@ var dist_AnthropicMessagesLanguageModel = class {
       betas: toolsBetas
     } = await anthropic_dist_prepareTools(
       jsonResponseTool != null ? {
-        tools: [...tools != null ? tools : [], jsonResponseTool],
+        tools: [
+          ...(tools != null ? tools : []).filter(
+            (tool) => (toolChoice == null ? void 0 : toolChoice.type) !== "none" && ((toolChoice == null ? void 0 : toolChoice.type) !== "tool" || tool.name === toolChoice.toolName)
+          ),
+          jsonResponseTool
+        ],
         toolChoice: { type: "required" },
         disableParallelToolUse: true,
         cacheControlValidator,
         supportsStructuredOutput: false,
         supportsStrictTools,
         defaultEagerInputStreaming,
-        rejectsForcedToolUse
+        rejectsForcedToolUse: rejectsForcedToolUse || thinkingType === "enabled"
       } : {
         tools: tools != null ? tools : [],
         toolChoice,
+        // tool changes can add tools when `tools` is empty, so the tool
+        // choice and parallel tool use settings still apply:
+        hasInlineTools: inlineTools.length > 0,
         disableParallelToolUse: anthropicOptions == null ? void 0 : anthropicOptions.disableParallelToolUse,
         cacheControlValidator,
         supportsStructuredOutput,
         supportsStrictTools,
         defaultEagerInputStreaming,
-        rejectsForcedToolUse
+        rejectsForcedToolUse: rejectsForcedToolUse || thinkingType === "enabled"
       }
     );
+    if ((toolChoice == null ? void 0 : toolChoice.type) === "tool" && ((anthropicToolChoice == null ? void 0 : anthropicToolChoice.type) === "auto" || jsonResponseTool != null) || (toolChoice == null ? void 0 : toolChoice.type) === "none" && jsonResponseTool != null) {
+      for (const server of (_h = baseArgs.mcp_servers) != null ? _h : []) {
+        server.tool_configuration = {
+          allowed_tools: (_i = server.tool_configuration) == null ? void 0 : _i.allowed_tools,
+          enabled: false
+        };
+      }
+      const selectedSdkName = toolChoice.type === "tool" ? toolChoice.toolName : void 0;
+      const selectedTool = tools == null ? void 0 : tools.find((tool) => tool.name === selectedSdkName);
+      const selectedProviderName = jsonResponseTool != null && selectedSdkName != null && (selectedTool == null ? void 0 : selectedTool.type) !== "function" ? toolNameMapping.toProviderToolName(selectedSdkName) : selectedSdkName;
+      const conflictingTool = inlineToolDefinitions.find(
+        ({ sdkName, definition }) => emittedInlineDefinitions.has(definition) && (toolChoice.type === "none" || // The JSON-tool path filters application tools by SDK name before
+        // conversion; the forced-choice fallback filters by provider name.
+        jsonResponseTool != null && sdkName !== selectedSdkName || !("name" in definition) || definition.name !== selectedProviderName)
+      );
+      if (conflictingTool != null) {
+        const toolName = "name" in conflictingTool.definition ? conflictingTool.definition.name : conflictingTool.definition.type;
+        const choice = toolChoice.type === "tool" ? `named tool choice '${toolChoice.toolName}'` : `tool choice 'none'`;
+        throw new InvalidArgumentError({
+          argument: "toolChoice",
+          message: `Inline tool '${toolName}' conflicts with ${choice}. Inline definitions must respect the tool choice when forced tool use falls back or the JSON response tool is used.`
+        });
+      }
+    }
     const cacheWarnings = cacheControlValidator.getWarnings();
     return {
       args: {
@@ -137843,7 +138465,7 @@ var dist_AnthropicMessagesLanguageModel = class {
         ...betas,
         ...toolsBetas,
         ...userSuppliedBetas,
-        ...(_g = anthropicOptions == null ? void 0 : anthropicOptions.anthropicBeta) != null ? _g : []
+        ...(_j = anthropicOptions == null ? void 0 : anthropicOptions.anthropicBeta) != null ? _j : []
       ]),
       usesJsonResponseTool: jsonResponseTool != null,
       toolNameMapping,
@@ -137944,10 +138566,11 @@ var dist_AnthropicMessagesLanguageModel = class {
     const mcpToolCalls = {};
     const serverToolCalls = {};
     let isJsonResponseFromTool = false;
+    const jsonResponseToolFallbackText = usesJsonResponseTool ? getJsonResponseToolFallbackText(response.content, response.stop_reason) : void 0;
     for (const part of response.content) {
       switch (part.type) {
         case "text": {
-          if (!usesJsonResponseTool) {
+          if (jsonResponseToolFallbackText == null || jsonResponseToolFallbackText.has(part)) {
             const webSearchCitations = (_a = part.citations) == null ? void 0 : _a.filter(
               (citation) => citation.type === "web_search_result_location"
             );
@@ -138022,6 +138645,11 @@ var dist_AnthropicMessagesLanguageModel = class {
               text: JSON.stringify(part.input)
             });
           } else if (part.toolset_name != null) {
+            validateToolsetMember({
+              toolsetName: part.toolset_name,
+              memberName: part.name,
+              tools: args.tools
+            });
             content.push({
               type: "tool-call",
               toolCallId: part.id,
@@ -138483,6 +139111,15 @@ var dist_AnthropicMessagesLanguageModel = class {
     let safeguardResults;
     let container = null;
     let isJsonResponseFromTool = false;
+    const heldBackText = [];
+    const heldBackTextByIndex = /* @__PURE__ */ new Map();
+    const createTextEnd = (id, citations) => ({
+      type: "text-end",
+      id,
+      ...citations.length > 0 && {
+        providerMetadata: { anthropic: { citations } }
+      }
+    });
     let isMessageOpen = false;
     let activeMessageId;
     let hasInvalidMessageSequence = false;
@@ -138494,7 +139131,7 @@ var dist_AnthropicMessagesLanguageModel = class {
           controller.enqueue({ type: "stream-start", warnings });
         },
         transform(chunk, controller) {
-          var _a2, _b2, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
+          var _a2, _b2, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o;
           if (hasInvalidMessageSequence) {
             return;
           }
@@ -138517,9 +139154,19 @@ var dist_AnthropicMessagesLanguageModel = class {
                 return;
               }
               blockType = contentBlockType;
+              if (!TEXT_OR_THINKING_BLOCK_TYPES.has(contentBlockType)) {
+                heldBackText.length = 0;
+              }
               switch (contentBlockType) {
                 case "text": {
                   if (usesJsonResponseTool) {
+                    const entry = {
+                      id: String(value.index),
+                      text: "",
+                      citations: []
+                    };
+                    heldBackText.push(entry);
+                    heldBackTextByIndex.set(value.index, entry);
                     return;
                   }
                   contentBlocks[value.index] = {
@@ -138582,6 +139229,11 @@ var dist_AnthropicMessagesLanguageModel = class {
                       id: String(value.index)
                     });
                   } else if (part.toolset_name != null) {
+                    validateToolsetMember({
+                      toolsetName: part.toolset_name,
+                      memberName: part.name,
+                      tools: body.tools
+                    });
                     const callerInfo = getAnthropicCallerInfo(part.caller);
                     const customToolName = toolNameMapping.toCustomToolName(
                       part.toolset_name
@@ -138974,17 +139626,12 @@ var dist_AnthropicMessagesLanguageModel = class {
                 const contentBlock = contentBlocks[value.index];
                 switch (contentBlock.type) {
                   case "text": {
-                    controller.enqueue({
-                      type: "text-end",
-                      id: String(value.index),
-                      ...contentBlock.citations.length > 0 && {
-                        providerMetadata: {
-                          anthropic: {
-                            citations: contentBlock.citations
-                          }
-                        }
-                      }
-                    });
+                    controller.enqueue(
+                      createTextEnd(
+                        String(value.index),
+                        contentBlock.citations
+                      )
+                    );
                     break;
                   }
                   case "reasoning": {
@@ -139002,9 +139649,12 @@ var dist_AnthropicMessagesLanguageModel = class {
                         try {
                           memberInput = contentBlock.input === "" ? {} : secureJsonParse(contentBlock.input);
                         } catch (e) {
-                          memberInput = void 0;
+                          throw new dist_InvalidResponseDataError({
+                            data: contentBlock.input,
+                            message: "Invalid toolset member input JSON."
+                          });
                         }
-                        contentBlock.input = memberInput === void 0 ? contentBlock.input : JSON.stringify(
+                        contentBlock.input = JSON.stringify(
                           toToolsetMemberInput({
                             memberName: contentBlock.toolset.memberName,
                             input: memberInput
@@ -139070,6 +139720,10 @@ var dist_AnthropicMessagesLanguageModel = class {
               switch (deltaType) {
                 case "text_delta": {
                   if (usesJsonResponseTool) {
+                    const entry = heldBackTextByIndex.get(value.index);
+                    if (entry != null) {
+                      entry.text += value.delta.text;
+                    }
                     return;
                   }
                   controller.enqueue({
@@ -139151,8 +139805,11 @@ var dist_AnthropicMessagesLanguageModel = class {
                 case "citations_delta": {
                   const citation = value.delta.citation;
                   const contentBlock = contentBlocks[value.index];
-                  if ((contentBlock == null ? void 0 : contentBlock.type) === "text" && citation.type === "web_search_result_location") {
-                    contentBlock.citations.push(citation);
+                  if (citation.type === "web_search_result_location") {
+                    if ((contentBlock == null ? void 0 : contentBlock.type) === "text") {
+                      contentBlock.citations.push(citation);
+                    }
+                    (_e = heldBackTextByIndex.get(value.index)) == null ? void 0 : _e.citations.push(citation);
                   }
                   const source = dist_createCitationSource(
                     citation,
@@ -139189,13 +139846,14 @@ var dist_AnthropicMessagesLanguageModel = class {
               }
               isMessageOpen = true;
               activeMessageId = value.message.id;
+              heldBackTextByIndex.clear();
               usage.input_tokens = value.message.usage.input_tokens;
-              usage.cache_read_input_tokens = (_e = value.message.usage.cache_read_input_tokens) != null ? _e : 0;
-              usage.cache_creation_input_tokens = (_f = value.message.usage.cache_creation_input_tokens) != null ? _f : 0;
+              usage.cache_read_input_tokens = (_f = value.message.usage.cache_read_input_tokens) != null ? _f : 0;
+              usage.cache_creation_input_tokens = (_g = value.message.usage.cache_creation_input_tokens) != null ? _g : 0;
               rawUsage = {
                 ...value.message.usage
               };
-              cacheCreationInputTokens = (_g = value.message.usage.cache_creation_input_tokens) != null ? _g : null;
+              cacheCreationInputTokens = (_h = value.message.usage.cache_creation_input_tokens) != null ? _h : null;
               if (value.message.input_transformations != null) {
                 inputTransformations = value.message.input_transformations;
               }
@@ -139217,8 +139875,8 @@ var dist_AnthropicMessagesLanguageModel = class {
               }
               controller.enqueue({
                 type: "response-metadata",
-                id: (_h = value.message.id) != null ? _h : void 0,
-                modelId: (_i = value.message.model) != null ? _i : void 0
+                id: (_i = value.message.id) != null ? _i : void 0,
+                modelId: (_j = value.message.model) != null ? _j : void 0
               });
               if (value.message.content != null) {
                 for (let contentIndex = 0; contentIndex < value.message.content.length; contentIndex++) {
@@ -139230,7 +139888,7 @@ var dist_AnthropicMessagesLanguageModel = class {
                       id: part.id,
                       toolName: part.name
                     });
-                    const inputStr = JSON.stringify((_j = part.input) != null ? _j : {});
+                    const inputStr = JSON.stringify((_k = part.input) != null ? _k : {});
                     controller.enqueue({
                       type: "tool-input-delta",
                       id: part.id,
@@ -139281,18 +139939,18 @@ var dist_AnthropicMessagesLanguageModel = class {
                   finishReason: value.delta.stop_reason,
                   isJsonResponseFromTool
                 }),
-                raw: (_k = value.delta.stop_reason) != null ? _k : void 0
+                raw: (_l = value.delta.stop_reason) != null ? _l : void 0
               };
-              stopSequence = (_l = value.delta.stop_sequence) != null ? _l : null;
+              stopSequence = (_m = value.delta.stop_sequence) != null ? _m : null;
               stopDetails = dist_mapAnthropicStopDetails(value.delta.stop_details);
               container = value.delta.container != null ? {
                 expiresAt: value.delta.container.expires_at,
                 id: value.delta.container.id,
-                skills: (_n = (_m = value.delta.container.skills) == null ? void 0 : _m.map((skill) => ({
+                skills: (_o = (_n = value.delta.container.skills) == null ? void 0 : _n.map((skill) => ({
                   type: skill.type,
                   skillId: skill.skill_id,
                   version: skill.version
-                }))) != null ? _n : null
+                }))) != null ? _o : null
               } : null;
               if (value.context_management) {
                 contextManagement = dist_mapAnthropicResponseContextManagement(
@@ -139344,6 +140002,15 @@ var dist_AnthropicMessagesLanguageModel = class {
               if (usedCustomProviderKey && providerOptionsName !== "anthropic") {
                 providerMetadata[providerOptionsName] = anthropicMetadata;
               }
+              if (!isJsonResponseFromTool && !isContinuationStopReason(finishReason.raw)) {
+                for (const { id, text, citations } of heldBackText) {
+                  if (text.length === 0) continue;
+                  controller.enqueue({ type: "text-start", id });
+                  controller.enqueue({ type: "text-delta", id, delta: text });
+                  controller.enqueue(createTextEnd(id, citations));
+                }
+              }
+              heldBackText.length = 0;
               controller.enqueue({
                 type: "finish",
                 finishReason,
@@ -139404,6 +140071,7 @@ function dist_getModelCapabilities(modelId) {
       rejectsSamplingParameters: true,
       rejectsThinkingDisabledAboveHighEffort: true,
       rejectsThinkingDisabled: true,
+      rejectsBudgetThinking: true,
       rejectsForcedToolUse: true,
       supportsBetweenToolsThinking: true,
       isKnownModel: true
@@ -139415,7 +140083,20 @@ function dist_getModelCapabilities(modelId) {
       rejectsSamplingParameters: true,
       rejectsThinkingDisabledAboveHighEffort: true,
       rejectsThinkingDisabled: true,
+      rejectsBudgetThinking: true,
       rejectsForcedToolUse: true,
+      supportsBetweenToolsThinking: false,
+      isKnownModel: true
+    };
+  } else if (modelId.includes("claude-haiku-5-5")) {
+    return {
+      maxOutputTokens: 128e3,
+      supportsStructuredOutput: true,
+      rejectsSamplingParameters: true,
+      rejectsThinkingDisabledAboveHighEffort: true,
+      rejectsThinkingDisabled: false,
+      rejectsBudgetThinking: true,
+      rejectsForcedToolUse: false,
       supportsBetweenToolsThinking: false,
       isKnownModel: true
     };
@@ -139426,17 +140107,19 @@ function dist_getModelCapabilities(modelId) {
       rejectsSamplingParameters: true,
       rejectsThinkingDisabledAboveHighEffort: true,
       rejectsThinkingDisabled: false,
+      rejectsBudgetThinking: false,
       rejectsForcedToolUse: false,
       supportsBetweenToolsThinking: false,
       isKnownModel: true
     };
-  } else if (modelId.includes("claude-fable-5-1")) {
+  } else if (modelId.includes("claude-fable-5-2") || modelId.includes("claude-fable-5-1")) {
     return {
       maxOutputTokens: 128e3,
       supportsStructuredOutput: true,
       rejectsSamplingParameters: true,
       rejectsThinkingDisabledAboveHighEffort: false,
       rejectsThinkingDisabled: true,
+      rejectsBudgetThinking: true,
       rejectsForcedToolUse: true,
       supportsBetweenToolsThinking: false,
       isKnownModel: true
@@ -139448,6 +140131,7 @@ function dist_getModelCapabilities(modelId) {
       rejectsSamplingParameters: true,
       rejectsThinkingDisabledAboveHighEffort: false,
       rejectsThinkingDisabled: true,
+      rejectsBudgetThinking: true,
       rejectsForcedToolUse: false,
       supportsBetweenToolsThinking: false,
       isKnownModel: true
@@ -139459,6 +140143,7 @@ function dist_getModelCapabilities(modelId) {
       rejectsSamplingParameters: true,
       rejectsThinkingDisabledAboveHighEffort: false,
       rejectsThinkingDisabled: false,
+      rejectsBudgetThinking: false,
       rejectsForcedToolUse: false,
       supportsBetweenToolsThinking: false,
       isKnownModel: true
@@ -139470,6 +140155,7 @@ function dist_getModelCapabilities(modelId) {
       rejectsSamplingParameters: false,
       rejectsThinkingDisabledAboveHighEffort: false,
       rejectsThinkingDisabled: false,
+      rejectsBudgetThinking: false,
       rejectsForcedToolUse: false,
       supportsBetweenToolsThinking: false,
       isKnownModel: true
@@ -139481,6 +140167,7 @@ function dist_getModelCapabilities(modelId) {
       rejectsSamplingParameters: false,
       rejectsThinkingDisabledAboveHighEffort: false,
       rejectsThinkingDisabled: false,
+      rejectsBudgetThinking: false,
       rejectsForcedToolUse: false,
       supportsBetweenToolsThinking: false,
       isKnownModel: true
@@ -139492,6 +140179,7 @@ function dist_getModelCapabilities(modelId) {
       rejectsSamplingParameters: false,
       rejectsThinkingDisabledAboveHighEffort: false,
       rejectsThinkingDisabled: false,
+      rejectsBudgetThinking: false,
       rejectsForcedToolUse: false,
       supportsBetweenToolsThinking: false,
       isKnownModel: true
@@ -139503,6 +140191,7 @@ function dist_getModelCapabilities(modelId) {
       rejectsSamplingParameters: false,
       rejectsThinkingDisabledAboveHighEffort: false,
       rejectsThinkingDisabled: false,
+      rejectsBudgetThinking: false,
       rejectsForcedToolUse: false,
       supportsBetweenToolsThinking: false,
       isKnownModel: true
@@ -139514,6 +140203,7 @@ function dist_getModelCapabilities(modelId) {
       rejectsSamplingParameters: false,
       rejectsThinkingDisabledAboveHighEffort: false,
       rejectsThinkingDisabled: false,
+      rejectsBudgetThinking: false,
       rejectsForcedToolUse: false,
       supportsBetweenToolsThinking: false,
       isKnownModel: true
@@ -139525,6 +140215,7 @@ function dist_getModelCapabilities(modelId) {
       rejectsSamplingParameters: false,
       rejectsThinkingDisabledAboveHighEffort: false,
       rejectsThinkingDisabled: false,
+      rejectsBudgetThinking: false,
       rejectsForcedToolUse: false,
       supportsBetweenToolsThinking: false,
       isKnownModel: true
@@ -139536,6 +140227,7 @@ function dist_getModelCapabilities(modelId) {
       rejectsSamplingParameters: false,
       rejectsThinkingDisabledAboveHighEffort: false,
       rejectsThinkingDisabled: false,
+      rejectsBudgetThinking: false,
       rejectsForcedToolUse: false,
       supportsBetweenToolsThinking: false,
       isKnownModel: false
@@ -139547,6 +140239,7 @@ function dist_getModelCapabilities(modelId) {
       rejectsSamplingParameters: true,
       rejectsThinkingDisabledAboveHighEffort: true,
       rejectsThinkingDisabled: false,
+      rejectsBudgetThinking: false,
       rejectsForcedToolUse: false,
       supportsBetweenToolsThinking: false,
       isKnownModel: false
@@ -139558,6 +140251,7 @@ function dist_getModelCapabilities(modelId) {
       rejectsSamplingParameters: false,
       rejectsThinkingDisabledAboveHighEffort: false,
       rejectsThinkingDisabled: false,
+      rejectsBudgetThinking: false,
       rejectsForcedToolUse: false,
       supportsBetweenToolsThinking: false,
       isKnownModel: false
@@ -139901,14 +140595,14 @@ var dist_toolSearchBm25_20251119InputSchema = lazySchema(
     })
   )
 );
-var dist_factory11 = createProviderToolFactoryWithOutputSchema({
+var factory12 = createProviderToolFactoryWithOutputSchema({
   id: "anthropic.tool_search_bm25_20251119",
   inputSchema: dist_toolSearchBm25_20251119InputSchema,
   outputSchema: dist_toolSearchBm25_20251119OutputSchema,
   supportsDeferredResults: true
 });
 var dist_toolSearchBm25_20251119 = (args = {}) => {
-  return dist_factory11(args);
+  return factory12(args);
 };
 
 // src/anthropic-tools.ts
@@ -170931,7 +171625,7 @@ const CATEGORIES = [
 	"test",
 	"docs"
 ];
-function dist_isRecord(value) {
+function lupe_core_dist_isRecord(value) {
 	return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 function pickArray(value) {
@@ -170952,7 +171646,7 @@ function pickSeverity(value) {
 }
 /** Read camel/snake `minConfidence`/`minSeverity` from a raw threshold object. */
 function pickGate(raw) {
-	if (!dist_isRecord(raw)) return void 0;
+	if (!lupe_core_dist_isRecord(raw)) return void 0;
 	const minConfidence = pickNumber(raw["minConfidence"] ?? raw["min_confidence"]);
 	const minSeverity = pickSeverity(raw["minSeverity"] ?? raw["min_severity"]);
 	if (minConfidence === void 0 && minSeverity === void 0) return void 0;
@@ -170962,7 +171656,7 @@ function pickGate(raw) {
 	};
 }
 function pickCategoryThresholds(raw) {
-	if (!dist_isRecord(raw)) return void 0;
+	if (!lupe_core_dist_isRecord(raw)) return void 0;
 	const out = {};
 	let any = false;
 	for (const cat of CATEGORIES) {
@@ -170976,11 +171670,11 @@ function pickCategoryThresholds(raw) {
 }
 /** Read a per-model price override; cache rows default to the 5-min ephemeral ratios of `input`. */
 function pickModelPrices(raw) {
-	if (!dist_isRecord(raw)) return void 0;
+	if (!lupe_core_dist_isRecord(raw)) return void 0;
 	const out = {};
 	let any = false;
 	for (const [model, value] of Object.entries(raw)) {
-		if (!dist_isRecord(value)) continue;
+		if (!lupe_core_dist_isRecord(value)) continue;
 		const input = pickNumber(value["input"]);
 		const output = pickNumber(value["output"]);
 		if (input === void 0 || output === void 0) continue;
@@ -170999,7 +171693,7 @@ function pickPathThresholds(raw) {
 	if (!arr) return void 0;
 	const out = [];
 	for (const entry of arr) {
-		if (!dist_isRecord(entry)) continue;
+		if (!lupe_core_dist_isRecord(entry)) continue;
 		const glob = pickString(entry["glob"]);
 		if (!glob) continue;
 		const gate = pickGate(entry);
@@ -171682,7 +172376,11 @@ function repairTurn(validationError, raw) {
 * The AI SDK parses `Output.array` only when `finishReason` is `stop`. A loop
 * that spends every step on tools therefore returns no findings and throws
 * `NoOutputGeneratedError` on `.output`. When that happens — or the model
-* stops for any other reason — one more call is made with tools disabled.
+* stops for any other reason — one more call is made with `toolChoice: 'none'`.
+* `tools` and `activeTools` stay identical across the loop and the final
+* answer: only `toolChoice` changes. Changing the tool set mid-conversation
+* drops the tool definitions, so the provider sees a different tool set and
+* the tool context is lost.
 * Invalid JSON gets one repair pass: local parse/fix, then a single re-ask
 * that includes the validation error.
 */
@@ -171719,12 +172417,8 @@ async function collectFindings(input) {
 			providerOptions: input.cacheable ? anthropicThinkingBinding(input.modelId) : void 0,
 			tools: hasTools ? input.tools : void 0,
 			toolChoice: mode === "answer" && hasTools ? "none" : void 0,
-			activeTools: mode === "answer" && hasTools ? [] : void 0,
 			stopWhen: [stepCountIs(mode === "loop" ? input.maxSteps : 1)],
-			prepareStep: mode === "loop" && hasTools ? ({ stepNumber }) => stepNumber >= input.maxSteps - 1 ? {
-				toolChoice: "none",
-				activeTools: []
-			} : void 0 : void 0,
+			prepareStep: mode === "loop" && hasTools ? ({ stepNumber }) => stepNumber >= input.maxSteps - 1 ? { toolChoice: "none" } : void 0 : void 0,
 			output: findingsOutput,
 			allowSystemInMessages: true,
 			maxRetries: 2,
