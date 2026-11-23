@@ -89,6 +89,11 @@ describe('toTokenUsage', () => {
       'claude-sonnet-4-5-20250929',
       'claude-haiku-4-5-20251001',
       'claude-opus-4-5-20251101',
+      // Date-stamped major-only releases (Claude 4.0): the 8-digit date is
+      // not a minor version, so these are not adaptive-capable.
+      'claude-sonnet-4-20250514',
+      'claude-opus-4-20250514',
+      'claude-haiku-4-20250514',
     ]) {
       expect(supportsAdaptiveThinking(modelId)).toBe(false);
     }

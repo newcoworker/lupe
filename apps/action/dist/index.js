@@ -171409,7 +171409,9 @@ function supportsAdaptiveThinking(modelId) {
 	const match = /^claude-(opus|sonnet|haiku|fable|mythos)-(\d+)(?:-(\d+))?/.exec(modelId);
 	if (!match) return false;
 	const major = Number(match[2]);
-	const minor = match[3] === void 0 ? void 0 : Number(match[3]);
+	const minorRaw = match[3];
+	const isDateStamp = minorRaw !== void 0 && /^(19|20)\d{6}$/.test(minorRaw);
+	const minor = minorRaw === void 0 || isDateStamp ? void 0 : Number(minorRaw);
 	if (major > 4) return true;
 	if (major === 4) return minor !== void 0 && minor >= 6;
 	return false;

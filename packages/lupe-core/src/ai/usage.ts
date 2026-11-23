@@ -44,7 +44,13 @@ export function supportsAdaptiveThinking(modelId: string | undefined): boolean {
   const match = /^claude-(opus|sonnet|haiku|fable|mythos)-(\d+)(?:-(\d+))?/.exec(modelId);
   if (!match) return false;
   const major = Number(match[2]);
-  const minor = match[3] === undefined ? undefined : Number(match[3]);
+  const minorRaw = match[3];
+  // A date-stamped model id (e.g. claude-sonnet-4-20250514) carries an
+  // 8-digit date where the minor version would be. That is a major-only
+  // release (Claude 4.0), not a minor version, so it must not count as
+  // adaptive-capable.
+  const isDateStamp = minorRaw !== undefined && /^(19|20)\d{6}$/.test(minorRaw);
+  const minor = minorRaw === undefined || isDateStamp ? undefined : Number(minorRaw);
   if (major > 4) return true;
   if (major === 4) return minor !== undefined && minor >= 6;
   return false;
