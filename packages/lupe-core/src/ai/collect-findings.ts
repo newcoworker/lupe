@@ -123,7 +123,11 @@ export interface CollectFindingsInput {
  * The AI SDK parses `Output.array` only when `finishReason` is `stop`. A loop
  * that spends every step on tools therefore returns no findings and throws
  * `NoOutputGeneratedError` on `.output`. When that happens — or the model
- * stops for any other reason — one more call is made with tools disabled.
+ * stops for any other reason — one more call is made with `toolChoice: 'none'`.
+ * `tools` and `activeTools` stay identical across the loop and the final
+ * answer: only `toolChoice` changes. Changing the tool set mid-conversation
+ * drops the tool definitions, so the provider sees a different tool set and
+ * the tool context is lost.
  * Invalid JSON gets one repair pass: local parse/fix, then a single re-ask
  * that includes the validation error.
  */
@@ -166,12 +170,10 @@ export async function collectFindings(
       providerOptions: input.cacheable ? anthropicThinkingBinding(input.modelId) : undefined,
       tools: hasTools ? input.tools : undefined,
       toolChoice: mode === 'answer' && hasTools ? 'none' : undefined,
-      activeTools: mode === 'answer' && hasTools ? [] : undefined,
       stopWhen: [stepCountIs(mode === 'loop' ? input.maxSteps : 1)],
       prepareStep:
         mode === 'loop' && hasTools
-          ? ({ stepNumber }) =>
-              stepNumber >= input.maxSteps - 1 ? { toolChoice: 'none' as const, activeTools: [] } : undefined
+          ? ({ stepNumber }) => (stepNumber >= input.maxSteps - 1 ? { toolChoice: 'none' as const } : undefined)
           : undefined,
       output: findingsOutput,
       allowSystemInMessages: true,

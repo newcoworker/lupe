@@ -225,9 +225,52 @@ describe('generateFindings tool loop', () => {
     expect(result.steps).toBe(4);
     const finalCall = calls.find((call) => promptOf(call).includes(FINAL_FINDINGS_TURN));
     expect(finalCall?.toolChoice).toEqual({ type: 'none' });
-    expect(finalCall?.tools).toEqual([]);
+    expect(finalCall?.tools).toEqual(calls[0]?.tools);
+    expect(finalCall?.tools?.length).toBeGreaterThan(0);
     expect(calls.some((call) => call.toolChoice?.type !== 'none')).toBe(true);
     expect(result.usage.inputTokens).toBe(40);
+  });
+
+  test('final answer and repair re-ask keep the same tools as the loop calls', async () => {
+    const calls: GenerateOptions[] = [];
+    const model = new MockLanguageModelV3({
+      doGenerate: async (options) => {
+        calls.push(options);
+        const prompt = promptOf(options);
+        if (prompt.includes('failed schema validation')) return textResult(findingsText(), 'stop');
+        if (prompt.includes(FINAL_FINDINGS_TURN)) return textResult('{"elements":[{"title":"nope"}]}', 'stop');
+        if (calls.length === 1) return toolCallResult('call_1');
+        return textResult('partial answer', 'length');
+      },
+    });
+
+    const result = await Effect.runPromise(run(model, 4));
+    expect(result.findings).toHaveLength(1);
+    expect(result.findings[0]?.ruleId).toBe(FINDING.ruleId);
+    expect(calls).toHaveLength(4);
+
+    // The tool set never changes mid-conversation: every model call sees the
+    // same tools. `activeTools` is consumed by the AI SDK before the model
+    // call (it filters `tools`), so identical `tools` on every call is the
+    // observable proof that no call narrowed the tool set, and no model call
+    // receives an `activeTools` value at all.
+    const loopTools = calls[0]?.tools;
+    expect(loopTools?.length).toBeGreaterThan(0);
+    for (const call of calls) {
+      expect(call.tools).toEqual(loopTools);
+      expect((call as { activeTools?: unknown }).activeTools).toBeUndefined();
+    }
+
+    // Only `toolChoice: 'none'` makes a call tool-free. The loop calls keep
+    // the SDK default (`auto`); the final answer and the repair re-ask set
+    // it to none.
+    const loopCalls = calls.filter((call) => !promptOf(call).includes(FINAL_FINDINGS_TURN));
+    for (const call of loopCalls) expect(call.toolChoice).toEqual({ type: 'auto' });
+    const finalCall = calls.find((call) => promptOf(call).includes(FINAL_FINDINGS_TURN));
+    expect(finalCall?.toolChoice).toEqual({ type: 'none' });
+    const repairCall = calls.find((call) => promptOf(call).includes('failed schema validation'));
+    expect(repairCall?.toolChoice).toEqual({ type: 'none' });
+    expect(repairCall?.tools).toEqual(loopTools);
   });
 
   test('repairs fenced JSON with a trailing comma without a second model call', async () => {
