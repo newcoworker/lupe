@@ -380,6 +380,38 @@ describe('verify', () => {
     expect(calls).toHaveLength(1);
     expect(calls[0]?.providerOptions).toEqual(THINKING_BINDING);
   });
+
+  test('haiku-4-5 verify calls carry no thinking option (adaptive thinking is rejected on 4.5 models)', async () => {
+    const calls: GenerateOptions[] = [];
+    const model = new MockLanguageModelV3({
+      doGenerate: async (options) => {
+        calls.push(options);
+        return textResult(JSON.stringify({ grounded: true, reason: 'matches the code' }), 'stop');
+      },
+    });
+    const ai = AiSdkLive({
+      provider: 'anthropic',
+      apiKey: 'test',
+      languageModel: model,
+      models: { verify: 'claude-haiku-4-5' },
+    }).pipe(Layer.provide(repoLayer));
+    const result = await Effect.runPromise(
+      Effect.gen(function* () {
+        const svc = yield* AiModel;
+        return yield* svc.verify({
+          task: 'verify',
+          system: 'You are lupe.',
+          candidate: FINDING,
+          evidenceContext: 'export const a = 1;',
+        });
+      }).pipe(Effect.provide(ai))
+    );
+    expect(result.grounded).toBe(true);
+    expect(calls).toHaveLength(1);
+    // No thinking option is passed, so the wire request carries no thinking
+    // field and no thinking-binding beta header.
+    expect(calls[0]?.providerOptions).toBeUndefined();
+  });
 });
 
 describe('anthropic thinking binding wire format', () => {

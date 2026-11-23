@@ -20,14 +20,16 @@ export function anthropicCacheBreakpoint(): { anthropic: { cacheControl: { type:
 
 /**
  * Whether an Anthropic model supports adaptive thinking (`thinking.type:
- * 'adaptive'`). Per Anthropic's docs, adaptive thinking is supported on
- * Claude 4.6 and later models and Claude Mythos Preview; Claude 4.5 and
- * earlier models support only legacy manual (extended) thinking and reject
- * `adaptive` with a 400. See the per-model table at
+ * 'adaptive'`). Per Anthropic's per-model table, Claude 4.5 and earlier
+ * models support only legacy manual (extended) thinking and reject
+ * `adaptive` with a 400; Claude 4.6 and later models, every Claude 5
+ * model, and Claude Mythos Preview support adaptive thinking. See
  * https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting
- * and the primer at https://platform.claude.com/docs/en/claude_api_primer
- * ("Adaptive thinking is supported on Claude 4.6 and later models and Claude
- * Mythos Preview"). Adaptive-capable: Opus 4.6, Sonnet 4.6, Opus 4.7,
+ * (per-model table: 4.5 "Extended only", rejects `"adaptive"`; 4.6+,
+ * Claude 5 and Mythos Preview are adaptive) and
+ * https://platform.claude.com/docs/en/build-with-claude/extended-thinking
+ * ("Adaptive thinking is not available on them, and `type: "adaptive"`
+ * returns a 400 error"). Adaptive-capable: Opus 4.6, Sonnet 4.6, Opus 4.7,
  * Opus 4.8, and every Claude 5 model (Opus 5, Sonnet 5, Haiku 5, Fable 5,
  * Mythos 5, and their 5.1/5.2/5.5 variants), plus Claude Mythos Preview.
  * Not adaptive-capable: Opus 4.5, Sonnet 4.5, Haiku 4.5, and earlier
