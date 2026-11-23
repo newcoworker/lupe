@@ -21,8 +21,8 @@ export function anthropicCacheBreakpoint(): { anthropic: { cacheControl: { type:
 /**
  * Provider options that tell Anthropic to drop a thinking block whose signature
  * no longer matches its assistant prefix instead of failing the request with
- * a 400. The standalone `blockBinding` form leaves the model's default
- * thinking mode untouched. The Anthropic provider adds the
+ * a 400. `type: 'adaptive'` pins the thinking mode, and `blockBinding`
+ * drops a mismatched block instead of failing. The Anthropic provider adds the
  * `thinking-binding-controls-2026-08-01` beta header automatically when this
  * option is present.
  *
@@ -32,7 +32,13 @@ export function anthropicCacheBreakpoint(): { anthropic: { cacheControl: { type:
  * signature error.
  */
 export function anthropicThinkingBinding(): {
-  anthropic: { thinking: { blockBinding: { prefixMismatchBehavior: 'drop_block' } } };
+  anthropic: {
+    thinking: { type: 'adaptive'; blockBinding: { prefixMismatchBehavior: 'drop_block' } };
+  };
 } {
-  return { anthropic: { thinking: { blockBinding: { prefixMismatchBehavior: 'drop_block' } } } };
+  return {
+    anthropic: {
+      thinking: { type: 'adaptive', blockBinding: { prefixMismatchBehavior: 'drop_block' } },
+    },
+  };
 }

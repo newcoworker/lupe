@@ -1,3 +1,5 @@
+import { createAnthropic } from '@ai-sdk/anthropic';
+import { generateText } from 'ai';
 import { MockLanguageModelV3 } from 'ai/test';
 import { Effect, Layer } from 'effect';
 import { describe, expect, test } from 'vitest';
@@ -6,6 +8,7 @@ import { RepoSource } from '../ports';
 import { AiSdkLive } from './ai-sdk-layer';
 import { FINAL_FINDINGS_TURN } from './collect-findings';
 import { AiModel } from './model';
+import { anthropicThinkingBinding } from './usage';
 
 type GenerateOptions = Parameters<MockLanguageModelV3['doGenerate']>[0];
 type GenerateResult = Awaited<ReturnType<MockLanguageModelV3['doGenerate']>>;
@@ -94,7 +97,9 @@ function run(
 }
 
 const THINKING_BINDING = {
-  anthropic: { thinking: { blockBinding: { prefixMismatchBehavior: 'drop_block' } } },
+  anthropic: {
+    thinking: { type: 'adaptive', blockBinding: { prefixMismatchBehavior: 'drop_block' } },
+  },
 };
 
 describe('generateFindings tool loop', () => {
@@ -332,5 +337,52 @@ describe('verify', () => {
     expect(result.grounded).toBe(true);
     expect(calls).toHaveLength(1);
     expect(calls[0]?.providerOptions).toEqual(THINKING_BINDING);
+  });
+});
+
+describe('anthropic thinking binding wire format', () => {
+  test('sends adaptive thinking with block_binding drop_block and the binding beta header', async () => {
+    const captured: { url: string; headers: Record<string, string>; body: unknown }[] = [];
+    const fetchMock = async (input: string | URL | Request, init?: RequestInit) => {
+      const request = input instanceof Request ? input : undefined;
+      const headers = new Headers(request?.headers ?? init?.headers);
+      const headerRecord: Record<string, string> = {};
+      headers.forEach((value, key) => {
+        headerRecord[key] = value;
+      });
+      const rawBody = request ? await request.text() : init?.body;
+      captured.push({
+        url: request?.url ?? String(input),
+        headers: headerRecord,
+        body: JSON.parse(String(rawBody ?? '{}')),
+      });
+      return new Response(
+        JSON.stringify({
+          id: 'msg_test',
+          type: 'message',
+          role: 'assistant',
+          content: [{ type: 'text', text: 'review done' }],
+          model: 'claude-haiku-4-5',
+          stop_reason: 'end_turn',
+          usage: { input_tokens: 10, output_tokens: 5 },
+        }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
+    };
+    const anthropic = createAnthropic({ apiKey: 'test', fetch: fetchMock as typeof fetch });
+    const result = await generateText({
+      model: anthropic('claude-haiku-4-5'),
+      prompt: 'review this diff',
+      providerOptions: anthropicThinkingBinding(),
+    });
+    expect(result.text).toBe('review done');
+    expect(captured).toHaveLength(1);
+    const request = captured[0];
+    expect(request?.headers['anthropic-beta']).toContain('thinking-binding-controls-2026-08-01');
+    const body = request?.body as {
+      thinking?: { type?: string; block_binding?: { prefix_mismatch_behavior?: string } };
+    };
+    expect(body.thinking?.type).toBe('adaptive');
+    expect(body.thinking?.block_binding?.prefix_mismatch_behavior).toBe('drop_block');
   });
 });

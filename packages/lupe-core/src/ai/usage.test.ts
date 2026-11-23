@@ -41,9 +41,11 @@ describe('toTokenUsage', () => {
     expect(anthropicCacheBreakpoint()).toEqual({ anthropic: { cacheControl: { type: 'ephemeral' } } });
   });
 
-  test('anthropic thinking binding drops a mismatched block without changing thinking mode', () => {
+  test('anthropic thinking binding pins adaptive thinking and drops a mismatched block', () => {
     expect(anthropicThinkingBinding()).toEqual({
-      anthropic: { thinking: { blockBinding: { prefixMismatchBehavior: 'drop_block' } } },
+      anthropic: {
+        thinking: { type: 'adaptive', blockBinding: { prefixMismatchBehavior: 'drop_block' } },
+      },
     });
   });
 });
