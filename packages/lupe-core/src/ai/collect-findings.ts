@@ -108,6 +108,8 @@ function repairTurn(validationError: string, raw: string | undefined): string {
 
 export interface CollectFindingsInput {
   readonly model: LanguageModel;
+  /** Model id of `model` (e.g. 'claude-haiku-4-5'). Gates the adaptive-thinking binding. */
+  readonly modelId: string;
   readonly system: string;
   readonly prompt: string;
   readonly tools: ToolSet;
@@ -158,8 +160,10 @@ export async function collectFindings(
       // Anthropic only: drop a thinking block whose signature no longer
       // matches its assistant prefix instead of failing the request with a
       // 400. The loop replays assistant messages (including thinking blocks)
-      // into follow-up calls, so a replayed block can mismatch.
-      providerOptions: input.cacheable ? anthropicThinkingBinding() : undefined,
+      // into follow-up calls, so a replayed block can mismatch. Gated by
+      // model capability: only models that support adaptive thinking get the
+      // option (haiku-4-5 and other 4.5 models do not).
+      providerOptions: input.cacheable ? anthropicThinkingBinding(input.modelId) : undefined,
       tools: hasTools ? input.tools : undefined,
       toolChoice: mode === 'answer' && hasTools ? 'none' : undefined,
       activeTools: mode === 'answer' && hasTools ? [] : undefined,

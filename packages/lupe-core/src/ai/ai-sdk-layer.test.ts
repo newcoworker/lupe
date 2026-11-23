@@ -77,7 +77,7 @@ const repoLayer = Layer.succeed(RepoSource, {
 function run(
   model: MockLanguageModelV3,
   maxSteps?: number,
-  config?: { provider: 'openai'; models: { review: string } }
+  config?: { provider?: 'anthropic' | 'openai'; models?: { review?: string; verify?: string } }
 ) {
   const ai = AiSdkLive({
     provider: config?.provider ?? 'anthropic',
@@ -127,6 +127,48 @@ describe('generateFindings tool loop', () => {
       },
     });
     const result = await Effect.runPromise(run(model, 4));
+    expect(result.findings).toHaveLength(1);
+    expect(calls).toHaveLength(1);
+    expect(calls[0]?.providerOptions).toEqual(THINKING_BINDING);
+  });
+
+  test('haiku-4-5 gets no thinking option (adaptive thinking is rejected on 4.5 models)', async () => {
+    const calls: GenerateOptions[] = [];
+    const model = new MockLanguageModelV3({
+      doGenerate: async (options) => {
+        calls.push(options);
+        return textResult(findingsText(), 'stop');
+      },
+    });
+    const result = await Effect.runPromise(run(model, 4, { models: { review: 'claude-haiku-4-5' } }));
+    expect(result.findings).toHaveLength(1);
+    expect(calls).toHaveLength(1);
+    expect(calls[0]?.providerOptions).toBeUndefined();
+  });
+
+  test('sonnet-4-5 gets no thinking option (adaptive thinking is rejected on 4.5 models)', async () => {
+    const calls: GenerateOptions[] = [];
+    const model = new MockLanguageModelV3({
+      doGenerate: async (options) => {
+        calls.push(options);
+        return textResult(findingsText(), 'stop');
+      },
+    });
+    const result = await Effect.runPromise(run(model, 4, { models: { review: 'claude-sonnet-4-5' } }));
+    expect(result.findings).toHaveLength(1);
+    expect(calls).toHaveLength(1);
+    expect(calls[0]?.providerOptions).toBeUndefined();
+  });
+
+  test('an adaptive-capable model (sonnet-5-5) gets the thinking option', async () => {
+    const calls: GenerateOptions[] = [];
+    const model = new MockLanguageModelV3({
+      doGenerate: async (options) => {
+        calls.push(options);
+        return textResult(findingsText(), 'stop');
+      },
+    });
+    const result = await Effect.runPromise(run(model, 4, { models: { review: 'claude-sonnet-5-5' } }));
     expect(result.findings).toHaveLength(1);
     expect(calls).toHaveLength(1);
     expect(calls[0]?.providerOptions).toEqual(THINKING_BINDING);
@@ -341,7 +383,7 @@ describe('verify', () => {
 });
 
 describe('anthropic thinking binding wire format', () => {
-  test('sends adaptive thinking with block_binding drop_block and the binding beta header', async () => {
+  async function captureRequest(modelId: string, binding: ReturnType<typeof anthropicThinkingBinding>) {
     const captured: { url: string; headers: Record<string, string>; body: unknown }[] = [];
     const fetchMock = async (input: string | URL | Request, init?: RequestInit) => {
       const request = input instanceof Request ? input : undefined;
@@ -362,7 +404,7 @@ describe('anthropic thinking binding wire format', () => {
           type: 'message',
           role: 'assistant',
           content: [{ type: 'text', text: 'review done' }],
-          model: 'claude-haiku-4-5',
+          model: modelId,
           stop_reason: 'end_turn',
           usage: { input_tokens: 10, output_tokens: 5 },
         }),
@@ -371,18 +413,28 @@ describe('anthropic thinking binding wire format', () => {
     };
     const anthropic = createAnthropic({ apiKey: 'test', fetch: fetchMock as typeof fetch });
     const result = await generateText({
-      model: anthropic('claude-haiku-4-5'),
+      model: anthropic(modelId),
       prompt: 'review this diff',
-      providerOptions: anthropicThinkingBinding(),
+      providerOptions: binding,
     });
     expect(result.text).toBe('review done');
     expect(captured).toHaveLength(1);
-    const request = captured[0];
-    expect(request?.headers['anthropic-beta']).toContain('thinking-binding-controls-2026-08-01');
-    const body = request?.body as {
-      thinking?: { type?: string; block_binding?: { prefix_mismatch_behavior?: string } };
+    return captured[0] as {
+      headers: Record<string, string>;
+      body: { thinking?: { type?: string; block_binding?: { prefix_mismatch_behavior?: string } } };
     };
-    expect(body.thinking?.type).toBe('adaptive');
-    expect(body.thinking?.block_binding?.prefix_mismatch_behavior).toBe('drop_block');
+  }
+
+  test('sends adaptive thinking with block_binding drop_block and the binding beta header', async () => {
+    const request = await captureRequest('claude-sonnet-5-5', anthropicThinkingBinding('claude-sonnet-5-5'));
+    expect(request.headers['anthropic-beta']).toContain('thinking-binding-controls-2026-08-01');
+    expect(request.body.thinking?.type).toBe('adaptive');
+    expect(request.body.thinking?.block_binding?.prefix_mismatch_behavior).toBe('drop_block');
+  });
+
+  test('haiku-4-5 sends no thinking field and no thinking-binding beta header', async () => {
+    const request = await captureRequest('claude-haiku-4-5', anthropicThinkingBinding('claude-haiku-4-5'));
+    expect(request.body.thinking).toBeUndefined();
+    expect(request.headers['anthropic-beta'] ?? '').not.toContain('thinking-binding-controls-2026-08-01');
   });
 });

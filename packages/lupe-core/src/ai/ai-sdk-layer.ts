@@ -116,6 +116,7 @@ export function AiSdkLive(config: LupeAiConfig): Layer.Layer<AiModel, never, Rep
             const { model, modelId } = resolveModel(input.task);
             const collected = await collectFindings({
               model,
+              modelId,
               system: input.system,
               prompt: input.prompt,
               tools,
@@ -136,8 +137,9 @@ export function AiSdkLive(config: LupeAiConfig): Layer.Layer<AiModel, never, Rep
               model,
               // Anthropic only: drop a thinking block whose signature no
               // longer matches its assistant prefix instead of failing the
-              // request with a 400.
-              providerOptions: cacheable ? anthropicThinkingBinding() : undefined,
+              // request with a 400. Gated by model capability: only models
+              // that support adaptive thinking get the option.
+              providerOptions: cacheable ? anthropicThinkingBinding(modelId) : undefined,
               messages: [
                 systemMessage(input.system),
                 {

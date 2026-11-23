@@ -171384,6 +171384,37 @@ function anthropicCacheBreakpoint() {
 	return { anthropic: { cacheControl: { type: "ephemeral" } } };
 }
 /**
+* Whether an Anthropic model supports adaptive thinking (`thinking.type:
+* 'adaptive'`). Per Anthropic's docs, adaptive thinking is supported on
+* Claude 4.6 and later models and Claude Mythos Preview; Claude 4.5 and
+* earlier models support only legacy manual (extended) thinking and reject
+* `adaptive` with a 400. See the per-model table at
+* https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting
+* and the primer at https://platform.claude.com/docs/en/claude_api_primer
+* ("Adaptive thinking is supported on Claude 4.6 and later models and Claude
+* Mythos Preview"). Adaptive-capable: Opus 4.6, Sonnet 4.6, Opus 4.7,
+* Opus 4.8, and every Claude 5 model (Opus 5, Sonnet 5, Haiku 5, Fable 5,
+* Mythos 5, and their 5.1/5.2/5.5 variants), plus Claude Mythos Preview.
+* Not adaptive-capable: Opus 4.5, Sonnet 4.5, Haiku 4.5, and earlier
+* Claude 4 models (they reject `"adaptive"` with a 400).
+*
+* Unknown or new model ids default to false (fail safe): the thinking option
+* is omitted entirely, leaving behavior unchanged. A future model version
+* that follows the documented "4.6 and later" rule (major version above 4,
+* or 4 with a minor of 6 or more) is treated as adaptive-capable.
+*/
+function supportsAdaptiveThinking(modelId) {
+	if (!modelId) return false;
+	if (modelId === "claude-mythos-preview" || modelId.startsWith("claude-mythos-preview-")) return true;
+	const match = /^claude-(opus|sonnet|haiku|fable|mythos)-(\d+)(?:-(\d+))?/.exec(modelId);
+	if (!match) return false;
+	const major = Number(match[2]);
+	const minor = match[3] === void 0 ? void 0 : Number(match[3]);
+	if (major > 4) return true;
+	if (major === 4) return minor !== void 0 && minor >= 6;
+	return false;
+}
+/**
 * Provider options that tell Anthropic to drop a thinking block whose signature
 * no longer matches its assistant prefix instead of failing the request with
 * a 400. `type: 'adaptive'` pins the thinking mode, and `blockBinding`
@@ -171395,8 +171426,14 @@ function anthropicCacheBreakpoint() {
 * thinking blocks) into follow-up calls; a replayed block whose prefix no
 * longer matches otherwise fails the whole review with an invalid thinking
 * signature error.
+*
+* Gated by model capability: only models Anthropic documents as supporting
+* adaptive thinking get the option (see supportsAdaptiveThinking). For every
+* other model the option is omitted entirely, so behavior is unchanged.
+* Callers must pass the model id of the model actually used for the call.
 */
-function anthropicThinkingBinding() {
+function anthropicThinkingBinding(modelId) {
+	if (!supportsAdaptiveThinking(modelId)) return void 0;
 	return { anthropic: { thinking: {
 		type: "adaptive",
 		blockBinding: { prefixMismatchBehavior: "drop_block" }
@@ -171675,7 +171712,7 @@ async function collectFindings(input) {
 		return generateText({
 			model: input.model,
 			messages: [...messages],
-			providerOptions: input.cacheable ? anthropicThinkingBinding() : void 0,
+			providerOptions: input.cacheable ? anthropicThinkingBinding(input.modelId) : void 0,
 			tools: hasTools ? input.tools : void 0,
 			toolChoice: mode === "answer" && hasTools ? "none" : void 0,
 			activeTools: mode === "answer" && hasTools ? [] : void 0,
@@ -171952,6 +171989,7 @@ function AiSdkLive(config) {
 				return {
 					...await collectFindings({
 						model,
+						modelId,
 						system: input.system,
 						prompt: input.prompt,
 						tools,
@@ -171969,7 +172007,7 @@ function AiSdkLive(config) {
 				const candidate = input.candidate;
 				const result = await generateText({
 					model,
-					providerOptions: cacheable ? anthropicThinkingBinding() : void 0,
+					providerOptions: cacheable ? anthropicThinkingBinding(modelId) : void 0,
 					messages: [systemMessage(input.system), {
 						role: "user",
 						content: `Finding under review:\n- rule: ${candidate.ruleId}\n- title: ${candidate.title}\n- location: ${candidate.path}:${candidate.startLine}\n- claim: ${candidate.message}\n` + (candidate.suggestion !== void 0 ? `- proposed suggestion (replacement for the anchored range):\n${candidate.suggestion}\n` : "") + `\nCited code context:\n${input.evidenceContext}\n\nDecide whether this finding is correct AND grounded in the cited code. Set grounded=false if it is speculative, already handled, or not supported by the code. Set impactConfirmed=false if the mechanism is real but the claimed impact/severity depends on a precondition not visible here (an off-context caller, an external contract, or unproven attacker-/tenant-controllability).` + (candidate.suggestion !== void 0 ? ` Also set suggestionValid=false if the proposed suggestion would not correctly fix the problem (e.g. a no-op or code that does not compile).` : "")
