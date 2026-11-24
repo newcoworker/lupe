@@ -177860,17 +177860,26 @@ async function resolveLupeThreads(octokit, pr, reviewedPaths) {
 		cursor = threads.pageInfo.endCursor;
 	}
 }
-async function findSticky(octokit, pr) {
-	const sticky = (await octokit.paginate(octokit.rest.issues.listComments, {
-		owner: pr.owner,
-		repo: pr.repo,
-		issue_number: pr.number,
-		per_page: 100
-	})).find((c) => (c.body ?? "").includes(SUMMARY_MARKER));
+/**
+* Pick lupe's sticky summary from the PR comments: the earliest comment carrying
+* the summary marker from the workflow's bot account (github-actions[bot], user
+* type Bot). Comments from any other author are ignored, so a hand-typed comment
+* carrying the marker can never supply lupe's review state.
+*/
+function selectBotSticky(comments) {
+	const sticky = comments.find((c) => (c.body ?? "").includes(SUMMARY_MARKER) && c.user?.login === "github-actions[bot]" && c.user?.type === "Bot");
 	return sticky ? {
 		id: sticky.id,
 		body: sticky.body ?? ""
 	} : void 0;
+}
+async function findSticky(octokit, pr) {
+	return selectBotSticky(await octokit.paginate(octokit.rest.issues.listComments, {
+		owner: pr.owner,
+		repo: pr.repo,
+		issue_number: pr.number,
+		per_page: 100
+	}));
 }
 function makeGitHubClient(config) {
 	const octokit = createOctokit(config);
@@ -178020,7 +178029,25 @@ const lupe_github_dist_VERSION = "0.0.0";
 //#endregion
 
 
+;// CONCATENATED MODULE: ./src/diff-selection.ts
+/**
+ * Log line describing which diff was reviewed. The "incremental review since"
+ * line is produced only when the incremental diff was really used; a fallback
+ * to the full diff names its reason (a non-fast-forward compare status, or the
+ * 300-file compare limit) instead. Returns undefined for a first review, which
+ * stays silent as before.
+ */
+function formatDiffSelectionLog(selection) {
+    if (selection.kind === 'incremental') {
+        return `lupe: incremental review since ${selection.sinceSha.slice(0, 7)} (${selection.fileCount} files).`;
+    }
+    return selection.reason === undefined
+        ? undefined
+        : `lupe: full diff review (${selection.fileCount} files): ${selection.reason}.`;
+}
+
 ;// CONCATENATED MODULE: ./src/index.ts
+
 
 
 
@@ -178166,11 +178193,32 @@ const program = Effect_gen(function* () {
         // Incremental: only review commits since the last reviewed SHA. Fall back to
         // the full diff on the first review or any non-fast-forward (rebase/force-push).
         const incremental = lastReviewedSha !== undefined && lastReviewedSha !== headSha;
-        const files = incremental
-            ? yield* gh.listDiffSince(prRef, lastReviewedSha, headSha).pipe(Effect_catchAll(() => gh.listDiff(prRef)))
-            : yield* gh.listDiff(prRef);
-        if (incremental)
-            info(`lupe: incremental review since ${lastReviewedSha.slice(0, 7)}.`);
+        const { files, selection } = incremental
+            ? yield* gh.listDiffSince(prRef, lastReviewedSha, headSha).pipe(Effect_map((diffFiles) => ({
+                files: diffFiles,
+                selection: {
+                    kind: 'incremental',
+                    sinceSha: lastReviewedSha,
+                    fileCount: diffFiles.length,
+                },
+            })), Effect_catchAll((error) => Effect_map(gh.listDiff(prRef), (diffFiles) => ({
+                files: diffFiles,
+                selection: {
+                    kind: 'full',
+                    reason: error.message,
+                    fileCount: diffFiles.length,
+                },
+            }))))
+            : yield* Effect_map(gh.listDiff(prRef), (diffFiles) => ({
+                files: diffFiles,
+                selection: { kind: 'full', reason: undefined, fileCount: diffFiles.length },
+            }));
+        // The log names the diff actually reviewed: "incremental review since X"
+        // only when the incremental diff was really used, otherwise the fallback
+        // reason (a non-fast-forward compare status, or the 300-file compare limit).
+        const selectionLog = formatDiffSelectionLog(selection);
+        if (selectionLog !== undefined)
+            info(selectionLog);
         const compressed = compressDiff(files, {
             pathFilters: config.pathFilters,
             maxFilesReviewed: maxFiles,

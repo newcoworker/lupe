@@ -28,6 +28,8 @@ import {
 import { compressDiff, discoverCodingStandards, redactSecrets, RepoSourceLive } from '@gigadrive/lupe-git';
 import { anchorFindings, GitHubClientLive } from '@gigadrive/lupe-github';
 
+import { formatDiffSelectionLog, type DiffSelection } from './diff-selection';
+
 const FAIL_NONE = 'none';
 
 function intInput(name: string): number | undefined {
@@ -173,10 +175,36 @@ const program = Effect.gen(function* () {
     // Incremental: only review commits since the last reviewed SHA. Fall back to
     // the full diff on the first review or any non-fast-forward (rebase/force-push).
     const incremental = lastReviewedSha !== undefined && lastReviewedSha !== headSha;
-    const files = incremental
-      ? yield* gh.listDiffSince(prRef, lastReviewedSha, headSha).pipe(Effect.catchAll(() => gh.listDiff(prRef)))
-      : yield* gh.listDiff(prRef);
-    if (incremental) core.info(`lupe: incremental review since ${lastReviewedSha.slice(0, 7)}.`);
+    const { files, selection } = incremental
+      ? yield* gh.listDiffSince(prRef, lastReviewedSha, headSha).pipe(
+          Effect.map((diffFiles) => ({
+            files: diffFiles,
+            selection: {
+              kind: 'incremental',
+              sinceSha: lastReviewedSha,
+              fileCount: diffFiles.length,
+            } satisfies DiffSelection,
+          })),
+          Effect.catchAll((error) =>
+            Effect.map(gh.listDiff(prRef), (diffFiles) => ({
+              files: diffFiles,
+              selection: {
+                kind: 'full',
+                reason: error.message,
+                fileCount: diffFiles.length,
+              } satisfies DiffSelection,
+            }))
+          )
+        )
+      : yield* Effect.map(gh.listDiff(prRef), (diffFiles) => ({
+          files: diffFiles,
+          selection: { kind: 'full', reason: undefined, fileCount: diffFiles.length } satisfies DiffSelection,
+        }));
+    // The log names the diff actually reviewed: "incremental review since X"
+    // only when the incremental diff was really used, otherwise the fallback
+    // reason (a non-fast-forward compare status, or the 300-file compare limit).
+    const selectionLog = formatDiffSelectionLog(selection);
+    if (selectionLog !== undefined) core.info(selectionLog);
     const compressed = compressDiff(files, {
       pathFilters: config.pathFilters,
       maxFilesReviewed: maxFiles,

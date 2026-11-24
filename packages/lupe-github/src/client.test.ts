@@ -1,14 +1,16 @@
 import { describe, expect, test } from 'vitest';
 
 import type { AnchoredComment } from '@gigadrive/lupe-core';
-import { INLINE_MARKER, renderInlineComment, type Finding } from '@gigadrive/lupe-core';
+import { INLINE_MARKER, renderInlineComment, SUMMARY_MARKER, type Finding } from '@gigadrive/lupe-core';
 
 import {
   compareToDiffFiles,
   paginateCompare,
+  selectBotSticky,
   shouldResolveThread,
   toReviewComment,
   type CompareResult,
+  type StickyCandidate,
 } from './client';
 
 function page(n: number, status = 'ahead'): CompareResult {
@@ -95,6 +97,57 @@ describe('paginateCompare (incremental compare pagination)', () => {
 
   test('throws when the 3rd page is still full (>300 files) so the caller falls back to the full diff', async () => {
     await expect(paginateCompare(() => Promise.resolve(page(100)))).rejects.toThrow(/300-file/);
+  });
+});
+
+describe('selectBotSticky (lupe-state marker is trusted only from the workflow bot)', () => {
+  const bot = { login: 'github-actions[bot]', type: 'Bot' };
+  const human = { login: 'someone', type: 'User' };
+  const stickyBody = (sha: string) => `${SUMMARY_MARKER}\n<!-- lupe-state {"lastReviewedSha":"${sha}"} -->`;
+
+  test('ignores a non-bot comment carrying the marker, even when posted before the bot sticky', () => {
+    const comments: StickyCandidate[] = [
+      { id: 1, body: stickyBody('aaa1111'), user: human },
+      { id: 2, body: stickyBody('bbb2222'), user: bot },
+    ];
+    expect(selectBotSticky(comments)?.id).toBe(2);
+  });
+
+  test('returns undefined when only non-bot comments carry the marker (lupe runs a full review)', () => {
+    const comments: StickyCandidate[] = [
+      { id: 1, body: stickyBody('aaa1111'), user: human },
+      { id: 3, body: stickyBody('ccc3333'), user: { login: 'another-bot', type: 'Bot' } },
+    ];
+    expect(selectBotSticky(comments)).toBeUndefined();
+  });
+
+  test('picks the earliest bot sticky when several exist', () => {
+    const comments: StickyCandidate[] = [
+      { id: 5, body: stickyBody('eee5555'), user: bot },
+      { id: 9, body: stickyBody('9999999'), user: bot },
+    ];
+    expect(selectBotSticky(comments)?.id).toBe(5);
+  });
+
+  test('ignores a bot comment without the marker', () => {
+    const comments: StickyCandidate[] = [
+      { id: 1, body: 'just a status note', user: bot },
+      { id: 2, body: stickyBody('bbb2222'), user: bot },
+    ];
+    expect(selectBotSticky(comments)?.id).toBe(2);
+  });
+
+  test('ignores a github-actions[bot] login whose user type is not Bot', () => {
+    const comments: StickyCandidate[] = [
+      { id: 1, body: stickyBody('aaa1111'), user: { login: 'github-actions[bot]', type: 'User' } },
+      { id: 2, body: stickyBody('bbb2222'), user: bot },
+    ];
+    expect(selectBotSticky(comments)?.id).toBe(2);
+  });
+
+  test('returns undefined when no comment carries the marker', () => {
+    expect(selectBotSticky([{ id: 1, body: 'hello', user: bot }])).toBeUndefined();
+    expect(selectBotSticky([])).toBeUndefined();
   });
 });
 

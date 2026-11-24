@@ -163,6 +163,26 @@ async function resolveLupeThreads(
   }
 }
 
+/** Minimal shape of an issue comment for sticky selection (narrowed for testability). */
+export interface StickyCandidate {
+  readonly id: number;
+  readonly body?: string | null;
+  readonly user?: { readonly login?: string; readonly type?: string } | null;
+}
+
+/**
+ * Pick lupe's sticky summary from the PR comments: the earliest comment carrying
+ * the summary marker from the workflow's bot account (github-actions[bot], user
+ * type Bot). Comments from any other author are ignored, so a hand-typed comment
+ * carrying the marker can never supply lupe's review state.
+ */
+export function selectBotSticky(comments: readonly StickyCandidate[]): { id: number; body: string } | undefined {
+  const sticky = comments.find(
+    (c) => (c.body ?? '').includes(SUMMARY_MARKER) && c.user?.login === 'github-actions[bot]' && c.user?.type === 'Bot'
+  );
+  return sticky ? { id: sticky.id, body: sticky.body ?? '' } : undefined;
+}
+
 async function findSticky(octokit: LupeOctokit, pr: PullRequestRef): Promise<{ id: number; body: string } | undefined> {
   const comments = await octokit.paginate(octokit.rest.issues.listComments, {
     owner: pr.owner,
@@ -170,8 +190,7 @@ async function findSticky(octokit: LupeOctokit, pr: PullRequestRef): Promise<{ i
     issue_number: pr.number,
     per_page: 100,
   });
-  const sticky = comments.find((c) => (c.body ?? '').includes(SUMMARY_MARKER));
-  return sticky ? { id: sticky.id, body: sticky.body ?? '' } : undefined;
+  return selectBotSticky(comments);
 }
 
 export function makeGitHubClient(config: OctokitConfig): GitHubClientService {
